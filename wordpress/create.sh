@@ -53,6 +53,8 @@ SITE_ROOT="$(pwd)"
 # Down the latest@Bedrock
 # ---------------------------------------------
 git clone https://github.com/roots/bedrock.git .
+rm -rf .git
+rm -rf .github
 
 # Install Dependencies
 # ---------------------------------------------
@@ -191,7 +193,7 @@ cat << 'EOF' >> README.md
 
 ### Local development
 
-Working with our Docker LDE, you'll need the following extras:
+Working in the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev), you'll need to do the following:
 
 - You'll need `DB_HOST=db` in your `.env`
 - You'll need to create a symlink of `/public` to `/web` (`ln -s web public`)
