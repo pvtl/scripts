@@ -6,7 +6,7 @@ __Wouldn't it be great to run a single command and have the site setup and ready
 
 The following scripts are how we at [Pivotal Agency](https://www.pivotalagency.com.au) like our sites setup by default.
 
-It's ok if you use different config or want different plugins - feel free to fork this repo and make them your own. We hope you'll find benefit in our template.
+It's ok if you use different config or want different plugins - feel free to fork this repo and make them your own. We hope you'll benefit from our templates.
 
 - [Wordpress](/wordpress)
 - Magento2 (coming soon...)

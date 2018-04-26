@@ -1,6 +1,6 @@
 # Wordpress
 
-## 🤞 Prerequisites
+### 🤞 Prerequisites
 
 - Unix
 - Git
@@ -8,6 +8,8 @@
 - Composer
 - WP-cli
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
+
+---
 
 ##  `create.sh`
 
@@ -40,3 +42,5 @@ bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wor
 ```
 
 It will ask you for the project name (eg. wordpress) which the script will use for various things like the directory name, MySQL database etc.
+
+---
