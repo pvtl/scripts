@@ -34,13 +34,14 @@ URL="http://${DIR_NAME}.pub.localhost"
 DB_HOST="db"
 DB_USER="root"
 DB_PW="dbroot"
-ADMIN_USER=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+RAND=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+ADMIN_USER="${RAND}@${RAND}.com"
 # ADMIN_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 # ADMIN_EMAIL="tech@pvtl.io"
 
 # Install Laravel
 # ---------------------------------------------
-composer create-project --prefer-dist laravel/laravel $DIR_NAME
+composer create-project --prefer-dist laravel/laravel $DIR_NAME "5.5.*"
 cd $DIR_NAME
 SITE_ROOT="$(pwd)"
 
@@ -53,41 +54,43 @@ $pw = $argv[3];
 $name = $argv[4];
 
 $conn = mysqli_connect($host, $user, $pw);
-mysqli_query($conn, "CREATE DATABASE " . $name);
+mysqli_query($conn, "CREATE DATABASE " . $name . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 ' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
 # Require Voyager
 # ---------------------------------------------
-composer require tcg/voyager
+composer require tcg/voyager:1.0.17
 
-# Update the .env file and setup DB connection
+# Update the .env file
 # ---------------------------------------------
 cp .env.example .env
 sed -i 's,DB_HOST=127.0.0.1,DB_HOST='"$DB_HOST"',g' .env
 sed -i 's/DB_DATABASE=homestead/DB_DATABASE='"$DIR_NAME"'/g' .env
 sed -i 's/DB_USERNAME=homestead/DB_USERNAME='"$DB_USER"'/g' .env
 sed -i 's/DB_PASSWORD=secret/DB_PASSWORD='"$DB_PW"'/g' .env
-sed -i 's,APP_URL=http://localhost:8000,APP_URL='"$URL"',g' .env
+sed -i 's,APP_URL=http://localhost,APP_URL='"$URL"',g' .env
 
 sed -i 's,MAIL_HOST=smtp.mailtrap.io,MAIL_HOST=mailhog,g' .env
 sed -i 's,MAIL_PORT=2525,MAIL_PORT=1025,g' .env
 sed -i 's,MAIL_USERNAME=null,MAIL_USERNAME=testuser,g' .env
 sed -i 's,MAIL_PASSWORD=null,MAIL_PASSWORD=testpwd,g' .env
 
+php artisan key:generate
+
 # Run the Voyager Installer
 # ---------------------------------------------
 php artisan voyager:install
+
+# Install Voyager Pages
+# ---------------------------------------------
+composer require pvtl/voyager-pages
+php artisan voyager-pages:install
 
 # Install Voyager Front-end
 # ---------------------------------------------
 composer require pvtl/voyager-frontend
 composer dump-autoload && php artisan voyager-frontend:install
 npm install && npm run dev
-
-# Install Voyager Pages
-# ---------------------------------------------
-composer require pvtl/voyager-pages
-php artisan voyager-pages:install
 
 # Install Voyager Page Blocks
 # ---------------------------------------------
@@ -104,11 +107,20 @@ composer dump-autoload && php artisan voyager-forms:install
 # composer require pvtl/voyager-posts
 # php artisan voyager-posts:install
 
-# Add the following to the .gitignore
-# ---------------------------------------------
-
 # Update the Readme
 # ---------------------------------------------
+rm README.md
+cat << 'EOF' >> README.md
+# A Voyager Project by Pivotal Agency
+
+## Installation
+
+- Clone this repo
+- Import a copy of the DB to your environment
+- Copy `.env.example` to `.env` and add your environment's settings
+- Generate a key - `php artisan key:generate`
+- Run `composer install` from the project root
+EOF
 
 # Create a Voyager Admin
 # ---------------------------------------------
