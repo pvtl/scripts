@@ -17,7 +17,7 @@ Installs a fresh version of Wordpress with the following:
 
 - Creates a new database for the install
 - [Bedrock](https://roots.io/bedrock/) setup with the latest Wordpress core
-- A randomly generated admin usernmae and password
+- A randomly generated admin username and password
 - The [Pivotal Boilerplate Theme](https://bitbucket.org/pvtl/wordpress-theme-boilerplate/overview) installed and activated
 - A set of default plugins (* comes pre-activated):
     - [Yoast SEO*](https://en-au.wordpress.org/plugins/wordpress-seo/)
