@@ -4,13 +4,6 @@
 #
 # Installs Wordpress "the Pivotal Way"
 #
-# Simply run the following from your CLI:
-# `bash <(curl -s https://gist.githubusercontent.com/mcnamee/3360ef8af8904f0bc38489b4b3a902f1/raw/install-wp.sh -L)`
-#
-# You get Wordpress Bedrock, the Pivotal Theme, a set of default plugins, database created,
-# Wordpress installed, a Readme with nice instructions and a better .gitignore
-#
-# Prereq's: Composer, Git, Unix, WP-cli, NPM
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
