@@ -75,6 +75,8 @@ sed -i 's,MAIL_PORT=2525,MAIL_PORT=1025,g' .env
 sed -i 's,MAIL_USERNAME=null,MAIL_USERNAME=testuser,g' .env
 sed -i 's,MAIL_PASSWORD=null,MAIL_PASSWORD=testpwd,g' .env
 
+echo "SCOUT_DRIVER=tntsearch" >> .env
+
 php artisan key:generate
 
 # Run the Voyager Installer
