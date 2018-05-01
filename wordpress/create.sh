@@ -25,18 +25,54 @@
 
 # Config
 # ---------------------------------------------
-echo "•• We'll create a new directory for the project. What shall we call it? (eg. wordpress)"
-read DIR_NAME
-
-DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].')
-DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
-URL="http://${DIR_NAME}.pub.localhost"
+# DB Details
 DB_HOST="db"
 DB_USER="root"
 DB_PW="dbroot"
-WP_USER=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+
+# Directory/DB Name
+echo "•• We'll create a new directory for the project. What shall we call it? (eg. wordpress)"
+read DIR_NAME
+
+if [[ -z "$DIR_NAME" ]]; then
+  printf '%s\n' "You didn't enter a directory name..."
+  exit 1
+fi
+
+DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].')
+DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
+
+URL="http://${DIR_NAME}.pub.localhost"
+
+# User Details
+echo "•• Please enter the Wordpress Admin username: (eg. pvtl)"
+read WP_USER
+
+WP_USER=$(echo $WP_USER | tr -cd '[[:alnum:]].')
+WP_USER=`echo "$WP_USER" | tr '[:upper:]' '[:lower:]'`
+
+if [[ -z "$WP_USER" ]]; then
+  WP_USER=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+fi
+
+echo "•• Please enter an Email for the Wordpress admin: (eg. jane.doe@pvtl.io)"
+read WP_EMAIL
+
+if [[ -z "$WP_EMAIL" ]]; then
+  RAND=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+  WP_EMAIL="${RAND}@${RAND}.com"
+fi
+
+EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
+
+if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
+  echo "Here we go"
+else
+  echo "Please enter a real email..."
+  exit 1
+fi
+
 WP_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-WP_EMAIL="tech@pvtl.io"
 
 # Create the directory
 # ---------------------------------------------
@@ -69,8 +105,14 @@ rm -rf web/app/plugins/advanced-custom-fields-pro/.git
 git clone https://bitbucket.org/pvtl/wordpress-theme-boilerplate.git web/app/themes/pvtl
 cd web/app/themes/pvtl
 rm -rf .git
+
+# Build assets
 npm install
 npm run build
+
+# Setup for local dev
+cp config-default.yml config.yml
+sed -i 's,url: "",url: "'"$URL"'",g' config.yml
 
 cd $SITE_ROOT
 
@@ -89,13 +131,8 @@ sed -i 's,http://example.com,'"$URL"',g' .env
 # Create a Database
 # ---------------------------------------------
 php -r '
-$host = $argv[1];
-$user = $argv[2];
-$pw = $argv[3];
-$name = $argv[4];
-
-$conn = mysqli_connect($host, $user, $pw);
-mysqli_query($conn, "CREATE DATABASE " . $name);
+$conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
+mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 ' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
 # Install Wordpress
@@ -183,14 +220,26 @@ cat << 'EOF' >> README.md
 - Copy `.env.example` to `.env` and add your environment's settings
 - Import the DB (and update `siteurl` and `home` in the `wp_options` table)
 - Run `composer install` from the project root
+- (optional) To make Browsersync work: `cp web/app/themes/pvtl/config-default.yml web/app/themes/pvtl/config.yml` and update the `BROWSERSYNC` > `url` to be your site's Wordpress URL.
 
 ### Local development
+
+#### Installation
 
 Working in the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev), you'll need to do the following:
 
 - You'll need `DB_HOST=db` in your `.env`
 - You'll need to create a symlink of `/public` to `/web` (`ln -s web public`)
 - Your Hostname will need to be {website}__.pub.localhost__ (note the `.pub`)
+
+#### Theme Development
+
+To compile theme assets, the following commands can be used from within the theme directory.
+
+| Command | Description |
+| --- | --- |
+| `npm start` | Watch/compile assets & start Browsersync (*to use Browsersync, you must run `npm i && npm start` from outside of the Docker container) |
+| `npm run build` | Compile assets for production |
 
 ---
 
