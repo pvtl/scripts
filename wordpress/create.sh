@@ -74,10 +74,12 @@ fi
 
 WP_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
+
 # Create the directory
 # ---------------------------------------------
 mkdir $DIR_NAME && cd $DIR_NAME
 SITE_ROOT="$(pwd)"
+
 
 # Down the latest@Bedrock
 # ---------------------------------------------
@@ -85,9 +87,11 @@ git clone https://github.com/roots/bedrock.git .
 rm -rf .git
 rm -rf .github
 
+
 # Install Dependencies
 # ---------------------------------------------
 composer install --ignore-platform-reqs
+
 
 # Install default Wordpress plugins
 # ---------------------------------------------
@@ -99,6 +103,7 @@ git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/
 rm -rf web/app/plugins/advanced-custom-fields-wpcli/.git
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
+
 
 # Install our theme
 # ---------------------------------------------
@@ -116,9 +121,11 @@ sed -i 's,url: "",url: "'"$URL"'",g' config.yml
 
 cd $SITE_ROOT
 
+
 # Create a Symlink for our LDE's
 # ---------------------------------------------
 ln -s web public
+
 
 # Create the .env file and setup DB connection
 # ---------------------------------------------
@@ -128,12 +135,14 @@ sed -i 's/database_user/'"$DB_USER"'/g' .env
 sed -i 's/database_password/'"$DB_PW"'\nDB_HOST='"$DB_HOST"'/g' .env
 sed -i 's,http://example.com,'"$URL"',g' .env
 
+
 # Create a Database
 # ---------------------------------------------
 php -r '
 $conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
 mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 ' $DB_HOST $DB_USER $DB_PW $DIR_NAME
+
 
 # Install Wordpress
 # ---------------------------------------------
@@ -145,6 +154,7 @@ wp core install \
   --admin_email="${WP_EMAIL}" \
   --skip-email \
   --allow-root
+
 
 # Set Wordpress config & activate theme/plugins
 # ---------------------------------------------
@@ -187,6 +197,7 @@ wp acf import --json_file=web/app/themes/pvtl/acf-fields.json --allow-root
 wp plugin deactivate advanced-custom-fields-wpcli --allow-root
 rm -rf web/app/plugins/advanced-custom-fields-wpcli
 
+
 # Add the following to the .gitignore
 # ---------------------------------------------
 echo '
@@ -208,6 +219,7 @@ web/app/object-cache.php
 !web/app/plugins/advanced-custom-fields-pro
 ' >> .gitignore
 
+
 # Update the Readme
 # ---------------------------------------------
 rm README.md
@@ -216,15 +228,31 @@ cat << 'EOF' >> README.md
 
 ## Installation
 
-- Clone this repo
-- Copy `.env.example` to `.env` and add your environment's settings
-- Import the DB (and update `siteurl` and `home` in the `wp_options` table)
-- Run `composer install` from the project root
-- (optional) To make Browsersync work: `cp web/app/themes/pvtl/config-default.yml web/app/themes/pvtl/config.yml` and update the `BROWSERSYNC` > `url` to be your site's Wordpress URL.
+#### 1. Clone this repo
+```bash
+git clone <repo-url>
+```
 
-### Local development
+#### 2. Copy `.env.example` to `.env` and add your environment's settings
+```bash
+cp .env.example .env
+```
 
-#### Installation
+#### 3. Import the DB
+
+Once imported: update `siteurl` and `home` in the `wp_options` table + scrub any sensitive data (eg. customer info, credit card tokens etc).
+
+#### 4. Enable Browsersync
+```bash
+cp web/app/themes/pvtl/config-default.yml web/app/themes/pvtl/config.yml
+```
+_Then update `BROWSERSYNC` > `url` to be your site's Wordpress URL_
+
+---
+
+## Local development
+
+### Installation
 
 Working in the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev), you'll need to do the following:
 
@@ -232,7 +260,7 @@ Working in the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-d
 - You'll need to create a symlink of `/public` to `/web` (`ln -s web public`)
 - Your Hostname will need to be {website}__.pub.localhost__ (note the `.pub`)
 
-#### Theme Development
+### Theme Development
 
 To compile theme assets, the following commands can be used from within the theme directory.
 
