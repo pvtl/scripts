@@ -48,13 +48,8 @@ SITE_ROOT="$(pwd)"
 # Create a Database
 # ---------------------------------------------
 php -r '
-$host = $argv[1];
-$user = $argv[2];
-$pw = $argv[3];
-$name = $argv[4];
-
-$conn = mysqli_connect($host, $user, $pw);
-mysqli_query($conn, "CREATE DATABASE " . $name . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+$conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
+mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 ' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
 # Require Voyager
