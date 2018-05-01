@@ -103,6 +103,10 @@ git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/
 rm -rf web/app/plugins/advanced-custom-fields-wpcli/.git
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
+git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms
+rm -rf web/app/plugins/gravityforms/.git
+git clone https://github.com/wp-premium/gravityformscampaignmonitor.git web/app/plugins/gravityformscampaignmonitor
+rm -rf web/app/plugins/gravityformscampaignmonitor/.git
 
 
 # Install our theme
@@ -166,6 +170,7 @@ wp rewrite flush --allow-root
 wp theme activate pvtl --allow-root
 wp plugin activate advanced-custom-fields-wpcli --allow-root
 wp plugin activate advanced-custom-fields-pro --allow-root
+wp plugin activate gravityforms --allow-root
 wp plugin activate wordpress-seo --allow-root
 
 # Setup Pages - home to be home page
