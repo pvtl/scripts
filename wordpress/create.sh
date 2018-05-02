@@ -115,6 +115,7 @@ ln -s web public
 composer require wpackagist-plugin/wordpress-seo
 composer require wpackagist-plugin/w3-total-cache
 composer require wpackagist-plugin/wp-migrate-db
+composer require wpackagist-plugin/admin-menu-editor
 
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git

@@ -20,12 +20,13 @@ Installs a fresh version of Wordpress with the following:
 - A randomly generated admin username and password
 - The [Pivotal Boilerplate Theme](https://bitbucket.org/pvtl/wordpress-theme-boilerplate/overview) installed and activated
 - A set of default plugins (* comes pre-activated):
-    - [Yoast SEO*](https://en-au.wordpress.org/plugins/wordpress-seo/)
+    - [Yoast SEO*](https://wordpress.org/plugins/wordpress-seo/)
     - [Advanced Custom Fields Pro*](https://www.advancedcustomfields.com/pro/)
     - [Gravity Forms*](https://www.gravityforms.com/)
     - [Campaign Monitor for Gravity Forms](https://www.gravityforms.com/add-ons/campaign-monitor/)
-    - [W3 Total Cache](https://en-au.wordpress.org/plugins/w3-total-cache/)
-    - [WP Migrate DB](https://en-au.wordpress.org/plugins/wp-migrate-db/)
+    - [W3 Total Cache](https://wordpress.org/plugins/w3-total-cache/)
+    - [WP Migrate DB](https://wordpress.org/plugins/wp-migrate-db/)
+    - [Admin Menu Editor](https://wordpress.org/plugins/admin-menu-editor/)
 - A `README.md` with nice usage instructions
 - A pre-configured `.gitignore`
 - Some basic Wordpress config:
