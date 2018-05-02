@@ -47,4 +47,4 @@ bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wor
 
 It will provide a few basic prompts for you to configure your new build.
 
----
+_*Note that you may need to login to Wordpress and visit __Settings > Permalinks__ in order for Wordpress to start using the correct permalinks_
