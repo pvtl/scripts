@@ -192,9 +192,6 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   cd web/app/themes/pvtl
   rm -rf .git
 
-  # Install ACF CLI (to enable us to install some default fields)
-  git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
-
   # Build assets
   npm install
   npm run build
@@ -203,12 +200,17 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   cp config-default.yml config.yml
   sed -i 's,url: "",url: "'"$URL"'",g' config.yml
 
+  cd $SITE_ROOT
+
   # Activate Theme
   wp theme activate pvtl --allow-root
 
   # Assign header and footer menus to theme menu locations
   wp menu location assign main-menu top-bar-r --allow-root
   wp menu location assign main-menu mobile-nav --allow-root
+
+  # Install ACF CLI (to enable us to install some default fields)
+  git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
 
   # Import our ACF fields for the theme
   wp plugin activate advanced-custom-fields-wpcli --allow-root
@@ -217,8 +219,6 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Remove ACF CLI plugin - we don't need it anymore
   wp plugin deactivate advanced-custom-fields-wpcli --allow-root
   rm -rf web/app/plugins/advanced-custom-fields-wpcli
-
-  cd $SITE_ROOT
 fi
 
 
