@@ -7,6 +7,7 @@
 - Node & NPM
 - Composer
 - WP-cli
+- The Pivotal WP theme requires `gulp-cli` NPM module installed globally
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
 
 ---
