@@ -22,6 +22,8 @@ Installs a fresh version of Wordpress with the following:
 - A set of default plugins (* comes pre-activated):
     - [Yoast SEO*](https://en-au.wordpress.org/plugins/wordpress-seo/)
     - [Advanced Custom Fields Pro*](https://www.advancedcustomfields.com/pro/)
+    - [Gravity Forms*](https://www.gravityforms.com/)
+    - [Campaign Monitor for Gravity Forms](https://www.gravityforms.com/add-ons/campaign-monitor/)
     - [W3 Total Cache](https://en-au.wordpress.org/plugins/w3-total-cache/)
     - [WP Migrate DB](https://en-au.wordpress.org/plugins/wp-migrate-db/)
 - A `README.md` with nice usage instructions
@@ -41,6 +43,6 @@ Whilst SSH'd into the Docker `web` container (`docker exec -it web bash`), brows
 bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/create.sh -L)
 ```
 
-It will ask you for the project name (eg. wordpress) which the script will use for various things like the directory name, MySQL database etc.
+It will provide a few basic prompts for you to configure your new build.
 
 ---
