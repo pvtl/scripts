@@ -27,6 +27,7 @@ Installs a fresh version of Wordpress with the following:
     - [W3 Total Cache](https://wordpress.org/plugins/w3-total-cache/)
     - [WP Migrate DB](https://wordpress.org/plugins/wp-migrate-db/)
     - [Admin Menu Editor](https://wordpress.org/plugins/admin-menu-editor/)
+    - [Better WP Security](https://wordpress.org/plugins/better-wp-security/)
 - A `README.md` with nice usage instructions
 - A pre-configured `.gitignore`
 - Some basic Wordpress config:
