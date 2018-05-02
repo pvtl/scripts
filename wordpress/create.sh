@@ -23,20 +23,27 @@
 #
 #
 
-# Config
+# Variables
+# ---------------------------------------------
+RESET="\e[39m"
+BLUE="\e[34m"
+
+
+# Site Config
 # ---------------------------------------------
 # DB Details
 DB_HOST="db"
 DB_USER="root"
 DB_PW="dbroot"
+RAND=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
+RAND_EMAIL="${RAND}@${RAND}.com"
+WP_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 # Directory/DB Name
-echo "•• We'll create a new directory for the project. What shall we call it? (eg. wordpress)"
-read DIR_NAME
-
+echo -e "${BLUE}\n?? We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] ${RESET}"
+read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
-  printf '%s\n' "You didn't enter a directory name..."
-  exit 1
+  DIR_NAME="wordpress${RAND}"
 fi
 
 DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].')
@@ -44,35 +51,40 @@ DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
 
 URL="http://${DIR_NAME}.pub.localhost"
 
-# User Details
-echo "•• Please enter the Wordpress Admin username: (eg. pvtl)"
-read WP_USER
+# Install Pivotal Theme?
+echo -e "${BLUE}\n?? Would you like the Pivotal theme installed? [y/n] ${RESET}"
+read -p "== " INSTALL_THEME
+if [ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] ;then
+    INSTALL_THEME=1
+else
+    INSTALL_THEME=0
+fi
+
+# Wordpress Username
+echo -e "${BLUE}\n?? Please enter the Wordpress Admin username: [user${RAND}] ${RESET}"
+read -p "== " WP_USER
 
 WP_USER=$(echo $WP_USER | tr -cd '[[:alnum:]].')
 WP_USER=`echo "$WP_USER" | tr '[:upper:]' '[:lower:]'`
-
 if [[ -z "$WP_USER" ]]; then
-  WP_USER=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+  WP_USER="user${RAND}"
 fi
 
-echo "•• Please enter an Email for the Wordpress admin: (eg. jane.doe@pvtl.io)"
-read WP_EMAIL
-
+# Wordpress Email
+echo -e "${BLUE}\n?? Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] ${RESET}"
+read -p "== " WP_EMAIL
 if [[ -z "$WP_EMAIL" ]]; then
-  RAND=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
-  WP_EMAIL="${RAND}@${RAND}.com"
+  WP_EMAIL="${RAND_EMAIL}"
 fi
 
 EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
 
 if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
-  echo "Here we go"
+  echo -e "Great, here we go...\n---\n"
 else
   echo "Please enter a real email..."
   exit 1
 fi
-
-WP_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 
 # Create the directory
@@ -93,14 +105,17 @@ rm -rf .github
 composer install --ignore-platform-reqs
 
 
+# Create a Symlink for our LDE's
+# ---------------------------------------------
+ln -s web public
+
+
 # Install default Wordpress plugins
 # ---------------------------------------------
 composer require wpackagist-plugin/wordpress-seo
 composer require wpackagist-plugin/w3-total-cache
 composer require wpackagist-plugin/wp-migrate-db
 
-git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
-rm -rf web/app/plugins/advanced-custom-fields-wpcli/.git
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
 git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms
@@ -109,26 +124,12 @@ git clone https://github.com/wp-premium/gravityformscampaignmonitor.git web/app/
 rm -rf web/app/plugins/gravityformscampaignmonitor/.git
 
 
-# Install our theme
+# Create a Database
 # ---------------------------------------------
-git clone https://bitbucket.org/pvtl/wordpress-theme-boilerplate.git web/app/themes/pvtl
-cd web/app/themes/pvtl
-rm -rf .git
-
-# Build assets
-npm install
-npm run build
-
-# Setup for local dev
-cp config-default.yml config.yml
-sed -i 's,url: "",url: "'"$URL"'",g' config.yml
-
-cd $SITE_ROOT
-
-
-# Create a Symlink for our LDE's
-# ---------------------------------------------
-ln -s web public
+php -r '
+$conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
+mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
 
 # Create the .env file and setup DB connection
@@ -138,14 +139,6 @@ sed -i 's/database_name/'"$DIR_NAME"'/g' .env
 sed -i 's/database_user/'"$DB_USER"'/g' .env
 sed -i 's/database_password/'"$DB_PW"'\nDB_HOST='"$DB_HOST"'/g' .env
 sed -i 's,http://example.com,'"$URL"',g' .env
-
-
-# Create a Database
-# ---------------------------------------------
-php -r '
-$conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
-mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
 
 # Install Wordpress
@@ -160,15 +153,13 @@ wp core install \
   --allow-root
 
 
-# Set Wordpress config & activate theme/plugins
+# Set Wordpress config & activate plugins
 # ---------------------------------------------
 # URL structure
 wp rewrite structure /%category%/%postname%/ --allow-root
 wp rewrite flush --allow-root
 
 # Active theme and plugins
-wp theme activate pvtl --allow-root
-wp plugin activate advanced-custom-fields-wpcli --allow-root
 wp plugin activate advanced-custom-fields-pro --allow-root
 wp plugin activate gravityforms --allow-root
 wp plugin activate wordpress-seo --allow-root
@@ -183,8 +174,6 @@ wp option update page_for_posts 4 --allow-root
 # Create a couple of menus for the theme
 wp menu create "Main Menu" --allow-root
 wp menu create "Footer Menu" --allow-root
-wp menu location assign main-menu top-bar-r --allow-root
-wp menu location assign main-menu mobile-nav --allow-root
 wp menu item add-post main-menu 3 --allow-root
 wp menu item add-post main-menu 4 --allow-root
 wp menu item add-post main-menu 2 --allow-root
@@ -195,12 +184,42 @@ wp menu item add-post footer-menu 2 --allow-root
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
 
-# Import our ACF fields for the theme
-wp acf import --json_file=web/app/themes/pvtl/acf-fields.json --allow-root
 
-# Remove ACF CLI plugin - we don't need it anymore
-wp plugin deactivate advanced-custom-fields-wpcli --allow-root
-rm -rf web/app/plugins/advanced-custom-fields-wpcli
+# Install the Pivotal theme
+# ---------------------------------------------
+if [[ ${INSTALL_THEME} == 1 ]] ; then
+  git clone https://bitbucket.org/pvtl/wordpress-theme-boilerplate.git web/app/themes/pvtl
+  cd web/app/themes/pvtl
+  rm -rf .git
+
+  # Install ACF CLI (to enable us to install some default fields)
+  git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
+
+  # Build assets
+  npm install
+  npm run build
+
+  # Setup for local dev
+  cp config-default.yml config.yml
+  sed -i 's,url: "",url: "'"$URL"'",g' config.yml
+
+  # Activate Theme
+  wp theme activate pvtl --allow-root
+
+  # Assign header and footer menus to theme menu locations
+  wp menu location assign main-menu top-bar-r --allow-root
+  wp menu location assign main-menu mobile-nav --allow-root
+
+  # Import our ACF fields for the theme
+  wp plugin activate advanced-custom-fields-wpcli --allow-root
+  wp acf import --json_file=web/app/themes/pvtl/acf-fields.json --allow-root
+
+  # Remove ACF CLI plugin - we don't need it anymore
+  wp plugin deactivate advanced-custom-fields-wpcli --allow-root
+  rm -rf web/app/plugins/advanced-custom-fields-wpcli
+
+  cd $SITE_ROOT
+fi
 
 
 # Add the following to the .gitignore
@@ -297,14 +316,14 @@ EOF
 
 # Output the login details
 # ---------------------------------------------
-echo " "
-echo "- - - - - - - - - - - - - -"
+echo -e "${BLUE}\n - - - - - - - - - - - - - -"
 echo "Wordpress has been installed at: ${URL}"
 echo "- - -"
 echo "Login to Wordpress at: ${URL}/wp/wp-admin"
 echo "Your Wordpress username is: ${WP_USER}"
 echo "Your Wordpress password is: ${WP_PW}"
+echo "Your Wordpress admin email is: ${WP_EMAIL}"
 echo "- - -"
 echo "The site is located in: ${SITE_ROOT}"
 echo "The site is using database: ${DIR_NAME}"
-echo "- - - - - - - - - - - - - -"
+echo -e "- - - - - - - - - - - - - - ${RESET}"
