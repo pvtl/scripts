@@ -39,6 +39,13 @@ RAND=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 RAND_EMAIL="${RAND}@${RAND}.com"
 WP_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
+# Git Repo
+# echo -e "${BLUE}\n?? If you'd like to commit the repo straight to Git, input the repo's Git URL (otherwise leave it blank to NOT push to git): ${RESET}"
+# read -p "== " GIT_URL
+# if [[ -z "$GIT_URL" ]]; then
+#   GIT_URL=0
+# fi
+
 # Directory/DB Name
 echo -e "${BLUE}\n?? We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] ${RESET}"
 read -p "== " DIR_NAME
@@ -315,6 +322,18 @@ Simply update the plugin's version number (to the desired version) in `composer.
 
 Simply run `composer remove wpackagist-plugin/plugin-name`
 EOF
+
+
+# Add to Git
+# if [[ ${GIT_URL} != 0 ]] ; then
+#   git init && git add . && git commit -m 'init'
+#   git remote add origin $GIT_URL
+#   git push origin master
+#   git branch develop
+#   git checkout develop
+#   git push origin develop
+# fi
+
 
 # Output the login details
 # ---------------------------------------------
