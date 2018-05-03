@@ -34,10 +34,13 @@ URL="http://${DIR_NAME}.pub.localhost"
 DB_HOST="db"
 DB_USER="root"
 DB_PW="dbroot"
-RAND=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+RAND=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 ADMIN_USER="${RAND}@${RAND}.com"
 # ADMIN_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 # ADMIN_EMAIL="tech@pvtl.io"
+
+# Install prestissimo (parallel composer package downloads)
+composer global require hirak/prestissimo
 
 # Install Laravel
 # ---------------------------------------------
@@ -59,16 +62,16 @@ composer require tcg/voyager:1.0.17
 # Update the .env file
 # ---------------------------------------------
 cp .env.example .env
-sed -i 's,DB_HOST=127.0.0.1,DB_HOST='"$DB_HOST"',g' .env
-sed -i 's/DB_DATABASE=homestead/DB_DATABASE='"$DIR_NAME"'/g' .env
-sed -i 's/DB_USERNAME=homestead/DB_USERNAME='"$DB_USER"'/g' .env
-sed -i 's/DB_PASSWORD=secret/DB_PASSWORD='"$DB_PW"'/g' .env
-sed -i 's,APP_URL=http://localhost,APP_URL='"$URL"',g' .env
+sed -ie 's,DB_HOST=127.0.0.1,DB_HOST='"$DB_HOST"',g' .env
+sed -ie 's/DB_DATABASE=homestead/DB_DATABASE='"$DIR_NAME"'/g' .env
+sed -ie 's/DB_USERNAME=homestead/DB_USERNAME='"$DB_USER"'/g' .env
+sed -ie 's/DB_PASSWORD=secret/DB_PASSWORD='"$DB_PW"'/g' .env
+sed -ie 's,APP_URL=http://localhost,APP_URL='"$URL"',g' .env
 
-sed -i 's,MAIL_HOST=smtp.mailtrap.io,MAIL_HOST=mailhog,g' .env
-sed -i 's,MAIL_PORT=2525,MAIL_PORT=1025,g' .env
-sed -i 's,MAIL_USERNAME=null,MAIL_USERNAME=testuser,g' .env
-sed -i 's,MAIL_PASSWORD=null,MAIL_PASSWORD=testpwd,g' .env
+sed -ie 's,MAIL_HOST=smtp.mailtrap.io,MAIL_HOST=mailhog,g' .env
+sed -ie 's,MAIL_PORT=2525,MAIL_PORT=1025,g' .env
+sed -ie 's,MAIL_USERNAME=null,MAIL_USERNAME=testuser,g' .env
+sed -ie 's,MAIL_PASSWORD=null,MAIL_PASSWORD=testpwd,g' .env
 
 echo "SCOUT_DRIVER=tntsearch" >> .env
 
@@ -82,6 +85,11 @@ php artisan voyager:install
 # ---------------------------------------------
 composer require pvtl/voyager-pages
 php artisan voyager-pages:install
+
+# Install Voyager Blog
+# ---------------------------------------------
+composer require pvtl/voyager-blog
+php artisan voyager-blog:install
 
 # Install Voyager Front-end
 # ---------------------------------------------
