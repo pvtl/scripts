@@ -27,6 +27,8 @@
 # ---------------------------------------------
 RESET="\e[39m"
 BLUE="\e[34m"
+UNDERLINE="\e[4m"
+NO_UNDERLINE="\e[0m"
 
 
 # Site Config
@@ -50,6 +52,35 @@ DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].')
 DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
 
 URL="http://${DIR_NAME}.pub.localhost"
+
+# Install Pages module?
+echo -e "${BLUE}\n?? Install the ${UNDERLINE}Pages Module?${NO_UNDERLINE} [y/n] ${RESET}"
+read -p "== " INSTALL_PAGES
+[ "$INSTALL_PAGES" != "${INSTALL_PAGES#[Yy]}" ] && INSTALL_PAGES=1 || INSTALL_PAGES=0
+
+# Install Page Blocks module?
+if [[ ${INSTALL_PAGES} == 1 ]] ; then
+  echo -e "${BLUE}\n?? Install the ${UNDERLINE}Page Blocks Module?${NO_UNDERLINE} [y/n] ${RESET}"
+  read -p "== " INSTALL_PAGEBLOCKS
+fi
+[ "$INSTALL_PAGEBLOCKS" != "${INSTALL_PAGEBLOCKS#[Yy]}" ] && INSTALL_PAGEBLOCKS=1 || INSTALL_PAGEBLOCKS=0
+
+# Install Front-end module? (don't ask if pages isn't installed)
+if [[ ${INSTALL_PAGES} == 1 ]] ; then
+  echo -e "${BLUE}\n?? Install the ${UNDERLINE}Front-end Module?${NO_UNDERLINE} [y/n] ${RESET}"
+  read -p "== " INSTALL_FRONTEND
+fi
+[ "$INSTALL_FRONTEND" != "${INSTALL_FRONTEND#[Yy]}" ] && INSTALL_FRONTEND=1 || INSTALL_FRONTEND=0
+
+# Install Blog module?
+echo -e "${BLUE}\n?? Install the ${UNDERLINE}Blog Module?${NO_UNDERLINE} [y/n] ${RESET}"
+read -p "== " INSTALL_BLOG
+[ "$INSTALL_BLOG" != "${INSTALL_BLOG#[Yy]}" ] && INSTALL_BLOG=1 || INSTALL_BLOG=0
+
+# Install Forms module?
+echo -e "${BLUE}\n?? Install the ${UNDERLINE}Forms Module?${NO_UNDERLINE} [y/n] ${RESET}"
+read -p "== " INSTALL_FORMS
+[ "$INSTALL_FORMS" != "${INSTALL_FORMS#[Yy]}" ] && INSTALL_FORMS=1 || INSTALL_FORMS=0
 
 # Voyager Admin Email
 echo -e "${BLUE}\n?? Please enter an Email for the Voyager admin: [${RAND_EMAIL}] ${RESET}"
@@ -98,9 +129,9 @@ sed -i 's/DB_PASSWORD=secret/DB_PASSWORD='"$DB_PW"'/g' .env
 sed -i 's,APP_URL=http://localhost,APP_URL='"$URL"',g' .env
 
 sed -i 's,MAIL_HOST=smtp.mailtrap.io,MAIL_HOST=mailhog,g' .env
-sed -i 's,MAIL_PORT=2525,MAIL_PORT=1025,g' .env
-sed -i 's,MAIL_USERNAME=null,MAIL_USERNAME=testuser,g' .env
-sed -i 's,MAIL_PASSWORD=null,MAIL_PASSWORD=testpwd,g' .env
+sed -i 's/MAIL_PORT=2525/MAIL_PORT=1025/g' .env
+sed -i 's/MAIL_USERNAME=null/MAIL_USERNAME=testuser/g' .env
+sed -i 's/MAIL_PASSWORD=null/MAIL_PASSWORD=testpwd/g' .env
 
 echo "SCOUT_DRIVER=tntsearch" >> .env
 
@@ -114,34 +145,43 @@ php artisan voyager:install
 
 # Install Voyager Pages
 # ---------------------------------------------
-composer require pvtl/voyager-pages
-php artisan voyager-pages:install
-
-
-# Install Voyager Blog
-# ---------------------------------------------
-composer require pvtl/voyager-blog
-php artisan voyager-blog:install
+if [[ ${INSTALL_PAGES} == 1 ]] ; then
+  composer require pvtl/voyager-pages
+  php artisan voyager-pages:install
+fi
 
 
 # Install Voyager Front-end
 # ---------------------------------------------
-composer require pvtl/voyager-frontend
-composer dump-autoload && php artisan voyager-frontend:install
-npm install && npm run dev
+if [[ ${INSTALL_FRONTEND} == 1 ]] ; then
+  composer require pvtl/voyager-frontend
+  composer dump-autoload && php artisan voyager-frontend:install
+  npm install && npm run dev
+fi
 
 
 # Install Voyager Page Blocks
 # ---------------------------------------------
-composer require pvtl/voyager-page-blocks
-php artisan voyager-page-blocks:install
+if [[ ${INSTALL_PAGEBLOCKS} == 1 ]] ; then
+  composer require pvtl/voyager-page-blocks
+  php artisan voyager-page-blocks:install
+fi
+
+
+# Install Voyager Blog
+# ---------------------------------------------
+if [[ ${INSTALL_BLOG} == 1 ]] ; then
+  composer require pvtl/voyager-blog
+  php artisan voyager-blog:install
+fi
 
 
 # Install Voyager Forms
 # ---------------------------------------------
-composer require pvtl/voyager-forms
-composer dump-autoload && php artisan voyager-forms:install
-
+if [[ ${INSTALL_FORMS} == 1 ]] ; then
+  composer require pvtl/voyager-forms
+  composer dump-autoload && php artisan voyager-forms:install
+fi
 
 # Update the Readme
 # ---------------------------------------------
@@ -164,8 +204,7 @@ php artisan voyager:admin $ADMIN_USER --create
 
 # Output the login details
 # ---------------------------------------------
-echo " "
-echo "- - - - - - - - - - - - - -"
+echo -e "${BLUE}\n - - - - - - - - - - - - - -"
 echo "Voyager has been installed at: ${URL}"
 echo "- - -"
 echo "Login to the Admin at: ${URL}/admin"
@@ -173,4 +212,4 @@ echo "Your Voyager username is: ${ADMIN_USER}"
 echo "- - -"
 echo "The site is located in: ${SITE_ROOT}"
 echo "The site is using database: ${DIR_NAME}"
-echo "- - - - - - - - - - - - - -"
+echo -e "- - - - - - - - - - - - - - ${RESET}"
