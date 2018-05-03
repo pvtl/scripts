@@ -5,6 +5,7 @@
 - Unix
 - Git
 - Node & NPM
+- PHP
 - Composer
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
 

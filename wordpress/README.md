@@ -5,6 +5,7 @@
 - Unix
 - Git
 - Node & NPM
+- PHP
 - Composer
 - WP-cli
 - The Pivotal WP theme requires `gulp-cli` NPM module installed globally
