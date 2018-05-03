@@ -23,30 +23,57 @@
 #
 #
 
-# Config
+# Variables
 # ---------------------------------------------
-echo "•• We'll create a new directory for the project. What shall we call it? (eg. voyager)"
-read DIR_NAME
+RESET="\e[39m"
+BLUE="\e[34m"
 
-DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].')
-DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
-URL="http://${DIR_NAME}.pub.localhost"
+
+# Site Config
+# ---------------------------------------------
+# DB Details
 DB_HOST="db"
 DB_USER="root"
 DB_PW="dbroot"
-RAND=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
-ADMIN_USER="${RAND}@${RAND}.com"
-# ADMIN_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-# ADMIN_EMAIL="tech@pvtl.io"
 
-# Install prestissimo (parallel composer package downloads)
-composer global require hirak/prestissimo
+RAND=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
+RAND_EMAIL="${RAND}@${RAND}.com"
+
+# Directory/DB Name
+echo -e "${BLUE}\n?? We'll create a new directory & DB for the project. What shall we call them? [voyager${RAND}] ${RESET}"
+read -p "== " DIR_NAME
+if [[ -z "$DIR_NAME" ]]; then
+  DIR_NAME="voyager${RAND}"
+fi
+
+DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].')
+DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
+
+URL="http://${DIR_NAME}.pub.localhost"
+
+# Voyager Admin Email
+echo -e "${BLUE}\n?? Please enter an Email for the Voyager admin: [${RAND_EMAIL}] ${RESET}"
+read -p "== " ADMIN_USER
+if [[ -z "$ADMIN_USER" ]]; then
+  ADMIN_USER="${RAND_EMAIL}"
+fi
+
+EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
+
+if [[ ${ADMIN_USER} =~ ${EMAIL_FORMAT} ]] ; then
+  echo -e "Great, here we go...\n---\n"
+else
+  echo "Please enter a real email..."
+  exit 1
+fi
+
 
 # Install Laravel
 # ---------------------------------------------
 composer create-project --prefer-dist laravel/laravel $DIR_NAME "5.5.*"
 cd $DIR_NAME
 SITE_ROOT="$(pwd)"
+
 
 # Create a Database
 # ---------------------------------------------
@@ -55,41 +82,47 @@ $conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
 mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 ' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
+
 # Require Voyager
 # ---------------------------------------------
 composer require tcg/voyager:1.0.17
 
+
 # Update the .env file
 # ---------------------------------------------
 cp .env.example .env
-sed -ie 's,DB_HOST=127.0.0.1,DB_HOST='"$DB_HOST"',g' .env
-sed -ie 's/DB_DATABASE=homestead/DB_DATABASE='"$DIR_NAME"'/g' .env
-sed -ie 's/DB_USERNAME=homestead/DB_USERNAME='"$DB_USER"'/g' .env
-sed -ie 's/DB_PASSWORD=secret/DB_PASSWORD='"$DB_PW"'/g' .env
-sed -ie 's,APP_URL=http://localhost,APP_URL='"$URL"',g' .env
+sed -i 's,DB_HOST=127.0.0.1,DB_HOST='"$DB_HOST"',g' .env
+sed -i 's/DB_DATABASE=homestead/DB_DATABASE='"$DIR_NAME"'/g' .env
+sed -i 's/DB_USERNAME=homestead/DB_USERNAME='"$DB_USER"'/g' .env
+sed -i 's/DB_PASSWORD=secret/DB_PASSWORD='"$DB_PW"'/g' .env
+sed -i 's,APP_URL=http://localhost,APP_URL='"$URL"',g' .env
 
-sed -ie 's,MAIL_HOST=smtp.mailtrap.io,MAIL_HOST=mailhog,g' .env
-sed -ie 's,MAIL_PORT=2525,MAIL_PORT=1025,g' .env
-sed -ie 's,MAIL_USERNAME=null,MAIL_USERNAME=testuser,g' .env
-sed -ie 's,MAIL_PASSWORD=null,MAIL_PASSWORD=testpwd,g' .env
+sed -i 's,MAIL_HOST=smtp.mailtrap.io,MAIL_HOST=mailhog,g' .env
+sed -i 's,MAIL_PORT=2525,MAIL_PORT=1025,g' .env
+sed -i 's,MAIL_USERNAME=null,MAIL_USERNAME=testuser,g' .env
+sed -i 's,MAIL_PASSWORD=null,MAIL_PASSWORD=testpwd,g' .env
 
 echo "SCOUT_DRIVER=tntsearch" >> .env
 
 php artisan key:generate
 
+
 # Run the Voyager Installer
 # ---------------------------------------------
 php artisan voyager:install
+
 
 # Install Voyager Pages
 # ---------------------------------------------
 composer require pvtl/voyager-pages
 php artisan voyager-pages:install
 
+
 # Install Voyager Blog
 # ---------------------------------------------
 composer require pvtl/voyager-blog
 php artisan voyager-blog:install
+
 
 # Install Voyager Front-end
 # ---------------------------------------------
@@ -97,20 +130,18 @@ composer require pvtl/voyager-frontend
 composer dump-autoload && php artisan voyager-frontend:install
 npm install && npm run dev
 
+
 # Install Voyager Page Blocks
 # ---------------------------------------------
 composer require pvtl/voyager-page-blocks
 php artisan voyager-page-blocks:install
+
 
 # Install Voyager Forms
 # ---------------------------------------------
 composer require pvtl/voyager-forms
 composer dump-autoload && php artisan voyager-forms:install
 
-# Install Voyager Blog
-# ---------------------------------------------
-# composer require pvtl/voyager-posts
-# php artisan voyager-posts:install
 
 # Update the Readme
 # ---------------------------------------------
