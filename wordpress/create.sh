@@ -61,11 +61,7 @@ URL="http://${DIR_NAME}.pub.localhost"
 # Install Pivotal Theme?
 echo -e "${BLUE}\n?? Would you like the Pivotal theme installed? [y/n] ${RESET}"
 read -p "== " INSTALL_THEME
-if [ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] ;then
-    INSTALL_THEME=1
-else
-    INSTALL_THEME=0
-fi
+[ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] && INSTALL_THEME=1 || INSTALL_THEME=0
 
 # Wordpress Username
 echo -e "${BLUE}\n?? Please enter the Wordpress Admin username: [user${RAND}] ${RESET}"
