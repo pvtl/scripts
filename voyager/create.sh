@@ -101,7 +101,7 @@ fi
 
 # Install Laravel
 # ---------------------------------------------
-composer create-project --prefer-dist laravel/laravel $DIR_NAME "5.5.*"
+composer create-project --prefer-dist laravel/laravel $DIR_NAME "5.6.*"
 cd $DIR_NAME
 SITE_ROOT="$(pwd)"
 
@@ -116,7 +116,7 @@ mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLL
 
 # Require Voyager
 # ---------------------------------------------
-composer require tcg/voyager:1.0.17
+composer require tcg/voyager
 
 
 # Update the .env file
