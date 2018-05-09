@@ -194,17 +194,6 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Activate Theme
   wp theme activate pvtl --allow-root
 
-  # Install ACF CLI (to enable us to install some default fields)
-  git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
-
-  # Import our ACF fields for the theme
-  wp plugin activate advanced-custom-fields-wpcli --allow-root
-  wp acf import --json_file=web/app/themes/pvtl/acf-fields.json --allow-root
-
-  # Remove ACF CLI plugin - we don't need it anymore
-  wp plugin deactivate advanced-custom-fields-wpcli --allow-root
-  rm -rf web/app/plugins/advanced-custom-fields-wpcli
-
   # Import content
   wp plugin install wordpress-importer --activate --allow-root
   curl -O https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/wordpress-export.xml
@@ -236,6 +225,17 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Add some footer widgets
   wp widget add nav_menu footer-widgets-1 1 --title="Quick Nav" --nav_menu="2" --allow-root
   wp widget add nav_menu footer-widgets-2 1 --title="Terms" --nav_menu="3" --allow-root
+
+  # Install ACF CLI (to enable us to install some default fields)
+  git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
+
+  # Import our ACF fields for the theme
+  wp plugin activate advanced-custom-fields-wpcli --allow-root
+  wp acf import --json_file=web/app/themes/pvtl/acf-fields.json --allow-root
+
+  # Remove ACF CLI plugin - we don't need it anymore
+  wp plugin deactivate advanced-custom-fields-wpcli --allow-root
+  rm -rf web/app/plugins/advanced-custom-fields-wpcli
 fi
 
 
