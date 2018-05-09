@@ -170,26 +170,6 @@ wp plugin activate advanced-custom-fields-pro --allow-root
 wp plugin activate gravityforms --allow-root
 wp plugin activate wordpress-seo --allow-root
 
-# Setup Pages - home to be home page
-wp post create --post_type=page --post_title='Home' --post_date='2017-12-01 07:00:00' --post_status='publish' --allow-root
-wp post create --post_type=page --post_title='Blog' --post_date='2017-12-01 07:00:00' --post_status='publish' --allow-root
-wp post create --post_type=page --post_title='Contact' --post_date='2017-12-01 07:00:00' --post_status='publish' --allow-root
-wp option update show_on_front 'page' --allow-root
-wp option update page_on_front 3 --allow-root
-wp option update page_for_posts 4 --allow-root
-
-# Create a couple of menus for the theme
-wp menu create "Main Menu" --allow-root
-wp menu create "Footer Menu" --allow-root
-wp menu item add-post main-menu 3 --allow-root
-wp menu item add-post main-menu 4 --allow-root
-wp menu item add-post main-menu 2 --allow-root
-wp menu item add-post main-menu 5 --allow-root
-wp menu item add-post footer-menu 3 --allow-root
-wp menu item add-post footer-menu 4 --allow-root
-wp menu item add-post footer-menu 2 --allow-root
-wp menu item add-post footer-menu 5 --allow-root
-
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
 
@@ -214,10 +194,6 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Activate Theme
   wp theme activate pvtl --allow-root
 
-  # Assign header and footer menus to theme menu locations
-  wp menu location assign main-menu top-bar-r --allow-root
-  wp menu location assign main-menu mobile-nav --allow-root
-
   # Install ACF CLI (to enable us to install some default fields)
   git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
 
@@ -229,14 +205,37 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   wp plugin deactivate advanced-custom-fields-wpcli --allow-root
   rm -rf web/app/plugins/advanced-custom-fields-wpcli
 
-  # Add some footer widgets
-  wp widget add nav_menu footer-widgets-1 1 --title="Quick Nav" --nav_menu="2" --allow-root
-  wp widget add nav_menu footer-widgets-2 1 --title="Terms" --nav_menu="3" --allow-root
-
-  # Import some content
+  # Import content
+  wp plugin install wordpress-importer --activate --allow-root
   curl -O https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/wordpress-export.xml
   sed -i 's,http://wordpress.pub.localhost,'"$URL"',g' wordpress-export.xml
   wp import wordpress-export.xml --authors="skip" --allow-root
+  wp plugin deactivate wordpress-importer --allow-root
+
+  # Setup the home/blog pages - 2=sample 3=home 4=blog 5=contact
+  wp option update show_on_front 'page' --allow-root
+  wp option update page_on_front 3 --allow-root
+  wp option update page_for_posts 4 --allow-root
+
+  # Create a couple of menus for the theme
+  wp menu create "Main Menu" --allow-root
+  wp menu create "Footer Menu" --allow-root
+  wp menu item add-post main-menu 3 --allow-root
+  wp menu item add-post main-menu 4 --allow-root
+  wp menu item add-post main-menu 2 --allow-root
+  wp menu item add-post main-menu 5 --allow-root
+  wp menu item add-post footer-menu 3 --allow-root
+  wp menu item add-post footer-menu 4 --allow-root
+  wp menu item add-post footer-menu 2 --allow-root
+  wp menu item add-post footer-menu 5 --allow-root
+
+  # Assign header and footer menus to theme menu locations
+  wp menu location assign main-menu top-bar-r --allow-root
+  wp menu location assign main-menu mobile-nav --allow-root
+
+  # Add some footer widgets
+  wp widget add nav_menu footer-widgets-1 1 --title="Quick Nav" --nav_menu="2" --allow-root
+  wp widget add nav_menu footer-widgets-2 1 --title="Terms" --nav_menu="3" --allow-root
 fi
 
 
