@@ -173,6 +173,7 @@ wp plugin activate wordpress-seo --allow-root
 # Setup Pages - home to be home page
 wp post create --post_type=page --post_title='Home' --post_date='2017-12-01 07:00:00' --post_status='publish' --allow-root
 wp post create --post_type=page --post_title='Blog' --post_date='2017-12-01 07:00:00' --post_status='publish' --allow-root
+wp post create --post_type=page --post_title='Contact' --post_date='2017-12-01 07:00:00' --post_status='publish' --allow-root
 wp option update show_on_front 'page' --allow-root
 wp option update page_on_front 3 --allow-root
 wp option update page_for_posts 4 --allow-root
@@ -183,9 +184,11 @@ wp menu create "Footer Menu" --allow-root
 wp menu item add-post main-menu 3 --allow-root
 wp menu item add-post main-menu 4 --allow-root
 wp menu item add-post main-menu 2 --allow-root
+wp menu item add-post main-menu 5 --allow-root
 wp menu item add-post footer-menu 3 --allow-root
 wp menu item add-post footer-menu 4 --allow-root
 wp menu item add-post footer-menu 2 --allow-root
+wp menu item add-post footer-menu 5 --allow-root
 
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
@@ -225,6 +228,15 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Remove ACF CLI plugin - we don't need it anymore
   wp plugin deactivate advanced-custom-fields-wpcli --allow-root
   rm -rf web/app/plugins/advanced-custom-fields-wpcli
+
+  # Add some footer widgets
+  wp widget add nav_menu footer-widgets-1 1 --title="Quick Nav" --nav_menu="2" --allow-root
+  wp widget add nav_menu footer-widgets-2 1 --title="Terms" --nav_menu="3" --allow-root
+
+  # Import some content
+  curl -O https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/wordpress-export.xml
+  sed -i 's,http://wordpress.pub.localhost,'"$URL"',g' wordpress-export.xml
+  wp import wordpress-export.xml --allow-root
 fi
 
 
