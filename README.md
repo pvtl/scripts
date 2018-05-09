@@ -9,5 +9,5 @@ The following scripts are how we at [Pivotal Agency](https://www.pivotalagency.c
 It's ok if you use different config or want different plugins - feel free to fork this repo and make them your own. We hope you'll benefit from our templates.
 
 - [Wordpress](/wordpress)
+- [Voyager](/voyager)
 - Magento2 (coming soon...)
-- Voyager (coming soon...)
