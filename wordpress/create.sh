@@ -200,6 +200,10 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   sed -i 's,http://wordpress.pub.localhost,'"$URL"',g' wordpress-export.xml
   wp import wordpress-export.xml --authors="skip" --allow-root
   wp plugin deactivate wordpress-importer --allow-root
+  rm -rf web/app/plugins/wordpress-importer
+
+  # Set the kitchen-sink template on default sample page
+  wp post update 2 --page_template='page-templates/kitchen-sink.php' --allow-root
 
   # Setup the home/blog pages - 2=sample 3=home 4=blog 5=contact
   wp option update show_on_front 'page' --allow-root
