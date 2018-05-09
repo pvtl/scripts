@@ -287,13 +287,14 @@ cp .env.example .env
 
 #### 3. Import the DB
 
-Once imported: update `siteurl` and `home` in the `wp_options` table + scrub any sensitive data (eg. customer info, credit card tokens etc).
+Once imported: scrub any sensitive data (eg. customer info, credit card tokens etc).
 
-#### 4. Enable Browsersync
+#### 4. Install dependencies (composer, npm)
 ```bash
-cp web/app/themes/pvtl/config-default.yml web/app/themes/pvtl/config.yml
+composer install --ignore-platform-reqs
+( cd web/app/themes/pvtl ; npm install )
+( cd web/app/themes/pvtl ; npm run build )
 ```
-_Then update `BROWSERSYNC` > `url` to be your site's Wordpress URL_
 
 ---
 
@@ -306,6 +307,8 @@ Working in the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-d
 - You'll need `DB_HOST=db` in your `.env`
 - You'll need to create a symlink of `/public` to `/web` (`ln -s web public`)
 - Your Hostname will need to be {website}__.pub.localhost__ (note the `.pub`)
+- Enable Browsersync - `cp web/app/themes/pvtl/config-default.yml web/app/themes/pvtl/config.yml`
+    - _Then update `BROWSERSYNC` > `url` to be your site's Wordpress URL_
 
 ### Theme Development
 
@@ -314,6 +317,7 @@ To compile theme assets, the following commands can be used from within the them
 | Command | Description |
 | --- | --- |
 | `npm start` | Watch/compile assets & start Browsersync (*to use Browsersync, you must run `npm i && npm start` from outside of the Docker container) |
+| `npm run dev` | Compile assets for dev |
 | `npm run build` | Compile assets for production |
 
 ---
