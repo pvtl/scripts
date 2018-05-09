@@ -236,7 +236,7 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Import some content
   curl -O https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/wordpress-export.xml
   sed -i 's,http://wordpress.pub.localhost,'"$URL"',g' wordpress-export.xml
-  wp import wordpress-export.xml --allow-root
+  wp import wordpress-export.xml --authors="skip" --allow-root
 fi
 
 

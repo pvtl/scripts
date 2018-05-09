@@ -7,6 +7,15 @@
 	xmlns:wp="http://wordpress.org/export/1.2/"
 >
 <channel>
+  <title>Wordpress</title>
+  <link>http://wordpress.pub.localhost</link>
+  <description>Just another WordPress site</description>
+  <pubDate>Wed, 09 May 2018 03:45:00 +0000</pubDate>
+  <language>en-US</language>
+  <wp:wxr_version>1.2</wp:wxr_version>
+  <wp:base_site_url>http://wordpress.pub.localhost</wp:base_site_url>
+  <wp:base_blog_url>http://wordpress.pub.localhost</wp:base_blog_url>
+
 	<item>
 		<title>Sample Page</title>
 		<link>http://wordpress.pub.localhost/sample-page/</link>
