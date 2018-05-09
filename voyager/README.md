@@ -5,7 +5,7 @@
 - Unix
 - Git
 - Node & NPM
-- PHP
+- PHP >= 7.1.3
 - Composer
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
 
