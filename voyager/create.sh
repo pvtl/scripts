@@ -189,13 +189,44 @@ rm README.md
 cat << 'EOF' >> README.md
 # A Voyager Project by Pivotal Agency
 
-## Installation
+## Install / Upgrade
 
-- Clone this repo
-- Import a copy of the DB to your environment
-- Copy `.env.example` to `.env` and add your environment's settings
-- Generate a key - `php artisan key:generate`
-- Run `composer install` from the project root
+1. Clone this repo
+1. Copy `.env.example` to `.env` and add your environment's settings
+
+From the project root folder, run:
+
+```
+composer install
+npm install
+php artisan key:generate
+npm run dev
+```
+
+Finally, either import a copy of the DB into your environment (along with the `APP_KEY` variable from `.env`) or run these commands to setup a fresh DB:
+
+```
+php artisan migrate
+php artisan db:seed
+```
+
+---
+
+## Admin Backend
+
+You can access the admin backend from `<domain>/admin`.
+
+New admin accounts can be created using:
+
+```
+php artisan voyager:admin --create
+```
+
+---
+
+## Contributing
+
+Please ensure your code editor is setup to use and respect the settings in the `.editorconfig` file. This may involve installing a plugin for your editor.
 EOF
 
 # Create a Voyager Admin
