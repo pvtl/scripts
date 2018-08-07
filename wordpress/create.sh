@@ -113,6 +113,11 @@ composer install --ignore-platform-reqs
 ln -s web public
 
 
+# Add Pivotal composer repo
+# ---------------------------------------------
+composer config repositories.wp-update-watcher git https://bitbucket.org/pvtl/wp-update-watcher
+
+
 # Install default Wordpress plugins
 # ---------------------------------------------
 composer require wpackagist-plugin/wordpress-seo
@@ -121,6 +126,7 @@ composer require wpackagist-plugin/wp-migrate-db
 composer require wpackagist-plugin/admin-menu-editor
 composer require wpackagist-plugin/better-wp-security
 composer require wpackagist-plugin/custom-post-type-ui
+composer require pvtl/wp-update-watcher
 
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
@@ -252,6 +258,9 @@ echo '
 *.log
 error_log
 error_log_dev
+
+# Ignore LDE symlink
+public
 
 # W3Total Cache
 web/app/cache
