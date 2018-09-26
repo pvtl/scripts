@@ -126,6 +126,7 @@ composer require wpackagist-plugin/wp-migrate-db
 composer require wpackagist-plugin/admin-menu-editor
 composer require wpackagist-plugin/better-wp-security
 composer require wpackagist-plugin/custom-post-type-ui
+composer require wpackagist-plugin/simple-custom-post-order
 composer require pvtl/wp-update-watcher
 
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
@@ -175,6 +176,7 @@ wp rewrite flush --allow-root
 wp plugin activate advanced-custom-fields-pro --allow-root
 wp plugin activate gravityforms --allow-root
 wp plugin activate wordpress-seo --allow-root
+wp plugin activate simple-custom-post-order --allow-root
 
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
