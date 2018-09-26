@@ -25,6 +25,7 @@ Installs a fresh version of Wordpress with the following:
     - [Yoast SEO*](https://wordpress.org/plugins/wordpress-seo/)
     - [Advanced Custom Fields Pro*](https://www.advancedcustomfields.com/pro/)
     - [Gravity Forms*](https://www.gravityforms.com/)
+    - [Simple Custom Post Order*](https://wordpress.org/plugins/simple-custom-post-order/)
     - [Campaign Monitor for Gravity Forms](https://www.gravityforms.com/add-ons/campaign-monitor/)
     - [W3 Total Cache](https://wordpress.org/plugins/w3-total-cache/)
     - [WP Migrate DB](https://wordpress.org/plugins/wp-migrate-db/)
