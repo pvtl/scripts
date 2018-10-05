@@ -32,7 +32,7 @@ BLUE="\e[34m"
 # Site Config
 # ---------------------------------------------
 # DB Details
-DB_HOST="db"
+DB_HOST="mysql"
 DB_USER="root"
 DB_PW="dbroot"
 RAND=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
