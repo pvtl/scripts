@@ -263,6 +263,15 @@ fi
 # Create a .htaccess file for permalinks
 # ---------------------------------------------
 echo '
+<IfModule mod_rewrite.c>
+  #### If URL is not XYZ, then redirect to XYZ
+  # RewriteCond %{HTTP_HOST} !^example\.com
+  # RewriteRule ^(.*)$ https://example.com/$1 [R=301,L]
+
+  #### Permanent page redirects
+  # RewriteRule ^old-url?$ /new-url [R=301]
+</IfModule>
+
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
   RewriteEngine On
