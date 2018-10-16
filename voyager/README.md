@@ -30,7 +30,7 @@ Installs a fresh version of Voyager with the following:
 
 ### 🚀 Usage
 
-Whilst SSH'd into the Docker `web` container (`docker exec -it web bash`), browsed to `/var/www/html`, simply run:
+Whilst SSH'd into the Docker `php71` container (`docker exec -it php71 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/voyager/create.sh -L)
