@@ -113,9 +113,10 @@ composer install --ignore-platform-reqs
 ln -s web public
 
 
-# Add Pivotal composer repo
+# Add Pivotal composer repos
 # ---------------------------------------------
 composer config repositories.wp-update-watcher git https://bitbucket.org/pvtl/wp-update-watcher
+composer config repositories.wp-button-shortcode git https://github.com/pvtl/wp-button-shortcode
 
 
 # Install default Wordpress plugins
@@ -128,8 +129,12 @@ composer require wpackagist-plugin/better-wp-security
 composer require wpackagist-plugin/custom-post-type-ui
 composer require wpackagist-plugin/simple-custom-post-order
 composer require wpackagist-plugin/duplicate-post
-composer require pvtl/wp-update-watcher
 
+# Plugins outside of wpackagist
+composer require pvtl/wp-update-watcher
+composer require pvtl/wp-button-shortcode
+
+# We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
 git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms
