@@ -182,7 +182,10 @@ wp rewrite flush --allow-root
 wp plugin activate advanced-custom-fields-pro --allow-root
 wp plugin activate gravityforms --allow-root
 wp plugin activate wordpress-seo --allow-root
+wp plugin activate admin-menu-editor --allow-root
 wp plugin activate simple-custom-post-order --allow-root
+wp plugin activate duplicate-post --allow-root
+wp plugin activate wp-button-shortcode --allow-root
 
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
