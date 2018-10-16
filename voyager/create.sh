@@ -34,7 +34,7 @@ NO_UNDERLINE="\e[0m"
 # Site Config
 # ---------------------------------------------
 # DB Details
-DB_HOST="db"
+DB_HOST="mysql"
 DB_USER="root"
 DB_PW="dbroot"
 
