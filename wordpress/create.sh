@@ -200,8 +200,8 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   rm -rf .git
 
   # Build assets
-  npm install
-  npm run build
+  yarn
+  yarn production
 
   # Setup for local dev
   cp config-default.yml config.yml
@@ -337,8 +337,8 @@ Once imported: scrub any sensitive data (eg. customer info, credit card tokens e
 #### 4. Install dependencies (composer, npm)
 ```bash
 composer install --ignore-platform-reqs
-( cd web/app/themes/pvtl ; npm install )
-( cd web/app/themes/pvtl ; npm run build )
+( cd web/app/themes/pvtl ; yarn )
+( cd web/app/themes/pvtl ; yarn production )
 ```
 
 ---
@@ -361,9 +361,10 @@ To compile theme assets, the following commands can be used from within the them
 
 | Command | Description |
 | --- | --- |
-| `npm start` | Watch/compile assets & start Browsersync (*to use Browsersync, you must run `npm i && npm start` from outside of the Docker container) |
-| `npm run dev` | Compile assets for dev |
-| `npm run build` | Compile assets for production |
+| `yarn dev` | Compiles/copies assets to /dist |
+| `yarn watch` | Watches your directory and compiles/copies assets to /dist each time you press save on a SCSS or JS file. Uses LiveReload to automatically inject assets into any open browser. Note that it polls a live reload server on port 3000. |
+| `yarn production` | Compiles/minifies/copies assets to /dist ready for production |
+| `yarn lint-js` | Provides a report on your JS, against the code styleguide |
 
 ---
 
