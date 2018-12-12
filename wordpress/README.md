@@ -30,6 +30,7 @@ Installs a fresh version of Wordpress with the following:
     - [Admin Menu Editor](https://wordpress.org/plugins/admin-menu-editor/)
     - [Better WP Security](https://wordpress.org/plugins/better-wp-security/)
     - [Campaign Monitor for Gravity Forms](https://www.gravityforms.com/add-ons/campaign-monitor/)
+    - [Disable Gutenburg](https://wordpress.org/plugins/disable-gutenberg/)
     - [Update Watcher](https://bitbucket.org/pvtl/wp-update-watcher)
     - [W3 Total Cache](https://wordpress.org/plugins/w3-total-cache/)
     - [WP Migrate DB](https://wordpress.org/plugins/wp-migrate-db/)

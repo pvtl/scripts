@@ -129,6 +129,7 @@ composer require wpackagist-plugin/better-wp-security
 composer require wpackagist-plugin/custom-post-type-ui
 composer require wpackagist-plugin/simple-custom-post-order
 composer require wpackagist-plugin/duplicate-post
+composer require wpackagist-plugin/disable-gutenberg
 
 # Plugins outside of wpackagist
 composer require pvtl/wp-update-watcher
