@@ -170,27 +170,46 @@ done
 # Stage and Deploy
 # ---------------------------------------------
 # A bit of bants
-echo -e "${FORMAT_MESSAGE}\n  ➤  Deploying...please be patient, it may take some time..."
+echo -e "${FORMAT_MESSAGE}\n  ➤  Deploying...please be patient, it may take 5-10mins..."
 sleep 1
 echo -e "     While you're waiting...Go and setup the Database and import the SQL"
 sleep 1
 echo -e "     - I'll ask you for DB credentials in a few minutes (you better be ready for it).${RESET_FORMATTING}"
 
 # The deploy may take some time due to pre/post-hook tasks like composer install
-curl -X GET "${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}&deploy" \
-  --max-time 900 \
-  --connect-timeout 60 \
-  --silent > /dev/null
+function do_deploy() {
+  curl -X GET "${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}&deploy" \
+    --max-time 60 \
+    --connect-timeout 60 \
+    --silent > /dev/null
+
+  echo "..."
+}
+do_deploy
 
 # We may get a gateway timeout when things (eg. composer) take too long.
-# So we'll pause time until index.php exists
+# So we'll pause until index.php exists
 DEPLOY_FINISHED=0
+DEPLOY_TIMER=0
+DEPLOY_TIMER_MAX=240
+
 while [ $DEPLOY_FINISHED != 1 ]; do
   sleep 5
   [ ! -f "${DIR_NAME}/index.php" ] && DEPLOY_FINISHED=0 || DEPLOY_FINISHED=1
+
+  # We don't want this going on forever - try deploying again (which will use some cache)
+  if (( $DEPLOY_TIMER > $DEPLOY_TIMER_MAX )); then
+    # To prevent it going over and over
+    DEPLOY_FINISHED=1
+    echo "Retrying..."
+    do_deploy
+    sleep 120
+  fi
+
+  # Increment by the same as sleep
+  DEPLOY_TIMER=$((DEPLOY_TIMER+5))
 done
 
-echo -e "${FORMAT_SUCCESS}\n  ✓  Code deployed.${RESET_FORMATTING}"
 
 # Browse to the project root
 # - opposed to the symlinked public dir
@@ -206,6 +225,8 @@ if [ ! -f ".env.example" ]; then
   echo "Please deploy manually:"
   echo -e " -  ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}${RESET_FORMATTING}"
   exit 1
+else
+  echo -e "${FORMAT_SUCCESS}\n  ✓  Code deployed.${RESET_FORMATTING}"
 fi
 
 cp .env.example .env
