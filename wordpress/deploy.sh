@@ -25,14 +25,28 @@
 
 # Variables
 # ---------------------------------------------
-RESET="\e[39m"
-BLUE="\e[34m"
-DEPLOY_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1)
+RESET_FORMATTING="\e[49m\e[39m"
+FORMAT_QUESTION="\e[44m\e[30m"
+FORMAT_MESSAGE="\e[43m\e[30m"
+FORMAT_SUCCESS="\e[102m\e[30m"
+FORMAT_ERROR="\e[41m\e[30m"
 PWD=$(pwd)
+# DEPLOY_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1)
+
+# WP Secrets
+WP_AUTH_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+WP_SECURE_AUTH_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+WP_LOGGED_IN_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+WP_NONCE_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+WP_AUTH_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+WP_SECURE_AUTH_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+WP_LOGGED_IN_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
+WP_NONCE_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 
 # Directory to deploy to
   # Defaults to PWD/public_html
-echo -e "${BLUE}\n?? Where should we deploy to? [${PWD}/public_html] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  Which directory should we deploy to?"
+echo -e "     Default: ${PWD}/public_html${RESET_FORMATTING}"
 read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="${PWD}/public_html"
@@ -45,35 +59,38 @@ fi
 
 # Asks for the publicly accessible URL (used to CURL the deploy script)
   # Quit if nothing input
-echo -e "${BLUE}\n?? What's the publicly accessible URL of the site? (note: include http:// and NO trailing slash) ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  What's the publicly accessible URL of the site?"
+echo -e "     Note: include http:// and NO trailing slash${RESET_FORMATTING}"
 read -p "== " PUBLIC_SITE_URL
 
 URL_FORMAT='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 
 if [[ ${PUBLIC_SITE_URL} =~ ${URL_FORMAT} ]] ; then
-  DEPLOY_SCRIPT_URL="${PUBLIC_SITE_URL}/deploy.php?key=${DEPLOY_KEY}"
+  DEPLOY_SCRIPT_URL="${PUBLIC_SITE_URL}/deploy.php"
 else
-  echo "Please enter a real URL..."
+  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real URL...${RESET_FORMATTING}"
   exit 1
 fi
 
 # Asks for the Git repo URL of the project
   # Quit if nothing input
-echo -e "${BLUE}\n?? What's URL to access the Git repo? (note: use the git version of the URL) ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  What's the URL to access the Git repo?"
+echo -e "     Note: use the GIT version of the URL${RESET_FORMATTING}"
 read -p "== " GIT_REPO_URL
 
 GIT_URL_FORMAT='git@[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 
 if [[ ${GIT_REPO_URL} =~ ${GIT_URL_FORMAT} ]] ; then
-  echo -e "\n"
+  echo -e ""
 else
-  echo "Please enter a real URL..."
+  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real URL...${RESET_FORMATTING}"
   exit 1
 fi
 
 # Asks for the branch to deploy
   # Defaults to master
-echo -e "${BLUE}\n?? What Git branch would you like to use? [master] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  What Git branch would you like to use?"
+echo -e "     Default: master${RESET_FORMATTING}"
 read -p "== " GIT_BRANCH
 if [[ -z "$GIT_BRANCH" ]]; then
   GIT_BRANCH="master"
@@ -89,38 +106,148 @@ cd ${DIR_NAME}
 git config --global http.sslVerify false
 git clone https://bitbucket.org/pvtl/deploy-script.git deploy_tmp
 
+  # Exit if it didn't clone
+if [ ! -d "deploy_tmp" ]; then
+  echo -e "${FORMAT_ERROR}  ⚠  Git clone failed${RESET_FORMATTING}"
+  exit 1
+fi
+
 # Puts both deploy.php and config (as deploy.json) into ‘folder to deploy to’
 mv deploy_tmp/deploy.php deploy.php
 mv deploy_tmp/config-templates/deploy.wordpress.json deploy.json
 rm -rf deploy_tmp
 
-# Update deploy.json
-# Add "repoUrl"
-GIT_REPO_URL_ESCD=$(echo ${GIT_REPO_URL//\//\\/})
-sed -i 's/"projectPubDir": "web",/"projectPubDir": "web",\n\t"repoUrl": "'"$GIT_REPO_URL_ESCD"'"/g' deploy.json
-
-# Add "trackedBranch"
-GIT_BRANCH_ESCD=$(echo ${GIT_BRANCH//\//\\/})
-sed -i 's/"projectPubDir": "web",/"projectPubDir": "web",\n\t"trackedBranch": "'"$GIT_BRANCH_ESCD"'"/g' deploy.json
-
-# Add "publicDir"
-DIR_NAME_ESCD=$(echo ${DIR_NAME//\//\\/})
-sed -i 's/"projectPubDir": "web",/"projectPubDir": "web",\n\t"publicDir": "'"$DIR_NAME_ESCD"'"/g' deploy.json
-
-# Add "secretKey"
-sed -i 's/"projectPubDir": "web",/"projectPubDir": "web",\n\t"secretKey": "'"$DEPLOY_KEY"'"/g' deploy.json
+  # Exit if the files don't exist
+if [ ! -f "deploy.json" ]; then
+  echo -e "${FORMAT_ERROR}  ⚠  Deploy script files didn't move${RESET_FORMATTING}"
+  exit 1
+fi
 
 
-# Call the Deploy script to setup and deploy
+# Setup the Deploy script
+# - Posting the input details for the script to do its thing
 # ---------------------------------------------
 # Curl request to URL/deploy.php
-curl -s ${DEPLOY_SCRIPT_URL} > /dev/null
+curl -X POST \
+  ${DEPLOY_SCRIPT_URL} \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: multipart/form-data;' \
+  -F branch=$GIT_BRANCH \
+  -F publicDir=$DIR_NAME \
+  -F projectPubDir=web \
+  -F repoUrl=$GIT_REPO_URL \
+
+# Get the secretKey generated by deploy.php
+DEPLOY_SECRET_KEY=$(cat "../deployments/deploy.json" | python -c "import sys, json; print json.load(sys.stdin)['secretKey']")
+
+
+# Show the public key and pause
+# ...for the user to add the public key to the repo
+# ---------------------------------------------
+# Get the public key
+ACC_PUBLIC_KEY_PATH=$(cat "../deployments/deploy.json" | python -c "import sys, json; print json.load(sys.stdin)['sshPubKeyPath']")
+ACC_PUBLIC_KEY=$(cat $ACC_PUBLIC_KEY_PATH)
+
+  # Can't find public key
+if [[ -z "$ACC_PUBLIC_KEY" ]]; then
+  echo -e "${FORMAT_ERROR}  ⚠  Something went wrong - the public/access key wasn't found${RESET_FORMATTING}"
+  exit 1
+fi
+
+# Show the key and pause
+echo -e "${FORMAT_QUESTION}\n  ➤  Please add this Access Key to the Git Repo"
+echo -e "     Bitbucket: Settings > Access keys${RESET_FORMATTING}"
+echo -e "$ACC_PUBLIC_KEY"
+
+PUB_KEY_ADDED=0
+while [  $PUB_KEY_ADDED != 1 ]; do
+  echo -e "${FORMAT_QUESTION}\n  ➤  Have you added it? [y/n] ${RESET_FORMATTING}"
+  read -p "== " PUB_KEY_ADDED
+  [ "$PUB_KEY_ADDED" != "${PUB_KEY_ADDED#[Yy]}" ] && PUB_KEY_ADDED=1 || PUB_KEY_ADDED=0
+done
+
+
+# Stage and Deploy
+# ---------------------------------------------
+# A bit of bants
+echo -e "${FORMAT_MESSAGE}\n  ➤  Deploying...please be patient, it may take some time..."
+sleep 1
+echo -e "     While you're waiting...Go and setup the Database and import the SQL"
+sleep 1
+echo -e "     - I'll ask you for DB credentials in a few minutes (you better be ready for it).${RESET_FORMATTING}"
+
+# The deploy may take some time due to pre/post-hook tasks like composer install
+curl -X GET "${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}&deploy" \
+  --max-time 900 \
+  --connect-timeout 60 \
+  --silent > /dev/null
+
+# We may get a gateway timeout when things (eg. composer) take too long.
+# So we'll pause time until index.php exists
+DEPLOY_FINISHED=0
+while [ $DEPLOY_FINISHED != 1 ]; do
+  sleep 5
+  [ ! -f "${DIR_NAME}/index.php" ] && DEPLOY_FINISHED=0 || DEPLOY_FINISHED=1
+done
+
+echo -e "${FORMAT_SUCCESS}\n  ✓  Code deployed.${RESET_FORMATTING}"
+
+# Browse to the project root
+# - opposed to the symlinked public dir
+# ---------------------------------------------
+cd -P ${DIR_NAME} && cd ../
 
 
 # Create the .env file
 # ---------------------------------------------
+  # Exit if the deploy script (CURL) didn't execute
+if [ ! -f ".env.example" ]; then
+  echo -e "${FORMAT_ERROR}  ⚠  Deploy didn't successfully execute"
+  echo "Please deploy manually:"
+  echo -e " -  ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}${RESET_FORMATTING}"
+  exit 1
+fi
+
 cp .env.example .env
 sed -i 's,http://example.com,'"$PUBLIC_SITE_URL"',g' .env
+
+# WP Secrets
+sed -i "s/AUTH_KEY='generateme'/AUTH_KEY='"$WP_AUTH_KEY"'/g" .env
+sed -i "s/SECURE_AUTH_KEY='generateme'/SECURE_AUTH_KEY='"$WP_SECURE_AUTH_KEY"'/g" .env
+sed -i "s/LOGGED_IN_KEY='generateme'/LOGGED_IN_KEY='"$WP_LOGGED_IN_KEY"'/g" .env
+sed -i "s/NONCE_KEY='generateme'/NONCE_KEY='"$WP_NONCE_KEY"'/g" .env
+sed -i "s/AUTH_SALT='generateme'/AUTH_SALT='"$WP_AUTH_SALT"'/g" .env
+sed -i "s/SECURE_AUTH_SALT='generateme'/SECURE_AUTH_SALT='"$WP_SECURE_AUTH_SALT"'/g" .env
+sed -i "s/LOGGED_IN_SALT='generateme'/LOGGED_IN_SALT='"$WP_LOGGED_IN_SALT"'/g" .env
+sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
+
+
+# DB Credentials
+# ---------------------------------------------
+# DB Name
+echo -e "${FORMAT_QUESTION}\n  ➤  What's the Database Name${RESET_FORMATTING}"
+read -p "== " DB_NAME
+if [[ -z "$DB_NAME" ]]; then
+  echo -e "${FORMAT_ERROR}  ⚠  You didn't provide a DB Name. You'll need to resolve this yourself.${RESET_FORMATTING}"
+fi
+
+# DB Username
+echo -e "${FORMAT_QUESTION}\n  ➤  What's the Database Username${RESET_FORMATTING}"
+read -p "== " DB_USER
+if [[ -z "$DB_USER" ]]; then
+  echo -e "${FORMAT_ERROR}  ⚠  You didn't provide a DB Username. You'll need to resolve this yourself.${RESET_FORMATTING}"
+fi
+
+# DB Password
+echo -e "${FORMAT_QUESTION}\n  ➤  What's the Database Password${RESET_FORMATTING}"
+read -p "== " DB_PW
+if [[ -z "$DB_PW" ]]; then
+  echo -e "${FORMAT_ERROR}  ⚠  You didn't provide a DB Password. You'll need to resolve this yourself.${RESET_FORMATTING}"
+fi
+
+sed -i 's/database_name/'"$DB_NAME"'/g' .env
+sed -i 's/database_user/'"$DB_USER"'/g' .env
+sed -i 's/database_password/'"$DB_PW"'\nDB_HOST=localhost/g' .env
 
 
 # Create a generic .htaccess file for permalinks (for convenience...user can FTP up a real one if needed)
@@ -148,9 +275,18 @@ echo '
 ' >> web/.htaccess
 
 
+# Fix any file permissions
+# eg. in case the script was operated as the wrong user
+# ---------------------------------------------
+CORRECT_USER=$(stat -c '%U' ../)
+chown -R ${CORRECT_USER} .
+
+
 # Output the next steps
 # ---------------------------------------------
-echo -e "${BLUE}\n - - - - - - - - - - - - - -"
-echo "You now need to:"
-echo "\t • Setup and import the DB in cPanel"
-echo "\t • Update .env with the DB details"
+echo -e "${FORMAT_SUCCESS}\n  ✓  Deployed Successfully!"
+echo -e " "
+echo -e "     Next Steps:"
+echo -e "       1. Upload any assets (images, files etc)"
+echo -e "       2. Add the deploy webhook URL (Bitbucket: Settings > Webhooks)"
+echo -e "${RESET_FORMATTING}"
