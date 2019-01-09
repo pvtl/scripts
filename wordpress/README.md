@@ -96,7 +96,7 @@ This script does all of the above with a single command:
 SSH into the destination server and change to the correct user (`sudo su - -s /bin/bash <cPanel username>`)
 
 ```bash
-curl https://raw.githubusercontent.com/pvtl/install-scripts/feature/deploy-wp/wordpress/deploy.sh --output wordpress-deploy.sh && bash wordpress-deploy.sh && rm wordpress-deploy.sh
+curl https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/deploy.sh --output wordpress-deploy.sh && bash wordpress-deploy.sh && rm wordpress-deploy.sh
 ```
 
 _It will provide a few basic prompts for everything._
