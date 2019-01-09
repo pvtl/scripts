@@ -1,4 +1,6 @@
-# Wordpress
+# Wordpress Scripts
+
+## Create a New Site
 
 ### 🤞 Prerequisites
 
@@ -52,3 +54,49 @@ bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wor
 ```
 
 It will provide a few basic prompts for you to configure your new build.
+
+---
+
+## Deploy a Site
+
+### 🤞 Prerequisites
+
+- Unix
+- Git
+- PHP
+- MySQL
+- Composer
+- Access to `https://bitbucket.org/pvtl/deploy-script.git`
+- Access to the Git repo you're wanting to clone
+
+### 🤔 What does this do?
+
+In the past, deploying a Wordpress site typically requires:
+
+1. Finding, downloading, connecting to FTP, uploading, configuring `deploy.php` and the `deploy.json` config
+1. Next, through the browser, filling out/submitting deploy.php
+1. Next `Stage & deploy`
+1. Next, through FTP, create, upload, configure a `.env` (and go to another site to generate WP Secrets custom to this site)
+1. Next, through FTP, create, upload, configure a `.htaccess`
+
+This script does all of the above with a single command:
+
+- In a single place, provides step-by-step prompts for the required information
+- Grabs the `deploy.php` script from Git (placing it on the server)
+- Grabs the `deploy.wordpress.json` (placing it on the server)
+- Automatically (using user input) sets up the deploy script & deploys
+- Configures Wordpress:
+    - Database credentials and URL
+    - Generates WP secrets/keys/salts
+    - A default `.htaccess`
+- Sorts out file ownership
+
+### 🚀 Usage
+
+SSH into the destination server and change to the correct user (`sudo su - -s /bin/bash <cPanel username>`)
+
+```bash
+curl https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/deploy.sh --output wordpress-deploy.sh && bash wordpress-deploy.sh && rm wordpress-deploy.sh
+```
+
+_It will provide a few basic prompts for everything._
