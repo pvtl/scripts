@@ -231,6 +231,7 @@ fi
 
 cp .env.example .env
 sed -i 's,http://example.com,'"$PUBLIC_SITE_URL"',g' .env
+sed -i 's,WP_ENV=development,WP_ENV=production,g' .env
 
 # WP Secrets
 sed -i "s/AUTH_KEY='generateme'/AUTH_KEY='"$WP_AUTH_KEY"'/g" .env
