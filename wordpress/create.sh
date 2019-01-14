@@ -352,8 +352,6 @@ Working in the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-d
 - You'll need `DB_HOST=mysql` in your `.env`
 - You'll need to create a symlink of `/public` to `/web` (`ln -s web public`)
 - Your Hostname will need to be {website}__.pub.localhost__ (note the `.pub`)
-- Enable Browsersync - `cp web/app/themes/pvtl/config-default.yml web/app/themes/pvtl/config.yml`
-    - _Then update `BROWSERSYNC` > `url` to be your site's Wordpress URL_
 
 ### Theme Development
 
