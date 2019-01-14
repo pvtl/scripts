@@ -106,6 +106,7 @@ if [ ! -f ".env.example" ]; then
 fi
 
 git checkout develop
+git remote set-url origin ${GIT_REPO_URL_GIT}
 
 
 # Install Dependencies
