@@ -179,8 +179,8 @@ echo -e "     - I'll ask you for DB credentials in a few minutes (you better be 
 # The deploy may take some time due to pre/post-hook tasks like composer install
 function do_deploy() {
   curl -X GET "${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}&deploy" \
-    --max-time 60 \
-    --connect-timeout 60 \
+    --max-time 150 \
+    --connect-timeout 150 \
     --silent > /dev/null
 
   echo "..."
@@ -203,7 +203,7 @@ while [ $DEPLOY_FINISHED != 1 ]; do
     DEPLOY_FINISHED=1
     echo "Retrying..."
     do_deploy
-    sleep 120
+    sleep 200
   fi
 
   # Increment by the same as sleep
