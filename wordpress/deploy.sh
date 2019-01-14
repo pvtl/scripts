@@ -298,7 +298,7 @@ echo '
 
 
 # Fix any file permissions
-# eg. in case the script was operated as the wrong user
+# eg. in case the script was operated by the wrong user
 # ---------------------------------------------
 CORRECT_USER=$(stat -c '%U' ../)
 chown -R ${CORRECT_USER} .
@@ -307,6 +307,7 @@ chown -R ${CORRECT_USER} .
 # Output the next steps
 # ---------------------------------------------
 echo -e "${FORMAT_SUCCESS}\n  ✓  Deployed Successfully!"
+echo -e "     ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
 echo -e " "
 echo -e "     Next Steps:"
 echo -e "       1. Upload any assets (images, files etc)"
