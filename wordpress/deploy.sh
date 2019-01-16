@@ -289,6 +289,10 @@ echo "
 # require valid-user
 
 <IfModule mod_rewrite.c>
+  #### Access all Wordpress uploads from another site (so that you do not need to download all assets)
+  # RewriteCond %{REQUEST_URI} ^/app/uploads/.*$
+  # RewriteRule ^(.*)$ https://livesite.com/$1 [QSA,L]
+
   #### If URL is not XYZ, then redirect to XYZ
   # RewriteCond %{HTTP_HOST} !^example\.com
   # RewriteRule ^(.*)$ https://example.com/$1 [R=301,L]
