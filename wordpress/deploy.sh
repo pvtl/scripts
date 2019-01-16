@@ -274,7 +274,13 @@ sed -i 's/database_password/'"$DB_PW"'\nDB_HOST=localhost/g' .env
 
 # Create a generic .htaccess file for permalinks (for convenience...user can FTP up a real one if needed)
 # ---------------------------------------------
-echo '
+echo "
+#### Password protect this directory
+# AuthType Basic
+# AuthName 'restricted area'
+# AuthUserFile ${DIR_NAME}/web/.htpasswd
+# require valid-user
+
 <IfModule mod_rewrite.c>
   #### If URL is not XYZ, then redirect to XYZ
   # RewriteCond %{HTTP_HOST} !^example\.com
@@ -294,7 +300,12 @@ echo '
   RewriteRule . /index.php [L]
 </IfModule>
 # END WordPress
-' >> web/.htaccess
+" >> web/.htaccess
+
+echo '
+pvtl:pvrgJ0QAegQSM
+nbm:nbVh6lSiQJnlI
+' >> web/.htpasswd
 
 
 # Fix any file permissions
@@ -313,4 +324,5 @@ echo -e "     Next Steps:"
 echo -e "       1. Upload any assets (images, files etc)"
 echo -e "       2. Add the following webhook URL to your git repo, to trigger auto-deploys (Bitbucket: Settings > Webhooks)"
 echo -e "          - ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
+echo -e "            (OR http://pvtl:pvtl@... if password protected)"
 echo -e "${RESET_FORMATTING}"
