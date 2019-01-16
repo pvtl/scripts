@@ -100,8 +100,6 @@ else
   exit 1
 fi
 
-exit 1
-
 # Create the directory
 # ---------------------------------------------
 mkdir $DIR_NAME && cd $DIR_NAME
