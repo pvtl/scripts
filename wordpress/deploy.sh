@@ -176,6 +176,11 @@ echo -e "     While you're waiting...Go and setup the Database and import the SQ
 sleep 1
 echo -e "     - I'll ask you for DB credentials in a few minutes (you better be ready for it).${RESET_FORMATTING}"
 
+# Give the server a bit more time to execute
+echo '
+php_value max_execution_time 250
+' >> .htaccess
+
 # The deploy may take some time due to pre/post-hook tasks like composer install
 function do_deploy() {
   curl -X GET "${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}&deploy" \
@@ -208,6 +213,8 @@ while [ $DEPLOY_FINISHED != 1 ]; do
 
   # Increment by the same as sleep
   DEPLOY_TIMER=$((DEPLOY_TIMER+5))
+
+  echo -n "."
 done
 
 
