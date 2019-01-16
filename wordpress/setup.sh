@@ -72,22 +72,35 @@ read -p "== " GIT_REPO_URL_HTTPS
 GIT_URL_FORMAT="^(https)(:\/\/|@)([^@:]+)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$"
 
 if [[ ${GIT_REPO_URL_HTTPS} =~ ${GIT_URL_FORMAT} ]] ; then
-  # Create the HTTP equivalent URL - for use within the docker container
-  # protocol=${BASH_REMATCH[1]}
-  # separator=${BASH_REMATCH[2]}
-  user=${BASH_REMATCH[4]}
-  hostname=${BASH_REMATCH[4]}
-  owner=${BASH_REMATCH[5]}
-  repo=${BASH_REMATCH[6]}
+  # Create the GIT equivalent URL - for use outside the docker container
+  # - The HTTPS version is only for use inside the docker container
+  BASH_REMATCH_3=${BASH_REMATCH[3]}
+  BASH_REMATCH_4=${BASH_REMATCH[4]}
+  BASH_REMATCH_5=${BASH_REMATCH[5]}
+  BASH_REMATCH_6=${BASH_REMATCH[6]}
+  
+  # If Bitbucket
+  if [[ ${GIT_REPO_URL_HTTPS} =~ .*bitbucket* ]] ; then
+    hostname=${BASH_REMATCH_4}
+    owner=${BASH_REMATCH_5}
+    repo=${BASH_REMATCH_6}
+
+  # Else: Github (likely)
+  else
+    hostname="@"${BASH_REMATCH_3}${BASH_REMATCH_4}
+    owner=${BASH_REMATCH_5}
+    repo=${BASH_REMATCH_6}
+  fi
 
   GIT_REPO_URL_GIT="git${hostname}:${owner}/${repo}.git"
-
   echo ${GIT_REPO_URL_GIT}
+
 else
   echo -e "${FORMAT_ERROR}  ⚠  Please enter the HTTPS version of the URL...${RESET_FORMATTING}"
   exit 1
 fi
 
+exit 1
 
 # Create the directory
 # ---------------------------------------------
