@@ -408,14 +408,10 @@ EOF
 
 
 # Add to Git
-# if [[ ${GIT_URL} != 0 ]] ; then
-#   git init && git add . && git commit -m 'init'
-#   git remote add origin $GIT_URL
-#   git push origin master
-#   git branch develop
-#   git checkout develop
-#   git push origin develop
-# fi
+# ---------------------------------------------
+git init && git add . && git commit -m 'init'
+git branch develop
+git checkout develop
 
 
 # Output the next steps
