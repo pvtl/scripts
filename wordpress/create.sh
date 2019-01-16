@@ -237,22 +237,22 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Set the kitchen-sink template on default sample page
   wp post update 2 --page_template='page-templates/kitchen-sink.php' --allow-root
 
-  # Setup the home/blog pages - 2=sample 3=home 4=blog 5=contact
+  # Setup the home/blog pages - 2=sample 4=home 5=blog 6=contact
   wp option update show_on_front 'page' --allow-root
-  wp option update page_on_front 3 --allow-root
-  wp option update page_for_posts 4 --allow-root
+  wp option update page_on_front 4 --allow-root
+  wp option update page_for_posts 5 --allow-root
 
   # Create a couple of menus for the theme
   wp menu create "Main Menu" --allow-root
   wp menu create "Footer Menu" --allow-root
-  wp menu item add-post main-menu 3 --allow-root
   wp menu item add-post main-menu 4 --allow-root
-  wp menu item add-post main-menu 2 --allow-root
   wp menu item add-post main-menu 5 --allow-root
-  wp menu item add-post footer-menu 3 --allow-root
+  wp menu item add-post main-menu 2 --allow-root
+  wp menu item add-post main-menu 6 --allow-root
   wp menu item add-post footer-menu 4 --allow-root
-  wp menu item add-post footer-menu 2 --allow-root
   wp menu item add-post footer-menu 5 --allow-root
+  wp menu item add-post footer-menu 2 --allow-root
+  wp menu item add-post footer-menu 6 --allow-root
 
   # Assign header and footer menus to theme menu locations
   wp menu location assign main-menu top-bar-r --allow-root
@@ -358,7 +358,6 @@ Once imported: scrub any sensitive data (eg. customer info, credit card tokens e
 ```bash
 composer install --ignore-platform-reqs
 ( cd web/app/themes/pvtl ; yarn )
-( cd web/app/themes/pvtl ; yarn production )
 ```
 
 ---
