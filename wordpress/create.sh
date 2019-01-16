@@ -127,19 +127,17 @@ composer config repositories.wp-button-shortcode git https://github.com/pvtl/wp-
 
 # Install default Wordpress plugins
 # ---------------------------------------------
-composer require wpackagist-plugin/wordpress-seo
-composer require wpackagist-plugin/w3-total-cache
-composer require wpackagist-plugin/wp-migrate-db
-composer require wpackagist-plugin/admin-menu-editor
-composer require wpackagist-plugin/better-wp-security
-composer require wpackagist-plugin/custom-post-type-ui
-composer require wpackagist-plugin/simple-custom-post-order
-composer require wpackagist-plugin/duplicate-post
-composer require wpackagist-plugin/disable-gutenberg
-
-# Plugins outside of wpackagist
-composer require pvtl/wp-update-watcher
-composer require pvtl/wp-button-shortcode
+composer require wpackagist-plugin/wordpress-seo \
+  wpackagist-plugin/w3-total-cache \
+  wpackagist-plugin/wp-migrate-db \
+  wpackagist-plugin/admin-menu-editor \
+  wpackagist-plugin/better-wp-security \
+  wpackagist-plugin/custom-post-type-ui \
+  wpackagist-plugin/simple-custom-post-order \
+  wpackagist-plugin/duplicate-post \
+  wpackagist-plugin/disable-gutenberg \
+  pvtl/wp-update-watcher \
+  pvtl/wp-button-shortcode
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
