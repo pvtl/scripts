@@ -25,12 +25,12 @@
 
 # Variables
 # ---------------------------------------------
-RESET="\e[39m"
-BLUE="\e[34m"
+RESET_FORMATTING="\e[49m\e[39m"
+FORMAT_QUESTION="\e[44m\e[30m"
+FORMAT_MESSAGE="\e[43m\e[30m"
+FORMAT_SUCCESS="\e[102m\e[30m"
+FORMAT_ERROR="\e[41m\e[30m"
 
-
-# Site Config
-# ---------------------------------------------
 # DB Details
 DB_HOST="mysql"
 DB_USER="root"
@@ -39,15 +39,9 @@ RAND=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 RAND_EMAIL="${RAND}@${RAND}.com"
 WP_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
-# Git Repo
-# echo -e "${BLUE}\n?? If you'd like to commit the repo straight to Git, input the repo's Git URL (otherwise leave it blank to NOT push to git): ${RESET}"
-# read -p "== " GIT_URL
-# if [[ -z "$GIT_URL" ]]; then
-#   GIT_URL=0
-# fi
 
 # Directory/DB Name
-echo -e "${BLUE}\n?? We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] ${RESET_FORMATTING}"
 read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="wordpress${RAND}"
@@ -59,12 +53,12 @@ DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
 URL="http://${DIR_NAME}.pub.localhost"
 
 # Install Pivotal Theme?
-echo -e "${BLUE}\n?? Would you like the Pivotal theme installed? [y/n] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  Would you like the Pivotal theme installed? [y/n] ${RESET_FORMATTING}"
 read -p "== " INSTALL_THEME
 [ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] && INSTALL_THEME=1 || INSTALL_THEME=0
 
 # Wordpress Username
-echo -e "${BLUE}\n?? Please enter the Wordpress Admin username: [user${RAND}] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the Wordpress Admin username: [user${RAND}] ${RESET_FORMATTING}"
 read -p "== " WP_USER
 
 WP_USER=$(echo $WP_USER | tr -cd '[[:alnum:]].')
@@ -74,7 +68,7 @@ if [[ -z "$WP_USER" ]]; then
 fi
 
 # Wordpress Email
-echo -e "${BLUE}\n?? Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] ${RESET_FORMATTING}"
 read -p "== " WP_EMAIL
 if [[ -z "$WP_EMAIL" ]]; then
   WP_EMAIL="${RAND_EMAIL}"
@@ -83,9 +77,9 @@ fi
 EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
 
 if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
-  echo -e "Great, here we go...\n---\n"
+  echo -e " "
 else
-  echo "Please enter a real email..."
+  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real email...${RESET_FORMATTING}"
   exit 1
 fi
 
@@ -320,12 +314,18 @@ cat << 'EOF' >> README.md
 
 ## Installation
 
+## a) Automated
+
+[Run a single command](https://github.com/pvtl/install-scripts/tree/master/wordpress#%EF%B8%8F-setup-the-site-locally)
+
+## b) Manual
+
 #### 1. Clone this repo
 ```bash
 git clone <repo-url>
 ```
 
-#### 2. Copy `.env.example` to `.env` and add your environment's settings
+#### 2. Copy `.env.example` to `.env` (and add your environment's settings)
 ```bash
 cp .env.example .env
 ```
@@ -397,16 +397,15 @@ EOF
 # fi
 
 
-# Output the login details
+# Output the next steps
 # ---------------------------------------------
-echo -e "${BLUE}\n - - - - - - - - - - - - - -"
-echo "Wordpress has been installed at: ${URL}"
-echo "- - -"
-echo "Login to Wordpress at: ${URL}/wp/wp-admin"
-echo "Your Wordpress username is: ${WP_USER}"
-echo "Your Wordpress password is: ${WP_PW}"
-echo "Your Wordpress admin email is: ${WP_EMAIL}"
-echo "- - -"
-echo "The site is located in: ${SITE_ROOT}"
-echo "The site is using database: ${DIR_NAME}"
-echo -e "- - - - - - - - - - - - - - ${RESET}"
+echo -e "${FORMAT_SUCCESS}\n  ✓  Installed Successfully!"
+echo -e " "
+echo -e "     Wordpress has been installed at: ${URL}"
+echo -e "     and you can login at: ${URL}/wp/wp-admin"
+echo -e " "
+echo -e "     Login credentials:"
+echo -e "       - Email: ${WP_EMAIL}"
+echo -e "       - Username: ${WP_USER}"
+echo -e "       - Password: ${WP_PW}"
+echo -e "${RESET_FORMATTING}"
