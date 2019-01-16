@@ -95,6 +95,14 @@ mkdir $DIR_NAME && cd $DIR_NAME
 SITE_ROOT="$(pwd)"
 
 
+# Create a Database
+# ---------------------------------------------
+php -r '
+$conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
+mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+' $DB_HOST $DB_USER $DB_PW $DIR_NAME
+
+
 # Clone the repo
 # ---------------------------------------------
 git clone ${GIT_REPO_URL_HTTPS} .
@@ -119,14 +127,6 @@ composer install --ignore-platform-reqs
 # Create a Symlink for our LDE's
 # ---------------------------------------------
 ln -s web public
-
-
-# Create a Database
-# ---------------------------------------------
-php -r '
-$conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
-mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
 
 # Create the .env file and setup DB connection and secrets
