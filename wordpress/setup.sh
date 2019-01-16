@@ -63,6 +63,12 @@ DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
 
 URL="http://${DIR_NAME}.pub.localhost"
 
+  # Error if directory already exists
+if [ -d ${DIR_NAME} ]; then
+  echo -e "${FORMAT_ERROR}  ⚠  That directory already exists...${RESET_FORMATTING}"
+  exit 1
+fi
+
 # Asks for the Git repo URL of the project
   # Quit if nothing input
 echo -e "${FORMAT_QUESTION}\n  ➤  What's the URL to access the Git repo?"
@@ -99,6 +105,7 @@ else
   echo -e "${FORMAT_ERROR}  ⚠  Please enter the HTTPS version of the URL...${RESET_FORMATTING}"
   exit 1
 fi
+
 
 # Create the directory
 # ---------------------------------------------
