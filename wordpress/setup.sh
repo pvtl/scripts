@@ -99,14 +99,14 @@ SITE_ROOT="$(pwd)"
 # ---------------------------------------------
 git clone ${GIT_REPO_URL_HTTPS} .
 
+git checkout develop
+git remote set-url origin ${GIT_REPO_URL_GIT}
+
   # Exit if it didn't clone
 if [ ! -f ".env.example" ]; then
   echo -e "${FORMAT_ERROR}  ⚠  Git clone failed${RESET_FORMATTING}"
   exit 1
 fi
-
-git checkout develop
-git remote set-url origin ${GIT_REPO_URL_GIT}
 
 
 # Install Dependencies
