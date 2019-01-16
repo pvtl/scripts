@@ -218,8 +218,10 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   yarn production
 
   # Setup for local dev
-  cp config-default.yml config.yml
-  sed -i 's,url: "",url: "'"$URL"'",g' config.yml
+  if [ -f "config-default.yml" ]; then
+    cp config-default.yml config.yml
+    sed -i 's,url: "",url: "'"$URL"'",g' config.yml
+  fi
 
   cd $SITE_ROOT
 
