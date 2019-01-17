@@ -67,6 +67,10 @@ It will provide a few basic prompts for you to configure your new build.
 - Composer
 - Access to `https://bitbucket.org/pvtl/deploy-script.git`
 - Access to the Git repo you're wanting to clone
+- The domain name you'll be using for the site, must be live and propagated (i.e. for the script to be able to reach it via a CURL request). To get around this, you could either:
+    - Add the domain to the *server's* host file (eg. `127.0.0.1 example.com`)
+    - Point another 'disposable' (eg. `justfordeploy.pvtl.io`) domain to it for setup, then once deployed, change the domain name in `deploy.json` and `.env`
+
 
 ### What does this do?
 
