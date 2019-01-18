@@ -50,25 +50,6 @@ WP_NONCE_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 
 # Site Config
 # ---------------------------------------------
-# Directory/DB Name
-  # Defaults to a random folder name
-echo -e "${FORMAT_QUESTION}\n  ➤  We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] ${RESET_FORMATTING}"
-read -p "== " DIR_NAME
-if [[ -z "$DIR_NAME" ]]; then
-  DIR_NAME="wordpress${RAND}"
-fi
-
-DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].')
-DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
-
-URL="http://${DIR_NAME}.pub.localhost"
-
-  # Error if directory already exists
-if [ -d ${DIR_NAME} ]; then
-  echo -e "${FORMAT_ERROR}  ⚠  That directory already exists...${RESET_FORMATTING}"
-  exit 1
-fi
-
 # Asks for the Git repo URL of the project
   # Quit if nothing input
 echo -e "${FORMAT_QUESTION}\n  ➤  What's the URL to access the Git repo?"
@@ -87,22 +68,44 @@ if [[ ${GIT_REPO_URL_HTTPS} =~ ${GIT_URL_FORMAT} ]] ; then
   
   # If Bitbucket
   if [[ ${GIT_REPO_URL_HTTPS} =~ .*bitbucket* ]] ; then
-    hostname=${BASH_REMATCH_4}
-    owner=${BASH_REMATCH_5}
-    repo=${BASH_REMATCH_6}
+    GIT_REPO_HOSTNAME=${BASH_REMATCH_4}
+    GIT_REPO_OWNER=${BASH_REMATCH_5}
+    GIT_REPO_NAME=${BASH_REMATCH_6}
 
   # Else: Github (likely)
   else
-    hostname="@"${BASH_REMATCH_3}${BASH_REMATCH_4}
-    owner=${BASH_REMATCH_5}
-    repo=${BASH_REMATCH_6}
+    GIT_REPO_HOSTNAME="@"${BASH_REMATCH_3}${BASH_REMATCH_4}
+    GIT_REPO_OWNER=${BASH_REMATCH_5}
+    GIT_REPO_NAME=${BASH_REMATCH_6}
   fi
 
-  GIT_REPO_URL_GIT="git${hostname}:${owner}/${repo}.git"
+  GIT_REPO_URL_GIT="git${GIT_REPO_HOSTNAME}:${GIT_REPO_OWNER}/${GIT_REPO_NAME}.git"
   echo ${GIT_REPO_URL_GIT}
 
 else
   echo -e "${FORMAT_ERROR}  ⚠  Please enter the HTTPS version of the URL...${RESET_FORMATTING}"
+  exit 1
+fi
+
+# Create a default dir and DB name
+DIR_NAME_TMP=$(echo $GIT_REPO_NAME | tr -cd '[[:alnum:]].' | tr '[:upper:]' '[:lower:]')
+
+# Directory/DB Name
+  # Defaults to a random folder name
+echo -e "${FORMAT_QUESTION}\n  ➤   We'll create a new directory & DB for the project. What shall we call them?"
+echo -e "     Default: ${DIR_NAME_TMP}${RESET_FORMATTING}"
+read -p "== " DIR_NAME
+if [[ -z "$DIR_NAME" ]]; then
+  DIR_NAME="${DIR_NAME_TMP}"
+fi
+
+DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].' | tr '[:upper:]' '[:lower:]')
+
+URL="http://${DIR_NAME}.pub.localhost"
+
+  # Error if directory already exists
+if [ -d ${DIR_NAME} ]; then
+  echo -e "${FORMAT_ERROR}  ⚠  That directory already exists...${RESET_FORMATTING}"
   exit 1
 fi
 
