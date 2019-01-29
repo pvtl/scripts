@@ -285,7 +285,7 @@ echo "
 #### Password protect this directory
 # AuthType Basic
 # AuthName 'restricted area'
-# AuthUserFile ${DIR_NAME}/web/.htpasswd
+# AuthUserFile ${DIR_NAME}/.htpasswd
 # require valid-user
 
 <IfModule mod_rewrite.c>
