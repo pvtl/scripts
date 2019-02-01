@@ -47,6 +47,15 @@ WP_SECURE_AUTH_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head 
 WP_LOGGED_IN_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 WP_NONCE_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 
+# Options
+while getopts "s" arg; do
+  case $arg in
+    s)
+      IS_STAGE=1
+      ;;
+  esac
+done
+
 
 # Site Config
 # ---------------------------------------------
@@ -102,6 +111,9 @@ fi
 DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].' | tr '[:upper:]' '[:lower:]')
 
 URL="http://${DIR_NAME}.pub.localhost"
+if [[ ${IS_STAGE} == 1 ]] ; then
+  URL="http://${DIR_NAME}.pub.pvtl.io"
+fi
 
   # Error if directory already exists
 if [ -d ${DIR_NAME} ]; then
@@ -197,6 +209,17 @@ echo '
 ' >> web/.htaccess
 
 
+# When STAGEing - add the stage.php script
+# ---------------------------------------------
+if [[ ${IS_STAGE} == 1 ]] ; then
+  # Pull the stage.php script from Bitbucket snippets
+  curl -L https://bitbucket.org/\!api/2.0/snippets/pvtl/A8RGM/files/stage.php --output web/stage.php
+
+  # Add the Git Repo to pull
+  sed -i "s,git_repo_url,"$GIT_REPO_URL_GIT",g" web/stage.php
+fi
+
+
 # Output the next steps
 # ---------------------------------------------
 echo -e "${FORMAT_SUCCESS}\n  ✓  Setup Successfully!"
@@ -207,4 +230,11 @@ echo -e " "
 echo -e "     Next Steps:"
 echo -e "       1. Download any assets (images, files etc) to: ${SITE_ROOT}"
 echo -e "       2. Import the Database to the new DB: ${DIR_NAME}"
+
+if [[ ${IS_STAGE} == 1 ]] ; then
+  echo -e "       3. Add the following webhook URL to your git repo, to trigger auto-deploys (Bitbucket: Settings > Webhooks)"
+  echo -e "          - ${URL}/stage.php"
+  echo -e "            (OR http://pvtl:pvtl@... if password protected)"
+fi
+
 echo -e "${RESET_FORMATTING}"
