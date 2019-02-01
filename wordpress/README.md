@@ -2,7 +2,8 @@
 
 ## 🖼 Create a New Site
 
-### Prerequisites
+<details><summary>Prerequisites</summary>
+<p>
 
 - Unix
 - Git
@@ -13,7 +14,11 @@
 - WP-cli
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
 
-### What does this do?
+</p></details>
+
+<details><summary>What does this do?</summary>
+
+<p>
 
 Installs a fresh version of Wordpress with the following:
 
@@ -44,6 +49,8 @@ Installs a fresh version of Wordpress with the following:
     - Timezone set to Brisbane
     - ACF default config imported (if the Pivotal theme is installed)
 
+</p></details>
+
 ### Usage
 
 Whilst SSH'd into the Docker `php72` container (`docker exec -it php72 bash`), browsed to `/var/www/html`, simply run:
@@ -52,13 +59,12 @@ Whilst SSH'd into the Docker `php72` container (`docker exec -it php72 bash`), b
 bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/create.sh -L)
 ```
 
-It will provide a few basic prompts for you to configure your new build.
-
 ---
 
 ## 🚀 Deploy a Site to production
 
-### Prerequisites
+<details><summary>Prerequisites</summary>
+<p>
 
 - Unix
 - Git
@@ -72,7 +78,11 @@ It will provide a few basic prompts for you to configure your new build.
     - Point another 'disposable' (eg. `justfordeploy.pvtl.io`) domain to it for setup, then once deployed, change the domain name in `deploy.json` and `.env`
 
 
-### What does this do?
+</p></details>
+
+<details><summary>What does this do?</summary>
+
+<p>
 
 In the past, deploying a Wordpress site typically requires:
 
@@ -94,6 +104,8 @@ This script does all of the above with a single command:
     - A default `.htaccess` for permalinks
 - Sorts out file ownership
 
+</p></details>
+
 ### Usage
 
 SSH into the destination server and change to the correct user (`sudo su - -s /bin/bash <cPanel username>`)
@@ -102,13 +114,12 @@ SSH into the destination server and change to the correct user (`sudo su - -s /b
 curl https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/deploy.sh --output wordpress-deploy.sh && bash wordpress-deploy.sh && rm wordpress-deploy.sh
 ```
 
-_It will provide a few basic prompts for everything._
-
 ---
 
 ## 👷‍♂️ Setup the site locally
 
-### Prerequisites
+<details><summary>Prerequisites</summary>
+<p>
 
 - Unix
 - Git
@@ -118,7 +129,11 @@ _It will provide a few basic prompts for everything._
 - Composer
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
 
-### What does this do?
+</p></details>
+
+<details><summary>What does this do?</summary>
+
+<p>
 
 Setting up a site on your local machine takes time. What if it could be done through a (almost) single command?
 
@@ -133,6 +148,8 @@ This script does all of the above with a single command:
     - Generates WP secrets/keys/salts
     - A default `.htaccess` for permalinks
 
+</p></details>
+
 ### Usage
 
 Whilst SSH'd into the Docker `php72` container (`docker exec -it php72 bash`), browsed to `/var/www/html`, simply run:
@@ -141,4 +158,46 @@ Whilst SSH'd into the Docker `php72` container (`docker exec -it php72 bash`), b
 bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/setup.sh -L)
 ```
 
-_It will provide a few basic prompts for everything._
+---
+
+## 🔦 Stage on Dev Server
+
+<details><summary>Prerequisites</summary>
+<p>
+
+- Unix
+- Git
+- Node, NPM & Yarn
+- PHP
+- MySQL
+- Composer
+
+</p></details>
+
+<details><summary>What does this do?</summary>
+
+<p>
+
+Setting up a site for staging does take time. What if it could be done through a (almost) single command?
+
+This script does all of the above with a single command:
+
+- In a single place, provides step-by-step prompts for the required information
+- Creates a directory and Clones the repo into it
+- Automatically installs PHP (composer) and build (npm) dependencies
+- Symlinks the correct directories
+- Configures Wordpress:
+    - Database credentials and URL
+    - Generates WP secrets/keys/salts
+    - A default `.htaccess` for permalinks
+- Downloads and sets up the `stage.php` script 
+
+</p></details>
+
+### Usage
+
+Whilst SSH'd into the Dev Server, `php71` container (`sudo docker exec -it services_php71-fpm_1 bash`), browsed to `/var/www/html`, simply run:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/setup.sh -L) -s
+```
