@@ -137,7 +137,7 @@ composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/duplicate-post \
   wpackagist-plugin/disable-gutenberg \
   pvtl/wp-update-watcher \
-  pvtl/wp-button-shortcode
+  pvtl/wp-button-shortcode &>/dev/null &
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
@@ -212,8 +212,7 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   rm -rf .git
 
   # Build assets
-  yarn
-  yarn production
+  yarn &>/dev/null &
 
   # Setup for local dev
   if [ -f "config-default.yml" ]; then
@@ -424,3 +423,5 @@ echo -e "       - Email: ${WP_EMAIL}"
 echo -e "       - Username: ${WP_USER}"
 echo -e "       - Password: ${WP_PW}"
 echo -e "${RESET_FORMATTING}"
+
+disown

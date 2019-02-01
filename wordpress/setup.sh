@@ -152,10 +152,13 @@ fi
 
 # Install Dependencies
 # ---------------------------------------------
-composer install --ignore-platform-reqs
-( cd web/app/themes/pvtl ; yarn )
+composer install --ignore-platform-reqs &>/dev/null &
+( cd web/app/themes/pvtl ; yarn &>/dev/null & )
 # ( cd web/app/themes/pvtl ; yarn run production )
 
+# The above commands are run in the background
+# `disown` ensures they finish if we close the terminal
+disown
 
 # Create a Symlink for our LDE's
 # ---------------------------------------------
@@ -226,6 +229,9 @@ echo -e "${FORMAT_SUCCESS}\n  ✓  Setup Successfully!"
 echo -e " "
 echo -e "     Wordpress has been installed at: ${URL}"
 echo -e "     and you can login at: ${URL}/wp/wp-admin"
+echo -e " "
+echo -e "     We're running the install of dependencies in the background"
+echo -e "     - so it may be a couple of minutes before the site is 100% ready"
 echo -e " "
 echo -e "     Next Steps:"
 echo -e "       1. Download any assets (images, files etc) to: ${SITE_ROOT}"
