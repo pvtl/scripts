@@ -142,10 +142,10 @@ composer require wpackagist-plugin/wordpress-seo \
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
-git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms
-rm -rf web/app/plugins/gravityforms/.git
-git clone https://github.com/wp-premium/gravityformscampaignmonitor.git web/app/plugins/gravityformscampaignmonitor
-rm -rf web/app/plugins/gravityformscampaignmonitor/.git
+( git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms \
+  && rm -rf web/app/plugins/gravityforms/.git ) &>/dev/null &
+( git clone https://github.com/wp-premium/gravityformscampaignmonitor.git web/app/plugins/gravityformscampaignmonitor \
+  && rm -rf web/app/plugins/gravityformscampaignmonitor/.git ) &>/dev/null &
 
 
 # Create a Database
@@ -193,12 +193,12 @@ wp rewrite flush --allow-root
 
 # Active theme and plugins
 wp plugin activate advanced-custom-fields-pro --allow-root
-wp plugin activate gravityforms --allow-root
-wp plugin activate wordpress-seo --allow-root
-wp plugin activate admin-menu-editor --allow-root
-wp plugin activate simple-custom-post-order --allow-root
-wp plugin activate duplicate-post --allow-root
-wp plugin activate wp-button-shortcode --allow-root
+# wp plugin activate gravityforms --allow-root
+# wp plugin activate wordpress-seo --allow-root
+# wp plugin activate admin-menu-editor --allow-root
+# wp plugin activate simple-custom-post-order --allow-root
+# wp plugin activate duplicate-post --allow-root
+# wp plugin activate wp-button-shortcode --allow-root
 
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
