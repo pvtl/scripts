@@ -238,7 +238,8 @@ echo -e "       1. Download any assets (images, files etc) to: ${SITE_ROOT}"
 echo -e "       2. Import the Database to the new DB: ${DIR_NAME}"
 
 if [[ ${IS_STAGE} == 1 ]] ; then
-  echo -e "       3. Add the following webhook URL to your git repo, to trigger auto-deploys (Bitbucket: Settings > Webhooks)"
+  echo -e "       3. Add the dev server's Public Key (https://pass.pvtl.io/index.php/pwd/view/4922) to the Git Repo (Bitbucket: Settings > Access Key)"
+  echo -e "       4. Add the following webhook URL to your git repo, to trigger auto-deploys (Bitbucket: Settings > Webhooks)"
   echo -e "          - ${URL}/stage.php"
   echo -e "            (OR http://pvtl:pvtl@... if password protected)"
 fi
