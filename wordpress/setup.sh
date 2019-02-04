@@ -221,6 +221,10 @@ if [[ ${IS_STAGE} == 1 ]] ; then
 
   # Add the Git Repo to pull
   sed -i "s,git_repo_url,"$GIT_REPO_URL_GIT",g" stage.php
+
+  # Fix any file permissions
+  CORRECT_USER=$(stat -c '%U' ../)
+  chown -R ${CORRECT_USER} .
 fi
 
 
