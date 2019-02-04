@@ -113,6 +113,7 @@ DIR_NAME=$(echo $DIR_NAME | tr -cd '[[:alnum:]].' | tr '[:upper:]' '[:lower:]')
 URL="http://${DIR_NAME}.pub.localhost"
 if [[ ${IS_STAGE} == 1 ]] ; then
   URL="http://${DIR_NAME}.pub.pvtl.io"
+  URL_STAGE_SCRIPT="http://pvtl:pvtl@${DIR_NAME}.pvtl.io/stage.php"
 fi
 
   # Error if directory already exists
@@ -216,10 +217,10 @@ echo '
 # ---------------------------------------------
 if [[ ${IS_STAGE} == 1 ]] ; then
   # Pull the stage.php script from Bitbucket snippets
-  curl -L https://bitbucket.org/\!api/2.0/snippets/pvtl/A8RGM/files/stage.php --output web/stage.php
+  curl -L https://bitbucket.org/\!api/2.0/snippets/pvtl/A8RGM/files/stage.php --output stage.php
 
   # Add the Git Repo to pull
-  sed -i "s,git_repo_url,"$GIT_REPO_URL_GIT",g" web/stage.php
+  sed -i "s,git_repo_url,"$GIT_REPO_URL_GIT",g" stage.php
 fi
 
 
@@ -238,10 +239,9 @@ echo -e "       1. Download any assets (images, files etc) to: ${SITE_ROOT}"
 echo -e "       2. Import the Database to the new DB: ${DIR_NAME}"
 
 if [[ ${IS_STAGE} == 1 ]] ; then
-  echo -e "       3. Add the dev server's Public Key (https://pass.pvtl.io/index.php/pwd/view/4922) to the Git Repo (Bitbucket: Settings > Access Key)"
+  echo -e "       3. Add the dev server's Public Key ( https://pass.pvtl.io/index.php/pwd/view/4922 ) to the Git Repo (Bitbucket: Settings > Access Key)"
   echo -e "       4. Add the following webhook URL to your git repo, to trigger auto-deploys (Bitbucket: Settings > Webhooks)"
-  echo -e "          - ${URL}/stage.php"
-  echo -e "            (OR http://pvtl:pvtl@... if password protected)"
+  echo -e "          - ${URL_STAGE_SCRIPT}"
 fi
 
 echo -e "${RESET_FORMATTING}"
