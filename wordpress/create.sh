@@ -136,6 +136,7 @@ composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/simple-custom-post-order \
   wpackagist-plugin/duplicate-post \
   wpackagist-plugin/disable-gutenberg \
+  wpackagist-plugin/google-analytics-dashboard-for-wp \
   pvtl/wp-update-watcher \
   pvtl/wp-button-shortcode &>/dev/null &
 

@@ -34,6 +34,7 @@ Installs a fresh version of Wordpress with the following:
     - [Simple Custom Post Order*](https://wordpress.org/plugins/simple-custom-post-order/)
     - [Yoast SEO*](https://wordpress.org/plugins/wordpress-seo/)
     - [Admin Menu Editor](https://wordpress.org/plugins/admin-menu-editor/)
+    - [Google Analytics Dashboard](https://wordpress.org/plugins/google-analytics-dashboard-for-wp/)
     - [Better WP Security](https://wordpress.org/plugins/better-wp-security/)
     - [Campaign Monitor for Gravity Forms](https://www.gravityforms.com/add-ons/campaign-monitor/)
     - [Disable Gutenburg](https://wordpress.org/plugins/disable-gutenberg/)
