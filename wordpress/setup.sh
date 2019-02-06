@@ -188,9 +188,11 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 # ---------------------------------------------
 echo '
 <IfModule mod_rewrite.c>
-  #### Access all Wordpress uploads from Live site (so that you do not need to download all assets)
-  # RewriteCond %{REQUEST_URI} ^/app/uploads/.*$
-  # RewriteRule ^(.*)$ https://livesite.com/$1 [QSA,L]
+  #### Access 404d Wordpress uploads from another site site (so that you do not need to download all assets)
+  #### - If URL is not found AND the URL contains /app/uploads/ - check on live site
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+  RewriteCond %{REQUEST_URI} ^/app/uploads/.*$
+  RewriteRule ^(.*)$ https://livesite.com.au/$1 [QSA,L]
 
   #### If URL is not XYZ, then redirect to XYZ
   # RewriteCond %{HTTP_HOST} !^example\.com
