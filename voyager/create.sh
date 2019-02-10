@@ -25,14 +25,12 @@
 
 # Variables
 # ---------------------------------------------
-RESET="\e[39m"
-BLUE="\e[34m"
-UNDERLINE="\e[4m"
-NO_UNDERLINE="\e[0m"
+RESET_FORMATTING="\e[49m\e[39m"
+FORMAT_QUESTION="\e[44m\e[30m"
+FORMAT_MESSAGE="\e[43m\e[30m"
+FORMAT_SUCCESS="\e[102m\e[30m"
+FORMAT_ERROR="\e[41m\e[30m"
 
-
-# Site Config
-# ---------------------------------------------
 # DB Details
 DB_HOST="mysql"
 DB_USER="root"
@@ -41,8 +39,13 @@ DB_PW="dbroot"
 RAND=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 RAND_EMAIL="${RAND}@${RAND}.com"
 
+
+# Site Config
+# ---------------------------------------------
+
 # Directory/DB Name
-echo -e "${BLUE}\n?? We'll create a new directory & DB for the project. What shall we call them? [voyager${RAND}] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  We'll create a new directory & DB for the project. What shall we call them?"
+echo -e "     Default: voyager${RAND}${RESET_FORMATTING}"
 read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="voyager${RAND}"
@@ -54,36 +57,37 @@ DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
 URL="http://${DIR_NAME}.pub.localhost"
 
 # Install Pages module?
-echo -e "${BLUE}\n?? Install the ${UNDERLINE}Pages Module?${NO_UNDERLINE} [y/n] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  Install the Pages Module? [y/n] ${RESET_FORMATTING}"
 read -p "== " INSTALL_PAGES
 [ "$INSTALL_PAGES" != "${INSTALL_PAGES#[Yy]}" ] && INSTALL_PAGES=1 || INSTALL_PAGES=0
 
 # Install Page Blocks module?
 if [[ ${INSTALL_PAGES} == 1 ]] ; then
-  echo -e "${BLUE}\n?? Install the ${UNDERLINE}Page Blocks Module?${NO_UNDERLINE} [y/n] ${RESET}"
+  echo -e "${FORMAT_QUESTION}\n  ➤  Install the Page Blocks Module? [y/n] ${RESET_FORMATTING}"
   read -p "== " INSTALL_PAGEBLOCKS
 fi
 [ "$INSTALL_PAGEBLOCKS" != "${INSTALL_PAGEBLOCKS#[Yy]}" ] && INSTALL_PAGEBLOCKS=1 || INSTALL_PAGEBLOCKS=0
 
 # Install Front-end module? (don't ask if pages isn't installed)
 if [[ ${INSTALL_PAGES} == 1 ]] ; then
-  echo -e "${BLUE}\n?? Install the ${UNDERLINE}Front-end Module?${NO_UNDERLINE} [y/n] ${RESET}"
+  echo -e "${FORMAT_QUESTION}\n  ➤  Install the Front-end Module? [y/n] ${RESET_FORMATTING}"
   read -p "== " INSTALL_FRONTEND
 fi
 [ "$INSTALL_FRONTEND" != "${INSTALL_FRONTEND#[Yy]}" ] && INSTALL_FRONTEND=1 || INSTALL_FRONTEND=0
 
 # Install Blog module?
-echo -e "${BLUE}\n?? Install the ${UNDERLINE}Blog Module?${NO_UNDERLINE} [y/n] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  Install the Blog Module? [y/n] ${RESET_FORMATTING}"
 read -p "== " INSTALL_BLOG
 [ "$INSTALL_BLOG" != "${INSTALL_BLOG#[Yy]}" ] && INSTALL_BLOG=1 || INSTALL_BLOG=0
 
 # Install Forms module?
-echo -e "${BLUE}\n?? Install the ${UNDERLINE}Forms Module?${NO_UNDERLINE} [y/n] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  Install the Forms Module? [y/n] ${RESET_FORMATTING}"
 read -p "== " INSTALL_FORMS
 [ "$INSTALL_FORMS" != "${INSTALL_FORMS#[Yy]}" ] && INSTALL_FORMS=1 || INSTALL_FORMS=0
 
 # Voyager Admin Email
-echo -e "${BLUE}\n?? Please enter an Email for the Voyager admin: [${RAND_EMAIL}] ${RESET}"
+echo -e "${FORMAT_QUESTION}\n  ➤  Please enter an Email for the Voyager admin:"
+echo -e "     Default: ${RAND_EMAIL}${RESET_FORMATTING}"
 read -p "== " ADMIN_USER
 if [[ -z "$ADMIN_USER" ]]; then
   ADMIN_USER="${RAND_EMAIL}"
@@ -92,18 +96,11 @@ fi
 EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
 
 if [[ ${ADMIN_USER} =~ ${EMAIL_FORMAT} ]] ; then
-  echo -e "Great, here we go...\n---\n"
+  echo -e " "
 else
-  echo "Please enter a real email..."
+  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real email...${RESET_FORMATTING}"
   exit 1
 fi
-
-
-# Install Laravel
-# ---------------------------------------------
-composer create-project --prefer-dist laravel/laravel $DIR_NAME "5.6.*"
-cd $DIR_NAME
-SITE_ROOT="$(pwd)"
 
 
 # Create a Database
@@ -114,6 +111,13 @@ mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLL
 ' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
 
+# Install Laravel
+# ---------------------------------------------
+composer create-project --prefer-dist laravel/laravel $DIR_NAME "5.7.*"
+cd $DIR_NAME
+SITE_ROOT="$(pwd)"
+
+
 # Require Voyager
 # ---------------------------------------------
 composer require tcg/voyager
@@ -121,7 +125,6 @@ composer require tcg/voyager
 
 # Update the .env file
 # ---------------------------------------------
-cp .env.example .env
 sed -i 's,DB_HOST=127.0.0.1,DB_HOST='"$DB_HOST"',g' .env
 sed -i 's/DB_DATABASE=homestead/DB_DATABASE='"$DIR_NAME"'/g' .env
 sed -i 's/DB_USERNAME=homestead/DB_USERNAME='"$DB_USER"'/g' .env
@@ -135,8 +138,6 @@ sed -i 's/MAIL_PASSWORD=null/MAIL_PASSWORD=testpwd/g' .env
 
 echo "SCOUT_DRIVER=tntsearch" >> .env
 
-php artisan key:generate
-
 
 # Run the Voyager Installer
 # ---------------------------------------------
@@ -146,42 +147,43 @@ php artisan voyager:install
 # Install Voyager Pages
 # ---------------------------------------------
 if [[ ${INSTALL_PAGES} == 1 ]] ; then
-  composer require pvtl/voyager-pages
-  php artisan voyager-pages:install
+  ( composer require pvtl/voyager-pages \
+    && php artisan voyager-pages:install ) &>/dev/null &
 fi
 
 
 # Install Voyager Front-end
 # ---------------------------------------------
 if [[ ${INSTALL_FRONTEND} == 1 ]] ; then
-  composer require pvtl/voyager-frontend
-  composer dump-autoload && php artisan voyager-frontend:install
-  npm install && npm run dev
+  ( composer require pvtl/voyager-frontend \
+    && composer dump-autoload \
+    && php artisan voyager-frontend:install ) &>/dev/null &
 fi
 
 
 # Install Voyager Page Blocks
 # ---------------------------------------------
 if [[ ${INSTALL_PAGEBLOCKS} == 1 ]] ; then
-  composer require pvtl/voyager-page-blocks
-  php artisan voyager-page-blocks:install
+  ( composer require pvtl/voyager-page-blocks \
+    && php artisan voyager-page-blocks:install ) &>/dev/null &
 fi
 
 
 # Install Voyager Blog
 # ---------------------------------------------
 if [[ ${INSTALL_BLOG} == 1 ]] ; then
-  composer require pvtl/voyager-blog
-  php artisan voyager-blog:install
+  ( composer require pvtl/voyager-blog \
+    && php artisan voyager-blog:install ) &>/dev/null &
 fi
 
 
 # Install Voyager Forms
 # ---------------------------------------------
 if [[ ${INSTALL_FORMS} == 1 ]] ; then
-  composer require pvtl/voyager-forms
-  composer dump-autoload && php artisan voyager-forms:install
+  ( composer require pvtl/voyager-forms \
+    && composer dump-autoload && php artisan voyager-forms:install ) &>/dev/null &
 fi
+
 
 # Update the Readme
 # ---------------------------------------------
@@ -198,9 +200,9 @@ From the project root folder, run:
 
 ```
 composer install
-npm install
+yarn
 php artisan key:generate
-npm run dev
+yarn dev
 ```
 
 Finally, either import a copy of the DB into your environment (along with the `APP_KEY` variable from `.env`) or run these commands to setup a fresh DB:
@@ -229,18 +231,25 @@ php artisan voyager:admin --create
 Please ensure your code editor is setup to use and respect the settings in the `.editorconfig` file. This may involve installing a plugin for your editor.
 EOF
 
+
 # Create a Voyager Admin
 # ---------------------------------------------
 php artisan voyager:admin $ADMIN_USER --create
 
+
 # Output the login details
 # ---------------------------------------------
-echo -e "${BLUE}\n - - - - - - - - - - - - - -"
-echo "Voyager has been installed at: ${URL}"
-echo "- - -"
-echo "Login to the Admin at: ${URL}/admin"
-echo "Your Voyager username is: ${ADMIN_USER}"
-echo "- - -"
-echo "The site is located in: ${SITE_ROOT}"
-echo "The site is using database: ${DIR_NAME}"
-echo -e "- - - - - - - - - - - - - - ${RESET}"
+echo -e "${FORMAT_SUCCESS}\n  ✓  Installed Successfully!"
+echo -e " "
+echo -e "     Voyager has been installed at: ${URL}"
+echo -e "     and you can login to the admin: ${URL}/admin"
+echo -e " "
+echo -e "     We're running the install of dependencies in the background"
+echo -e "     - so it may be a couple of minutes before the site is 100% ready"
+echo -e " "
+echo -e "     Login credentials:"
+echo -e "       - Username: ${ADMIN_USER}"
+echo -e "       - Password: (the password you input)"
+echo -e "${RESET_FORMATTING}"
+
+disown

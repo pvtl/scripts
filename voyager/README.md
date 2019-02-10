@@ -1,6 +1,9 @@
 # Voyager
 
-### 🤞 Prerequisites
+## 🖼 Create a New Site
+
+<details><summary>Prerequisites</summary>
+<p>
 
 - Unix
 - Git
@@ -9,9 +12,11 @@
 - Composer
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
 
----
+</p></details>
 
-##  `create.sh`
+<details><summary>What does this do?</summary>
+
+<p>
 
 Installs a fresh version of Voyager with the following:
 
@@ -28,14 +33,14 @@ Installs a fresh version of Voyager with the following:
 - Some basic Voyager config:
     - Timezone set to Brisbane
 
-### 🚀 Usage
+</p></details>
 
-Whilst SSH'd into the Docker `php71` container (`docker exec -it php71 bash`), browsed to `/var/www/html`, simply run:
+### Usage
+
+Whilst SSH'd into the Docker `php72` container (`docker exec -it php72 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/voyager/create.sh -L)
 ```
-
-It will ask you for the project name (eg. voyager) which the script will use for various things like the directory name, MySQL database etc.
 
 ---
