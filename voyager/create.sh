@@ -147,41 +147,42 @@ php artisan voyager:install
 # Install Voyager Pages
 # ---------------------------------------------
 if [[ ${INSTALL_PAGES} == 1 ]] ; then
-  ( composer require pvtl/voyager-pages \
-    && php artisan voyager-pages:install ) &>/dev/null &
+  composer require pvtl/voyager-pages
+  php artisan voyager-pages:install
 fi
 
 
 # Install Voyager Front-end
 # ---------------------------------------------
 if [[ ${INSTALL_FRONTEND} == 1 ]] ; then
-  ( composer require pvtl/voyager-frontend \
-    && composer dump-autoload \
-    && php artisan voyager-frontend:install ) &>/dev/null &
+  composer require pvtl/voyager-frontend
+  composer dump-autoload
+  php artisan voyager-frontend:install
 fi
 
 
 # Install Voyager Page Blocks
 # ---------------------------------------------
 if [[ ${INSTALL_PAGEBLOCKS} == 1 ]] ; then
-  ( composer require pvtl/voyager-page-blocks \
-    && php artisan voyager-page-blocks:install ) &>/dev/null &
+  composer require pvtl/voyager-page-blocks
+  php artisan voyager-page-blocks:install
 fi
 
 
 # Install Voyager Blog
 # ---------------------------------------------
 if [[ ${INSTALL_BLOG} == 1 ]] ; then
-  ( composer require pvtl/voyager-blog \
-    && php artisan voyager-blog:install ) &>/dev/null &
+  composer require pvtl/voyager-blog
+  php artisan voyager-blog:install
 fi
 
 
 # Install Voyager Forms
 # ---------------------------------------------
 if [[ ${INSTALL_FORMS} == 1 ]] ; then
-  ( composer require pvtl/voyager-forms \
-    && composer dump-autoload && php artisan voyager-forms:install ) &>/dev/null &
+  composer require pvtl/voyager-forms
+  composer dump-autoload
+  php artisan voyager-forms:install
 fi
 
 
@@ -243,9 +244,6 @@ echo -e "${FORMAT_SUCCESS}\n  ✓  Installed Successfully!"
 echo -e " "
 echo -e "     Voyager has been installed at: ${URL}"
 echo -e "     and you can login to the admin: ${URL}/admin"
-echo -e " "
-echo -e "     We're running the install of dependencies in the background"
-echo -e "     - so it may be a couple of minutes before the site is 100% ready"
 echo -e " "
 echo -e "     Login credentials:"
 echo -e "       - Username: ${ADMIN_USER}"
