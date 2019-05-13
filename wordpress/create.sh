@@ -137,6 +137,7 @@ composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/duplicate-post \
   wpackagist-plugin/disable-gutenberg \
   wpackagist-plugin/google-analytics-dashboard-for-wp \
+  wpackagist-plugin/wp-smushit \
   pvtl/wp-update-watcher \
   pvtl/wp-button-shortcode &>/dev/null &
 
@@ -194,12 +195,13 @@ wp rewrite flush --allow-root
 
 # Active theme and plugins
 wp plugin activate advanced-custom-fields-pro --allow-root
-# wp plugin activate gravityforms --allow-root
-# wp plugin activate wordpress-seo --allow-root
-# wp plugin activate admin-menu-editor --allow-root
-# wp plugin activate simple-custom-post-order --allow-root
-# wp plugin activate duplicate-post --allow-root
-# wp plugin activate wp-button-shortcode --allow-root
+wp plugin activate wp-smushit --allow-root
+wp plugin activate wordpress-seo --allow-root
+wp plugin activate simple-custom-post-order --allow-root
+wp plugin activate duplicate-post --allow-root
+wp plugin activate gravityforms --allow-root
+wp plugin activate admin-menu-editor --allow-root
+wp plugin activate wp-button-shortcode --allow-root
 
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root

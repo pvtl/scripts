@@ -32,6 +32,7 @@ Installs a fresh version of Wordpress with the following:
     - [Duplicate Post*](https://wordpress.org/plugins/duplicate-post)
     - [Gravity Forms*](https://www.gravityforms.com/)
     - [Simple Custom Post Order*](https://wordpress.org/plugins/simple-custom-post-order/)
+    - [Smush Image Compression and Optimization*](https://wordpress.org/plugins/wp-smushit/)
     - [Yoast SEO*](https://wordpress.org/plugins/wordpress-seo/)
     - [Admin Menu Editor](https://wordpress.org/plugins/admin-menu-editor/)
     - [Google Analytics Dashboard](https://wordpress.org/plugins/google-analytics-dashboard-for-wp/)
