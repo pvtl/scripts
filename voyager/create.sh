@@ -113,7 +113,7 @@ mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLL
 
 # Install Laravel
 # ---------------------------------------------
-composer create-project --prefer-dist laravel/laravel $DIR_NAME "5.7.*"
+composer create-project --prefer-dist laravel/laravel $DIR_NAME "5.8.*"
 cd $DIR_NAME
 SITE_ROOT="$(pwd)"
 
