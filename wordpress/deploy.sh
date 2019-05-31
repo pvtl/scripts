@@ -55,6 +55,7 @@ fi
   # Create if it doesn't exist
 if [ ! -d ${DIR_NAME} ]; then
   mkdir -p ${DIR_NAME};
+  chmod 755 ${DIR_NAME}
 fi
 
 # Asks for the publicly accessible URL (used to CURL the deploy script)
@@ -124,7 +125,14 @@ if [ ! -f "deploy.json" ]; then
 fi
 
 # Fix any file permissions
+find ${DIR_NAME} -type d -exec chmod 755 {} \;
 find ${DIR_NAME} -type f -exec chmod 644 {} \;
+
+# Ensure exec() is enabled + give the server a bit more time to execute
+echo '
+max_execution_time = 250
+disable_functions="show_source, system, passthru, popen"
+' >> php.ini
 
 # Setup the Deploy script
 # - Posting the input details for the script to do its thing
@@ -182,12 +190,6 @@ echo -e "     - I'll ask you for DB credentials in a few minutes (you better be 
 # echo '
 # php_value max_execution_time 250
 # ' >> .htaccess
-
-# Ensure exec() is enabled + give the server a bit more time to execute
-echo '
-max_execution_time = 250
-disable_functions="show_source, system, passthru, popen"
-' >> php.ini
 
 # The deploy may take some time due to pre/post-hook tasks like composer install
 function do_deploy() {
