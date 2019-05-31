@@ -123,6 +123,8 @@ if [ ! -f "deploy.json" ]; then
   exit 1
 fi
 
+# Fix any file permissions
+find ${DIR_NAME} -type f -exec chmod 644 {} \;
 
 # Setup the Deploy script
 # - Posting the input details for the script to do its thing
@@ -177,9 +179,15 @@ sleep 1
 echo -e "     - I'll ask you for DB credentials in a few minutes (you better be ready for it).${RESET_FORMATTING}"
 
 # Give the server a bit more time to execute
+# echo '
+# php_value max_execution_time 250
+# ' >> .htaccess
+
+# Ensure exec() is enabled + give the server a bit more time to execute
 echo '
-php_value max_execution_time 250
-' >> .htaccess
+max_execution_time = 250
+disable_functions="show_source, system, passthru, popen"
+' >> php.ini
 
 # The deploy may take some time due to pre/post-hook tasks like composer install
 function do_deploy() {
