@@ -195,7 +195,6 @@ wp rewrite flush --allow-root
 
 # Active plugins - only the plugins manually cloned - the others are installing in the bg
 wp plugin activate advanced-custom-fields-pro --allow-root
-wp plugin activate gravityforms --allow-root
 
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
