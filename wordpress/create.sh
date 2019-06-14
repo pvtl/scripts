@@ -193,15 +193,9 @@ wp core install \
 wp rewrite structure /%category%/%postname%/ --allow-root
 wp rewrite flush --allow-root
 
-# Active theme and plugins
+# Active plugins - only the plugins manually cloned - the others are installing in the bg
 wp plugin activate advanced-custom-fields-pro --allow-root
-wp plugin activate wp-smushit --allow-root
-wp plugin activate wordpress-seo --allow-root
-wp plugin activate simple-custom-post-order --allow-root
-wp plugin activate duplicate-post --allow-root
 wp plugin activate gravityforms --allow-root
-wp plugin activate admin-menu-editor --allow-root
-wp plugin activate wp-button-shortcode --allow-root
 
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
@@ -216,12 +210,6 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
 
   # Build assets
   yarn &>/dev/null &
-
-  # Setup for local dev
-  if [ -f "config-default.yml" ]; then
-    cp config-default.yml config.yml
-    sed -i 's,url: "",url: "'"$URL"'",g' config.yml
-  fi
 
   cd $SITE_ROOT
 
