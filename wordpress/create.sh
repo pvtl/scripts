@@ -163,7 +163,8 @@ mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLL
 cp .env.example .env
 sed -i 's/database_name/'"$DIR_NAME"'/g' .env
 sed -i 's/database_user/'"$DB_USER"'/g' .env
-sed -i 's/database_password/'"$DB_PW"'\nDB_HOST='"$DB_HOST"'/g' .env
+sed -i 's/database_password/'"$DB_PW"'/g' .env
+sed -i 's/# DB_HOST=localhost/DB_HOST='"$DB_PW"'/g' .env
 sed -i 's,http://example.com,'"$URL"',g' .env
 
 sed -i "s/SECURE_AUTH_KEY='generateme'/SECURE_AUTH_KEY='"$WP_SECURE_AUTH_KEY"'/g" .env
