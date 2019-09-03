@@ -96,6 +96,15 @@ else
   exit 1
 fi
 
+# Asks for the branch to deploy
+  # Defaults to master
+echo -e "${FORMAT_QUESTION}\n  ➤  What Git branch would you like to use?"
+echo -e "     Default: develop${RESET_FORMATTING}"
+read -p "== " GIT_BRANCH
+if [[ -z "$GIT_BRANCH" ]]; then
+  GIT_BRANCH="develop"
+fi
+
 # Create a default dir and DB name
 DIR_NAME_TMP=$(echo $GIT_REPO_NAME | tr -cd '[[:alnum:]].' | tr '[:upper:]' '[:lower:]')
 
@@ -139,9 +148,7 @@ mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLL
 
 # Clone the repo
 # ---------------------------------------------
-git clone ${GIT_REPO_URL_HTTPS} .
-
-git checkout develop
+git clone --single-branch --branch ${GIT_BRANCH} ${GIT_REPO_URL_HTTPS} .
 git remote set-url origin ${GIT_REPO_URL_GIT}
 
   # Exit if it didn't clone
