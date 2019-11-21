@@ -248,7 +248,7 @@ fi
 
 cp .env.example .env
 sed -i 's,http://example.com,'"$PUBLIC_SITE_URL"',g' .env
-sed -i 's,WP_ENV=development,WP_ENV=production,g' .env
+sed -i "s,WP_ENV='development',WP_ENV='production',g" .env
 
 # WP Secrets
 sed -i "s/SECURE_AUTH_KEY='generateme'/SECURE_AUTH_KEY='"$WP_SECURE_AUTH_KEY"'/g" .env
@@ -286,7 +286,8 @@ fi
 
 sed -i 's/database_name/'"$DB_NAME"'/g' .env
 sed -i 's/database_user/'"$DB_USER"'/g' .env
-sed -i 's/database_password/'"$DB_PW"'\nDB_HOST=localhost/g' .env
+sed -i 's/database_password/'"$DB_PW"'/g' .env
+sed -i "s/# DB_HOST='localhost'/DB_HOST='localhost'/g" .env
 
 
 # Create a generic .htaccess file for permalinks (for convenience...user can FTP up a real one if needed)
