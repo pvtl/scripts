@@ -236,20 +236,20 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   wp plugin deactivate wordpress-importer --allow-root
   rm -rf web/app/plugins/wordpress-importer
 
-  # Setup the home/blog pages - 78=about 76=home 102=blog 80=contact
+  # Setup the home/blog pages - 76=about 74=home 102=blog 78=contact
   wp option update show_on_front 'page' --allow-root
-  wp option update page_on_front 76 --allow-root
+  wp option update page_on_front 74 --allow-root
   wp option update page_for_posts 102 --allow-root
 
   # Create a couple of menus for the theme
   wp menu create "Main Menu" --allow-root
   wp menu create "Top Bar" --allow-root
+  wp menu item add-post main-menu 74 --allow-root
   wp menu item add-post main-menu 76 --allow-root
-  wp menu item add-post main-menu 78 --allow-root
   wp menu item add-post main-menu 102 --allow-root
-  wp menu item add-post main-menu 80 --allow-root
+  wp menu item add-post main-menu 78 --allow-root
+  wp menu item add-post top-bar 76 --allow-root
   wp menu item add-post top-bar 78 --allow-root
-  wp menu item add-post top-bar 80 --allow-root
 
   # Assign header and footer menus to theme menu locations
   wp menu location assign main-menu primary --allow-root
