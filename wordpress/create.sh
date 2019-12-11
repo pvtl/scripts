@@ -122,7 +122,6 @@ ln -s web public
 # Add Pivotal composer repos
 # ---------------------------------------------
 composer config repositories.wp-update-watcher git https://bitbucket.org/pvtl/wp-update-watcher
-composer config repositories.wp-button-shortcode git https://github.com/pvtl/wp-button-shortcode
 
 
 # Install default Wordpress plugins
@@ -131,13 +130,11 @@ composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/w3-total-cache \
   wpackagist-plugin/wp-migrate-db \
   wpackagist-plugin/admin-menu-editor \
-  wpackagist-plugin/better-wp-security \
   wpackagist-plugin/custom-post-type-ui \
   wpackagist-plugin/simple-custom-post-order \
   wpackagist-plugin/duplicate-post \
-  wpackagist-plugin/disable-gutenberg \
-  wpackagist-plugin/google-analytics-dashboard-for-wp \
-  wpackagist-plugin/wp-smushit \
+  wpackagist-plugin/ewww-image-optimizer \
+  wpackagist-plugin/redirection \
   pvtl/wp-update-watcher \
   pvtl/wp-button-shortcode &>/dev/null &
 
@@ -146,8 +143,6 @@ git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/p
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
 ( git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms \
   && rm -rf web/app/plugins/gravityforms/.git ) &>/dev/null &
-( git clone https://github.com/wp-premium/gravityformscampaignmonitor.git web/app/plugins/gravityformscampaignmonitor \
-  && rm -rf web/app/plugins/gravityformscampaignmonitor/.git ) &>/dev/null &
 
 
 # Create a Database
@@ -204,7 +199,7 @@ wp option update timezone_string Australia/Brisbane --allow-root
 # Install the Pivotal theme
 # ---------------------------------------------
 if [[ ${INSTALL_THEME} == 1 ]] ; then
-  git clone https://bitbucket.org/pvtl/wordpress-theme-boilerplate.git web/app/themes/pvtl
+  git clone https://bitbucket.org/pvtl/pvtl20-boilerplate.git web/app/themes/pvtl
   cd web/app/themes/pvtl
   rm -rf .git
 
