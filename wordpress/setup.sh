@@ -161,8 +161,8 @@ fi
 # Install Dependencies
 # ---------------------------------------------
 composer install --ignore-platform-reqs &>/dev/null &
-( cd web/app/themes/pvtl ; yarn &>/dev/null & )
-# ( cd web/app/themes/pvtl ; yarn run production )
+( cd web/app/themes/pvtl20-child ; yarn &>/dev/null & )
+# ( cd web/app/themes/pvtl20-child ; yarn run production )
 
 # The above commands are run in the background
 # `disown` ensures they finish if we close the terminal
