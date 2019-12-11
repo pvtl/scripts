@@ -199,8 +199,13 @@ wp option update timezone_string Australia/Brisbane --allow-root
 # Install the Pivotal theme
 # ---------------------------------------------
 if [[ ${INSTALL_THEME} == 1 ]] ; then
-  git clone https://bitbucket.org/pvtl/pvtl20-boilerplate.git web/app/themes/pvtl
-  cd web/app/themes/pvtl
+  # Parent theme
+  git clone git@github.com:understrap/understrap.git web/app/themes/pvtl20
+  ( cd web/app/themes/pvtl20 && rm -rf .git )
+
+  # Child theme
+  git clone https://bitbucket.org/pvtl/pvtl20-boilerplate.git web/app/themes/pvtl20-child
+  cd web/app/themes/pvtl20-child
   rm -rf .git
 
   # Build assets
@@ -209,50 +214,49 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   cd $SITE_ROOT
 
   # Activate Theme
-  wp theme activate pvtl --allow-root
+  wp theme activate pvtl20 --allow-root
 
   # Import content
   wp plugin install wordpress-importer --activate --allow-root
-  curl -O https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/wordpress-export.xml
-  sed -i 's,http://wordpress.pub.localhost,'"$URL"',g' wordpress-export.xml
-  wp import wordpress-export.xml --authors="skip" --allow-root
+  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl20-child/wordpress-pages-export.xml
+  wp import web/app/themes/pvtl20-child/wordpress-pages-export.xml --authors="skip" --allow-root
+  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl20-child/wordpress-posts-export.xml
+  wp import web/app/themes/pvtl20-child/wordpress-posts-export.xml --authors="skip" --allow-root
   wp plugin deactivate wordpress-importer --allow-root
   rm -rf web/app/plugins/wordpress-importer
 
-  # Set the kitchen-sink template on default sample page
-  wp post update 2 --page_template='page-templates/kitchen-sink.php' --allow-root
-
   # Setup the home/blog pages - 2=sample 4=home 5=blog 6=contact
-  wp option update show_on_front 'page' --allow-root
-  wp option update page_on_front 4 --allow-root
-  wp option update page_for_posts 5 --allow-root
+  # wp option update show_on_front 'page' --allow-root
+  # wp option update page_on_front 4 --allow-root
+  # wp option update page_for_posts 5 --allow-root
 
   # Create a couple of menus for the theme
   wp menu create "Main Menu" --allow-root
-  wp menu create "Footer Menu" --allow-root
-  wp menu item add-post main-menu 4 --allow-root
-  wp menu item add-post main-menu 5 --allow-root
-  wp menu item add-post main-menu 2 --allow-root
-  wp menu item add-post main-menu 6 --allow-root
-  wp menu item add-post footer-menu 4 --allow-root
-  wp menu item add-post footer-menu 5 --allow-root
-  wp menu item add-post footer-menu 2 --allow-root
-  wp menu item add-post footer-menu 6 --allow-root
+  wp menu create "Top Bar" --allow-root
+  # wp menu item add-post main-menu 4 --allow-root
+  # wp menu item add-post main-menu 5 --allow-root
+  # wp menu item add-post main-menu 2 --allow-root
+  # wp menu item add-post main-menu 6 --allow-root
+  # wp menu item add-post footer-menu 4 --allow-root
+  # wp menu item add-post footer-menu 5 --allow-root
+  # wp menu item add-post footer-menu 2 --allow-root
+  # wp menu item add-post footer-menu 6 --allow-root
 
   # Assign header and footer menus to theme menu locations
-  wp menu location assign main-menu top-bar-r --allow-root
-  wp menu location assign main-menu mobile-nav --allow-root
+  wp menu location assign main-menu primary --allow-root
+  wp menu location assign main-menu mobile --allow-root
+  wp menu location assign top-bar topbar --allow-root
 
   # Add some footer widgets
-  wp widget add nav_menu footer-widgets-1 1 --title="Quick Nav" --nav_menu="2" --allow-root
-  wp widget add nav_menu footer-widgets-2 1 --title="Terms" --nav_menu="3" --allow-root
+  # wp widget add nav_menu footer-widgets-1 1 --title="Quick Nav" --nav_menu="2" --allow-root
+  # wp widget add nav_menu footer-widgets-2 1 --title="Terms" --nav_menu="3" --allow-root
 
   # Install ACF CLI (to enable us to install some default fields)
   git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
 
   # Import our ACF fields for the theme
   wp plugin activate advanced-custom-fields-wpcli --allow-root
-  wp acf import --json_file=web/app/themes/pvtl/acf-fields.json --allow-root
+  wp acf import --json_file=web/app/themes/pvtl20-child/acf-fields.json --allow-root
 
   # Remove ACF CLI plugin - we don't need it anymore
   wp plugin deactivate advanced-custom-fields-wpcli --allow-root
@@ -342,7 +346,7 @@ Once imported: scrub any sensitive data (eg. customer info, credit card tokens e
 #### 4. Install dependencies (composer, npm)
 ```bash
 composer install --ignore-platform-reqs
-( cd web/app/themes/pvtl ; yarn )
+( cd web/app/themes/pvtl20-child ; yarn )
 ```
 
 ---
