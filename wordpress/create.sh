@@ -297,7 +297,7 @@ error_log
 error_log_dev
 
 # Ignore LDE symlink
-public
+/public
 
 # W3Total Cache
 web/app/cache
