@@ -200,8 +200,8 @@ wp option update timezone_string Australia/Brisbane --allow-root
 # ---------------------------------------------
 if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Parent theme
-  git clone git@github.com:understrap/understrap.git web/app/themes/pvtl20
-  ( cd web/app/themes/pvtl20 && rm -rf .git )
+  git clone https://github.com/understrap/understrap.git web/app/themes/understrap
+  ( cd web/app/themes/understrap && rm -rf .git )
 
   # Child theme
   git clone https://bitbucket.org/pvtl/pvtl20-boilerplate.git web/app/themes/pvtl20-child
@@ -214,42 +214,7 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   cd $SITE_ROOT
 
   # Activate Theme
-  wp theme activate pvtl20 --allow-root
-
-  # Import content
-  wp plugin install wordpress-importer --activate --allow-root
-  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl20-child/wordpress-pages-export.xml
-  wp import web/app/themes/pvtl20-child/wordpress-pages-export.xml --authors="skip" --allow-root
-  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl20-child/wordpress-posts-export.xml
-  wp import web/app/themes/pvtl20-child/wordpress-posts-export.xml --authors="skip" --allow-root
-  wp plugin deactivate wordpress-importer --allow-root
-  rm -rf web/app/plugins/wordpress-importer
-
-  # Setup the home/blog pages - 2=sample 4=home 5=blog 6=contact
-  # wp option update show_on_front 'page' --allow-root
-  # wp option update page_on_front 4 --allow-root
-  # wp option update page_for_posts 5 --allow-root
-
-  # Create a couple of menus for the theme
-  wp menu create "Main Menu" --allow-root
-  wp menu create "Top Bar" --allow-root
-  # wp menu item add-post main-menu 4 --allow-root
-  # wp menu item add-post main-menu 5 --allow-root
-  # wp menu item add-post main-menu 2 --allow-root
-  # wp menu item add-post main-menu 6 --allow-root
-  # wp menu item add-post footer-menu 4 --allow-root
-  # wp menu item add-post footer-menu 5 --allow-root
-  # wp menu item add-post footer-menu 2 --allow-root
-  # wp menu item add-post footer-menu 6 --allow-root
-
-  # Assign header and footer menus to theme menu locations
-  wp menu location assign main-menu primary --allow-root
-  wp menu location assign main-menu mobile --allow-root
-  wp menu location assign top-bar topbar --allow-root
-
-  # Add some footer widgets
-  # wp widget add nav_menu footer-widgets-1 1 --title="Quick Nav" --nav_menu="2" --allow-root
-  # wp widget add nav_menu footer-widgets-2 1 --title="Terms" --nav_menu="3" --allow-root
+  wp theme activate pvtl20-child --allow-root
 
   # Install ACF CLI (to enable us to install some default fields)
   git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
@@ -261,6 +226,39 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Remove ACF CLI plugin - we don't need it anymore
   wp plugin deactivate advanced-custom-fields-wpcli --allow-root
   rm -rf web/app/plugins/advanced-custom-fields-wpcli
+
+  # Import content
+  wp plugin install wordpress-importer --activate --allow-root
+  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl20-child/wordpress-pages-export.xml
+  wp import web/app/themes/pvtl20-child/wordpress-pages-export.xml --authors="skip" --allow-root
+  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl20-child/wordpress-posts-export.xml
+  wp import web/app/themes/pvtl20-child/wordpress-posts-export.xml --authors="skip" --allow-root
+  wp plugin deactivate wordpress-importer --allow-root
+  rm -rf web/app/plugins/wordpress-importer
+
+  # Setup the home/blog pages - 78=about 76=home 102=blog 80=contact
+  wp option update show_on_front 'page' --allow-root
+  wp option update page_on_front 76 --allow-root
+  wp option update page_for_posts 102 --allow-root
+
+  # Create a couple of menus for the theme
+  wp menu create "Main Menu" --allow-root
+  wp menu create "Top Bar" --allow-root
+  wp menu item add-post main-menu 76 --allow-root
+  wp menu item add-post main-menu 78 --allow-root
+  wp menu item add-post main-menu 102 --allow-root
+  wp menu item add-post main-menu 80 --allow-root
+  wp menu item add-post top-bar 78 --allow-root
+  wp menu item add-post top-bar 80 --allow-root
+
+  # Assign header and footer menus to theme menu locations
+  wp menu location assign main-menu primary --allow-root
+  wp menu location assign main-menu mobile --allow-root
+  wp menu location assign top-bar topbar --allow-root
+
+  # Add some footer widgets
+  # wp widget add nav_menu footer-widgets-1 1 --title="Quick Nav" --nav_menu="2" --allow-root
+  # wp widget add nav_menu footer-widgets-2 1 --title="Terms" --nav_menu="3" --allow-root
 fi
 
 
