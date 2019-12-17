@@ -73,6 +73,24 @@ else
   exit 1
 fi
 
+HOSTNAME=$(sed 's_http://__g' <<<${PUBLIC_SITE_URL} | sed 's_https://__g')
+SERVER_IP=$(curl http://ifconfig.me)
+HOST_IP=$(ping -c 1 ${HOSTNAME} | awk -F '[()]' '{print $2}' | head -n 1)
+
+if [[ ${SERVER_IP} != ${HOST_IP} ]]; then
+  if [[ '127.0.0.1' != ${HOST_IP} ]]; then
+    echo -e "${FORMAT_ERROR}  ⚠  The hostname is not currently pointed to this server.${RESET_FORMATTING}"
+    echo -e "${FORMAT_ERROR}  ⚠  This will cause the deploy to fail.${RESET_FORMATTING}"
+    echo -e "${FORMAT_ERROR}  ⚠  Please read the 'Prerequisites' of this script before continuing.${RESET_FORMATTING}"
+    echo -e "${FORMAT_QUESTION}\n  ➤  Continue? [y/n] ${RESET_FORMATTING}"
+    read -p "== " CONTINUE_WHEN_IPS_DIFF
+
+    if [[ "$CONTINUE_WHEN_IPS_DIFF" != "${CONTINUE_WHEN_IPS_DIFF#[Nn]}" ]]; then
+      exit 1
+    fi
+  fi
+fi
+
 # Asks for the Git repo URL of the project
   # Quit if nothing input
 echo -e "${FORMAT_QUESTION}\n  ➤  What's the URL to access the Git repo?"
