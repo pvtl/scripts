@@ -128,6 +128,7 @@ composer config repositories.wp-update-watcher git https://bitbucket.org/pvtl/wp
 # ---------------------------------------------
 composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/w3-total-cache \
+  wpackagist-plugin/better-wp-security \
   wpackagist-plugin/wp-migrate-db \
   wpackagist-plugin/admin-menu-editor \
   wpackagist-plugin/custom-post-type-ui \
