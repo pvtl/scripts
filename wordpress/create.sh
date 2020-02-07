@@ -204,8 +204,8 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   ( cd web/app/themes/understrap && rm -rf .git )
 
   # Child theme
-  git clone https://bitbucket.org/pvtl/pvtl20-boilerplate.git web/app/themes/pvtl20-child
-  cd web/app/themes/pvtl20-child
+  git clone https://bitbucket.org/pvtl/wordpress-theme-boilerplate-v3.git web/app/themes/pvtl-child
+  cd web/app/themes/pvtl-child
   rm -rf .git
 
   # Build assets
@@ -214,14 +214,14 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   cd $SITE_ROOT
 
   # Activate Theme
-  wp theme activate pvtl20-child --allow-root
+  wp theme activate pvtl-child --allow-root
 
   # Install ACF CLI (to enable us to install some default fields)
   git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
 
   # Import our ACF fields for the theme
   wp plugin activate advanced-custom-fields-wpcli --allow-root
-  wp acf import --json_file=web/app/themes/pvtl20-child/acf-fields.json --allow-root
+  wp acf import --json_file=web/app/themes/pvtl-child/acf-fields.json --allow-root
 
   # Remove ACF CLI plugin - we don't need it anymore
   wp plugin deactivate advanced-custom-fields-wpcli --allow-root
@@ -229,10 +229,10 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
 
   # Import content
   wp plugin install wordpress-importer --activate --allow-root
-  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl20-child/wordpress-pages-export.xml
-  wp import web/app/themes/pvtl20-child/wordpress-pages-export.xml --authors="skip" --allow-root
-  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl20-child/wordpress-posts-export.xml
-  wp import web/app/themes/pvtl20-child/wordpress-posts-export.xml --authors="skip" --allow-root
+  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl-child/wordpress-pages-export.xml
+  wp import web/app/themes/pvtl-child/wordpress-pages-export.xml --authors="skip" --allow-root
+  sed -i 's,http://pvtl20.pub.localhost,'"$URL"',g' web/app/themes/pvtl-child/wordpress-posts-export.xml
+  wp import web/app/themes/pvtl-child/wordpress-posts-export.xml --authors="skip" --allow-root
   wp plugin deactivate wordpress-importer --allow-root
   rm -rf web/app/plugins/wordpress-importer
 
@@ -344,7 +344,7 @@ Once imported: scrub any sensitive data (eg. customer info, credit card tokens e
 #### 4. Install dependencies (composer, npm)
 ```bash
 composer install --ignore-platform-reqs
-( cd web/app/themes/pvtl20-child ; yarn )
+( cd web/app/themes/pvtl-child ; yarn )
 ```
 
 ---
