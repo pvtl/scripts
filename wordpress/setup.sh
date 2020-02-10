@@ -157,6 +157,12 @@ if [ ! -f ".env.example" ]; then
   exit 1
 fi
 
+# Undo the shallow clone when not staging
+if [[ ${IS_STAGE} != 1 ]] ; then
+  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+  git fetch origin
+fi
+
 
 # Install Dependencies
 # ---------------------------------------------
@@ -223,7 +229,7 @@ echo '
 ' >> web/.htaccess
 
 
-# When STAGEing - add the stage.php script
+# When STAGE-ing - add the stage.php script
 # ---------------------------------------------
 if [[ ${IS_STAGE} == 1 ]] ; then
   # Pull the stage.php script from Bitbucket snippets
