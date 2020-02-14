@@ -365,10 +365,11 @@ To compile theme assets, the following commands can be used from within the them
 
 | Command | Description |
 | --- | --- |
-| `yarn dev` | Compiles/copies assets to /dist |
+| `yarn development` | Compiles/copies assets to /dist |
 | `yarn watch` | Watches your directory and compiles/copies assets to /dist each time you press save on a SCSS or JS file. Uses LiveReload to automatically inject assets into any open browser. Note that it polls a live reload server on port 3000. |
 | `yarn production` | Compiles/minifies/copies assets to /dist ready for production |
 | `yarn lint-js` | Provides a report on your JS, against the code styleguide |
+| `yarn lint-js` | Lints the JS files |
 
 ---
 
