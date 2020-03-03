@@ -213,8 +213,11 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
 
   cd $SITE_ROOT
   
-  # Copy the PHPCS config from the theme, into the root (mainly for SublimeLinter...)
-  mv ./phpcs.xml ./config/phpcs.xml && cp web/app/themes/pvtl-child/phpcs-root.xml ./phpcs.xml
+  # Move the PHPCS-root config from the theme, into the root (mainly for SublimeLinter...)
+  mv ./phpcs.xml ./config/phpcs.xml && mv web/app/themes/pvtl-child/phpcs-root.xml ./phpcs.xml
+  
+  # Move the Bitbucket Pipelines file into the root
+  mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
 
   # Activate Theme
   wp theme activate pvtl-child --allow-root
