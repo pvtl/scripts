@@ -218,6 +218,7 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   
   # Move the Bitbucket Pipelines file into the root
   mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
+  sed -i 's,# - cd web/app/themes/pvtl-child,- cd web/app/themes/pvtl-child,g' ./bitbucket-pipelines.yml
 
   # Activate Theme
   wp theme activate pvtl-child --allow-root
