@@ -327,11 +327,11 @@ cat << 'EOF' >> README.md
 
 ## Installation
 
-## a) Automated
+### a) Automated
 
 [Run a single command](https://github.com/pvtl/install-scripts/tree/master/wordpress#%EF%B8%8F-setup-the-site-locally)
 
-## b) Manual
+### b) Manual
 
 #### 1. Clone this repo
 ```bash
@@ -365,17 +365,9 @@ Working in the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-d
 - You'll need to create a symlink of `/public` to `/web` (`ln -s web public`)
 - Your Hostname will need to be {website}__.pub.localhost__ (note the `.pub`)
 
-### Theme Development
+### Theme
 
-To compile theme assets, the following commands can be used from within the theme directory.
-
-| Command | Description |
-| --- | --- |
-| `yarn development` | Compiles/copies assets to /dist |
-| `yarn watch` | Watches your directory and compiles/copies assets to /dist each time you press save on a SCSS or JS file. Uses LiveReload to automatically inject assets into any open browser. Note that it polls a live reload server on port 3000. |
-| `yarn production` | Compiles/minifies/copies assets to /dist ready for production |
-| `yarn lint-js` | Provides a report on your JS, against the code styleguide |
-| `yarn lint-js` | Lints the JS files |
+For more information on working with this site's theme, please see the README.md from this site's theme directory.
 
 ---
 
