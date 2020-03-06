@@ -317,6 +317,9 @@ web/app/object-cache.php
 !web/app/plugins/advanced-custom-fields-pro
 !web/app/plugins/gravityforms
 !web/app/plugins/gravityformscampaignmonitor
+
+# Ignore dynamic salient stylesheet
+web/app/themes/salient/css/salient-dynamic-styles.css
 ' >> .gitignore
 
 
