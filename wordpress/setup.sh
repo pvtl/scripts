@@ -168,7 +168,7 @@ fi
 # ---------------------------------------------
 composer install --ignore-platform-reqs &>/dev/null &
 
-if [ ! -f "web/app/themes/pvtl20-child/index.php" ]; then
+if [ -f "web/app/themes/pvtl20-child/index.php" ]; then
   ( cd web/app/themes/pvtl20-child ; yarn &>/dev/null & )
 fi
 
