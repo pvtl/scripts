@@ -167,8 +167,10 @@ fi
 # Install Dependencies
 # ---------------------------------------------
 composer install --ignore-platform-reqs &>/dev/null &
-( cd web/app/themes/pvtl20-child ; yarn &>/dev/null & )
-# ( cd web/app/themes/pvtl20-child ; yarn run production )
+
+if [ ! -f "web/app/themes/pvtl20-child/index.php" ]; then
+  ( cd web/app/themes/pvtl20-child ; yarn &>/dev/null & )
+fi
 
 # The above commands are run in the background
 # `disown` ensures they finish if we close the terminal
@@ -204,9 +206,9 @@ echo '
 <IfModule mod_rewrite.c>
   #### Access 404d Wordpress uploads from another site site (so that you do not need to download all assets)
   #### - If URL is not found AND the URL contains /app/uploads/ - check on live site
-  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
-  RewriteCond %{REQUEST_URI} ^/app/uploads/.*$
-  RewriteRule ^(.*)$ https://livesite.com.au/$1 [QSA,L]
+  # RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+  # RewriteCond %{REQUEST_URI} ^/app/uploads/.*$
+  # RewriteRule ^(.*)$ https://livesite.com.au/$1 [QSA,L]
 
   #### If URL is not XYZ, then redirect to XYZ
   # RewriteCond %{HTTP_HOST} !^example\.com
