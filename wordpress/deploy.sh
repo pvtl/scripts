@@ -184,7 +184,7 @@ fi
 
 # Show the key and pause
 echo -e "${FORMAT_QUESTION}\n  ➤  Please add this Access Key to the Git Repo"
-echo -e "     Bitbucket: Settings > Access keys${RESET_FORMATTING}"
+echo -e "     Github: Settings > Access keys${RESET_FORMATTING}"
 echo -e "$ACC_PUBLIC_KEY"
 
 PUB_KEY_ADDED=0
@@ -365,7 +365,7 @@ echo -e " "
 echo -e "     Next Steps:"
 echo -e "       1. Upload any assets (images, files etc)"
 echo -e "       2. Setup the CRON - `0,30 * * * * /usr/local/bin/php ${DIR_NAME}wp-cron.php >/dev/null 2>&1`"
-echo -e "       3. Add the following webhook URL to your git repo, to trigger auto-deploys (Bitbucket: Settings > Webhooks)"
+echo -e "       3. Add the following webhook URL to your git repo, to trigger auto-deploys (Github: Settings > Webhooks)"
 echo -e "          - ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
 echo -e "            (OR http://pvtl:pvtl@... if password protected)"
 echo -e "${RESET_FORMATTING}"
