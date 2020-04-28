@@ -12,6 +12,7 @@
 - MySQL
 - Composer
 - WP-cli
+- Github access to the PVTL theme (it'll prompt you for a password, which is a [Github personal access token](https://github.com/settings/tokens))
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
 
 </p></details>
@@ -73,7 +74,7 @@ bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wor
 - PHP
 - MySQL
 - Composer
-- Access to `https://bitbucket.org/pvtl/deploy-script.git`
+- Access to `https://github.com/pvtl/deploy-script.git` (it'll prompt you for a password, which is a [Github personal access token](https://github.com/settings/tokens))
 - Access to the Git repo you're wanting to clone
 - The domain name you'll be using for the site, must be live and propagated (i.e. for the script to be able to reach it via a CURL request). To get around this, you could either:
     - Add the domain to the *server's* host file (eg. `127.0.0.1 example.com`)
