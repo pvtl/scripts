@@ -121,7 +121,7 @@ ln -s web public
 
 # Add Pivotal composer repos
 # ---------------------------------------------
-composer config repositories.wp-update-watcher git https://github.com/pvtl/wp-update-watcher.git
+composer config repositories.wp-update-watcher git https://github.com/pvtl/wp-update-watcher
 
 
 # Install default Wordpress plugins
