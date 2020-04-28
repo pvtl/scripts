@@ -397,6 +397,8 @@ EOF
 
 # Add to Git
 # ---------------------------------------------
+git config --global user.email "tech+github@pvtl.io"
+git config --global user.name "PVTL Install Bot"
 git init && git add . && git commit -m 'init'
 git branch develop
 git checkout develop
