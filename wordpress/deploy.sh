@@ -123,7 +123,7 @@ cd ${DIR_NAME}
 # Gets (from Githib) deploy.php and the Wordpress specific config
   # Will ask for git username/password
 git config --global http.sslVerify false
-git clone https://https://github.com/pvtl/deploy-script.git deploy_tmp
+git clone https://github.com/pvtl/deploy-script.git deploy_tmp
 
   # Exit if it didn't clone
 if [ ! -d "deploy_tmp" ]; then
