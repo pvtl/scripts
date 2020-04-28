@@ -235,7 +235,7 @@ echo '
 # ---------------------------------------------
 if [[ ${IS_STAGE} == 1 ]] ; then
   # Pull the stage.php script from Bitbucket snippets
-  curl -L https://bitbucket.org/\!api/2.0/snippets/pvtl/A8RGM/files/stage.php --output stage.php
+  curl -L https://gist.githubusercontent.com/mcnamee/d07145548a864a18ab786f66675efc66/raw/stage.php --output stage.php
 
   # Add the Git Repo to pull
   sed -i "s,git_repo_url,"$GIT_REPO_URL_GIT",g" stage.php
