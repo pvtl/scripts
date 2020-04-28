@@ -136,7 +136,7 @@ composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/duplicate-post \
   wpackagist-plugin/ewww-image-optimizer \
   wpackagist-plugin/redirection \
-  pvtl/wp-update-watcher &>/dev/null &
+  pvtl/wp-update-watcher
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
