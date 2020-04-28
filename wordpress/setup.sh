@@ -234,7 +234,7 @@ echo '
 # When STAGE-ing - add the stage.php script
 # ---------------------------------------------
 if [[ ${IS_STAGE} == 1 ]] ; then
-  # Pull the stage.php script from Bitbucket snippets
+  # Pull the stage.php script from Github Gists
   curl -L https://gist.githubusercontent.com/mcnamee/d07145548a864a18ab786f66675efc66/raw/stage.php --output stage.php
 
   # Add the Git Repo to pull
@@ -261,8 +261,8 @@ echo -e "       1. Download any assets (images, files etc) to: ${SITE_ROOT}"
 echo -e "       2. Import the Database to the new DB: ${DIR_NAME}"
 
 if [[ ${IS_STAGE} == 1 ]] ; then
-  echo -e "       3. Add the dev server's Public Key ( https://pass.pvtl.io/index.php/pwd/view/4922 ) to the Git Repo (Bitbucket: Settings > Access Key)"
-  echo -e "       4. Add the following webhook URL to your git repo, to trigger auto-deploys (Bitbucket: Settings > Webhooks)"
+  echo -e "       3. Add the dev server's Public Key ( https://pass.pvtl.io/index.php/pwd/view/4922 ) to the Git Repo (Github: Settings > Deploy Key)"
+  echo -e "       4. Add the following webhook URL to your git repo, to trigger auto-deploys (Github: Settings > Webhooks)"
   echo -e "          - ${URL_STAGE_SCRIPT}"
 fi
 
