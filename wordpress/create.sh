@@ -121,7 +121,7 @@ ln -s web public
 
 # Add Pivotal composer repos
 # ---------------------------------------------
-composer config repositories.wp-update-watcher git https://bitbucket.org/pvtl/wp-update-watcher
+composer config repositories.wp-update-watcher git https://github.com/pvtl/wp-update-watcher.git
 
 
 # Install default Wordpress plugins
@@ -204,7 +204,7 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   ( cd web/app/themes/understrap && rm -rf .git )
 
   # Child theme
-  git clone https://bitbucket.org/pvtl/wordpress-theme-boilerplate-v3.git web/app/themes/pvtl-child
+  git clone https://github.com/pvtl/wordpress-theme-boilerplate-v3.git web/app/themes/pvtl-child
   cd web/app/themes/pvtl-child
   rm -rf .git
 
@@ -217,8 +217,8 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   mv ./phpcs.xml ./config/phpcs.xml && mv web/app/themes/pvtl-child/phpcs-root.xml ./phpcs.xml
   
   # Move the Bitbucket Pipelines file into the root
-  mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
-  sed -i 's,# - cd web/app/themes/pvtl-child,- cd web/app/themes/pvtl-child,g' ./bitbucket-pipelines.yml
+  # mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
+  # sed -i 's,# - cd web/app/themes/pvtl-child,- cd web/app/themes/pvtl-child,g' ./bitbucket-pipelines.yml
 
   # Activate Theme
   wp theme activate pvtl-child --allow-root
