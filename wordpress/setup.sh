@@ -168,8 +168,8 @@ fi
 # ---------------------------------------------
 composer install --ignore-platform-reqs &>/dev/null &
 
-if [ -f "web/app/themes/pvtl20-child/index.php" ]; then
-  ( cd web/app/themes/pvtl20-child ; yarn &>/dev/null & )
+if [ -f "web/app/themes/pvtl-child/index.php" ]; then
+  ( cd web/app/themes/pvtl-child ; yarn &>/dev/null & )
 fi
 
 # The above commands are run in the background
