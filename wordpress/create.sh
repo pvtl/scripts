@@ -318,6 +318,10 @@ web/app/object-cache.php
 !web/app/plugins/gravityforms
 !web/app/plugins/gravityformscampaignmonitor
 
+# Include Salient plugins
+!web/app/plugins/js_composer_salient
+!web/app/plugins/salient-*
+
 # Ignore dynamic salient stylesheet
 web/app/themes/salient/css/salient-dynamic-styles.css
 ' >> .gitignore
