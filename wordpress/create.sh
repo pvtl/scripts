@@ -217,11 +217,12 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   mv ./phpcs.xml ./config/phpcs.xml && mv web/app/themes/pvtl-child/phpcs-root.xml ./phpcs.xml
   
   # Move the Bitbucket Pipelines file into the root
-  # mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
-  # sed -i 's,# - cd web/app/themes/pvtl-child,- cd web/app/themes/pvtl-child,g' ./bitbucket-pipelines.yml
+  mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
+  sed -i 's,# - cd web/app/themes/pvtl-child,- cd web/app/themes/pvtl-child,g' ./bitbucket-pipelines.yml
   
   # Move the Github Actions file into the root
   mv web/app/themes/pvtl-child/github-workflows-test.yml ./.github/workflows/test.yml
+  rm -rf web/app/themes/pvtl-child/.github
 
   # Activate Theme
   wp theme activate pvtl-child --allow-root
