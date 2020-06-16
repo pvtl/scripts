@@ -317,6 +317,13 @@ echo "
 # AuthUserFile ${DIR_NAME}/.htpasswd
 # require valid-user
 
+#### Block access to xml-rpc.php
+#### It's usually how malicious actors brute force logins
+<Files xmlrpc.php>
+ deny from all
+</Files>
+
+#### Custom rules
 <IfModule mod_rewrite.c>
   #### Access 404d Wordpress uploads from another site site (so that you do not need to download all assets)
   #### - If URL is not found AND the URL contains /app/uploads/ - check on live site
