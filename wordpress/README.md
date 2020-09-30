@@ -12,7 +12,7 @@
 - MySQL
 - Composer
 - WP-cli
-- Github access to the PVTL theme (it'll prompt you for a password, which is a [Github personal access token](https://github.com/settings/tokens))
+- Github access to the PVTL theme (it'll prompt you for a password, which is a [Github personal access token](https://github.com/settings/tokens) with *all repo permissions*)
 - Ideally using the [Pivotal Docker Dev environment](https://github.com/pvtl/docker-dev)
 
 </p></details>
