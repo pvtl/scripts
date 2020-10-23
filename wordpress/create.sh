@@ -111,7 +111,7 @@ SITE_ROOT="$(pwd)"
 
 # Download the latest@Bedrock
 # ---------------------------------------------
-git clone https://github.com/roots/bedrock.git .
+git clone --depth 1 https://github.com/roots/bedrock.git .
 rm -rf .git
 rm -rf .github
 
@@ -148,10 +148,10 @@ composer require wpackagist-plugin/wordpress-seo \
   "pvtl/pvtl-sso:~1.0"
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
-git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
+git clone --depth 1 https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
-( git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms \
-  && rm -rf web/app/plugins/gravityforms/.git ) &>/dev/null &
+git clone --depth 1 https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms \
+rm -rf web/app/plugins/gravityforms/.git
 
 
 # Create a Database
@@ -219,11 +219,11 @@ wp option update timezone_string Australia/Brisbane --allow-root
 # ---------------------------------------------
 if [[ ${INSTALL_THEME} == 1 ]] ; then
   # Parent theme
-  git clone https://github.com/understrap/understrap.git web/app/themes/understrap
+  git clone --depth 1 https://github.com/understrap/understrap.git web/app/themes/understrap
   ( cd web/app/themes/understrap && rm -rf .git )
 
   # Child theme
-  git clone https://github.com/pvtl/wordpress-theme-boilerplate-v3.git web/app/themes/pvtl-child
+  git clone --depth 1 https://github.com/pvtl/wordpress-theme-boilerplate-v3.git web/app/themes/pvtl-child
   cd web/app/themes/pvtl-child
   rm -rf .git
 
@@ -247,7 +247,7 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   wp theme activate pvtl-child --allow-root
 
   # Install ACF CLI (to enable us to install some default fields)
-  git clone https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
+  git clone --depth 1 https://github.com/hoppinger/advanced-custom-fields-wpcli.git web/app/plugins/advanced-custom-fields-wpcli
 
   # Import our ACF fields for the theme
   wp plugin activate advanced-custom-fields-wpcli --allow-root
