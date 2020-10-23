@@ -153,14 +153,6 @@ rm -rf web/app/plugins/advanced-custom-fields-pro/.git
 ( git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms \
   && rm -rf web/app/plugins/gravityforms/.git ) &>/dev/null &
 
-# Activate a plugins
-wp plugin activate pvtl-sso --allow-root
-wp plugin activate wordpress-seo --allow-root
-wp plugin activate gravityforms --allow-root
-wp plugin activate simple-custom-post-order --allow-root
-wp plugin activate duplicate-post --allow-root
-wp plugin activate admin-menu-editor --allow-root
-
 
 # Create a Database
 # ---------------------------------------------
@@ -193,11 +185,21 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 wp core install \
   --url="${URL}" \
   --title="${DIR_NAME}" \
-#  --admin_user="${WP_USER}" \
-#  --admin_password="${WP_PW}" \
-#  --admin_email="${WP_EMAIL}" \
+  --admin_user="${DIR_NAME}" \
+  --admin_password="${WP_PW}" \
+  --admin_email="${WP_EMAIL}" \
   --skip-email \
   --allow-root
+
+
+# Activate a plugins
+# ---------------------------------------------
+wp plugin activate pvtl-sso --allow-root
+wp plugin activate wordpress-seo --allow-root
+wp plugin activate gravityforms --allow-root
+wp plugin activate simple-custom-post-order --allow-root
+wp plugin activate duplicate-post --allow-root
+wp plugin activate admin-menu-editor --allow-root
 
 
 # Set Wordpress config & activate plugins
