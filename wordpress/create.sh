@@ -34,7 +34,6 @@ FORMAT_ERROR="\e[41m\e[30m"
 # DB Details
 DB_HOST="mysql"
 DB_USER="root"
-DB_PW="dbroot"
 RAND=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 RAND_EMAIL="${RAND}@${RAND}.com"
 WP_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
@@ -68,6 +67,14 @@ URL="http://${DIR_NAME}.pub.localhost"
 echo -e "${FORMAT_QUESTION}\n  ➤  Would you like the Pivotal theme installed? [y/n] ${RESET_FORMATTING}"
 read -p "== " INSTALL_THEME
 [ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] && INSTALL_THEME=1 || INSTALL_THEME=0
+
+# LDE database password
+echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the password for your LDE's MySQL: [dbroot] ${RESET_FORMATTING}"
+read -p "== " DB_PW
+
+if [[ -z "$DB_PW" ]]; then
+  DB_PW="dbroot"
+fi
 
 # Wordpress Username - NOT NEEDED SINCE SSO
 # echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the Wordpress Admin username: [user${RAND}] ${RESET_FORMATTING}"
