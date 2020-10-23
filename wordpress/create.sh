@@ -187,7 +187,7 @@ wp core install \
   --title="${DIR_NAME}" \
   --admin_user="${DIR_NAME}" \
   --admin_password="${WP_PW}" \
-  --admin_email="${WP_EMAIL}" \
+  --admin_email="${RAND_EMAIL}" \
   --skip-email \
   --allow-root
 
