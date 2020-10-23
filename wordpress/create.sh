@@ -69,31 +69,31 @@ echo -e "${FORMAT_QUESTION}\n  ➤  Would you like the Pivotal theme installed? 
 read -p "== " INSTALL_THEME
 [ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] && INSTALL_THEME=1 || INSTALL_THEME=0
 
-# Wordpress Username
-echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the Wordpress Admin username: [user${RAND}] ${RESET_FORMATTING}"
-read -p "== " WP_USER
+# Wordpress Username - NOT NEEDED SINCE SSO
+# echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the Wordpress Admin username: [user${RAND}] ${RESET_FORMATTING}"
+# read -p "== " WP_USER
 
-WP_USER=$(echo $WP_USER | tr -cd '[[:alnum:]].')
-WP_USER=`echo "$WP_USER" | tr '[:upper:]' '[:lower:]'`
-if [[ -z "$WP_USER" ]]; then
-  WP_USER="user${RAND}"
-fi
+# WP_USER=$(echo $WP_USER | tr -cd '[[:alnum:]].')
+# WP_USER=`echo "$WP_USER" | tr '[:upper:]' '[:lower:]'`
+# if [[ -z "$WP_USER" ]]; then
+#   WP_USER="user${RAND}"
+# fi
 
-# Wordpress Email
-echo -e "${FORMAT_QUESTION}\n  ➤  Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] ${RESET_FORMATTING}"
-read -p "== " WP_EMAIL
-if [[ -z "$WP_EMAIL" ]]; then
-  WP_EMAIL="${RAND_EMAIL}"
-fi
+# Wordpress Email - NOT NEEDED SINCE SSO
+# echo -e "${FORMAT_QUESTION}\n  ➤  Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] ${RESET_FORMATTING}"
+# read -p "== " WP_EMAIL
+# if [[ -z "$WP_EMAIL" ]]; then
+#   WP_EMAIL="${RAND_EMAIL}"
+# fi
 
-EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
+# EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
 
-if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
-  echo -e " "
-else
-  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real email...${RESET_FORMATTING}"
-  exit 1
-fi
+# if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
+#   echo -e " "
+# else
+#   echo -e "${FORMAT_ERROR}  ⚠  Please enter a real email...${RESET_FORMATTING}"
+#   exit 1
+# fi
 
 
 # Create the directory
@@ -102,7 +102,7 @@ mkdir $DIR_NAME && cd $DIR_NAME
 SITE_ROOT="$(pwd)"
 
 
-# Down the latest@Bedrock
+# Download the latest@Bedrock
 # ---------------------------------------------
 git clone https://github.com/roots/bedrock.git .
 rm -rf .git
@@ -122,6 +122,7 @@ ln -s web public
 # Add Pivotal composer repos
 # ---------------------------------------------
 composer config repositories.wp-update-watcher git https://github.com/pvtl/wp-update-watcher
+composer config repositories.pvtl-sso git https://github.com/pvtl/wordpress-pvtl-sso-plugin
 
 
 # Install default Wordpress plugins
@@ -136,13 +137,22 @@ composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/duplicate-post \
   wpackagist-plugin/ewww-image-optimizer \
   wpackagist-plugin/redirection \
-  pvtl/wp-update-watcher
+  pvtl/wp-update-watcher \
+  "pvtl/pvtl-sso:~1.0"
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
 ( git clone https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms \
   && rm -rf web/app/plugins/gravityforms/.git ) &>/dev/null &
+
+# Activate a plugins
+wp plugin activate pvtl-sso --allow-root
+wp plugin activate wordpress-seo --allow-root
+wp plugin activate gravityforms --allow-root
+wp plugin activate simple-custom-post-order --allow-root
+wp plugin activate duplicate-post --allow-root
+wp plugin activate admin-menu-editor --allow-root
 
 
 # Create a Database
@@ -176,9 +186,9 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 wp core install \
   --url="${URL}" \
   --title="${DIR_NAME}" \
-  --admin_user="${WP_USER}" \
-  --admin_password="${WP_PW}" \
-  --admin_email="${WP_EMAIL}" \
+#  --admin_user="${WP_USER}" \
+#  --admin_password="${WP_PW}" \
+#  --admin_email="${WP_EMAIL}" \
   --skip-email \
   --allow-root
 
@@ -430,10 +440,10 @@ echo -e " "
 echo -e "     Wordpress has been installed at: ${URL}"
 echo -e "     and you can login at: ${URL}/wp/wp-admin"
 echo -e " "
-echo -e "     Login credentials:"
-echo -e "       - Email: ${WP_EMAIL}"
-echo -e "       - Username: ${WP_USER}"
-echo -e "       - Password: ${WP_PW}"
+# echo -e "     Login credentials:"
+# echo -e "       - Email: ${WP_EMAIL}"
+# echo -e "       - Username: ${WP_USER}"
+# echo -e "       - Password: ${WP_PW}"
 echo -e "${RESET_FORMATTING}"
 
 disown
