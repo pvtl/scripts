@@ -87,20 +87,20 @@ fi
 # fi
 
 # Wordpress Email - NOT NEEDED SINCE SSO
-# echo -e "${FORMAT_QUESTION}\n  ➤  Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] ${RESET_FORMATTING}"
-# read -p "== " WP_EMAIL
-# if [[ -z "$WP_EMAIL" ]]; then
-#   WP_EMAIL="${RAND_EMAIL}"
-# fi
+echo -e "${FORMAT_QUESTION}\n  ➤  Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] ${RESET_FORMATTING}"
+read -p "== " WP_EMAIL
+if [[ -z "$WP_EMAIL" ]]; then
+  WP_EMAIL="${RAND_EMAIL}"
+fi
 
-# EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
+EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
 
-# if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
-#   echo -e " "
-# else
-#   echo -e "${FORMAT_ERROR}  ⚠  Please enter a real email...${RESET_FORMATTING}"
-#   exit 1
-# fi
+if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
+  echo -e " "
+else
+  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real email...${RESET_FORMATTING}"
+  exit 1
+fi
 
 
 # Create the directory
@@ -190,6 +190,9 @@ wp core install \
   --admin_email="${RAND_EMAIL}" \
   --skip-email \
   --allow-root
+
+# Change main WP email (not the user email) to the installer
+wp option update admin_email $WP_EMAIL --allow-root
 
 
 # Activate a plugins
