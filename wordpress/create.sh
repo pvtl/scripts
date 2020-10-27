@@ -150,7 +150,7 @@ composer require wpackagist-plugin/wordpress-seo \
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone --depth 1 https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
-git clone --depth 1 https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms \
+git clone --depth 1 https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms
 rm -rf web/app/plugins/gravityforms/.git
 
 
