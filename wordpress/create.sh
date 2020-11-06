@@ -144,6 +144,7 @@ composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/duplicate-post \
   wpackagist-plugin/ewww-image-optimizer \
   wpackagist-plugin/redirection \
+  wpackagist-plugin/email-templates \
   pvtl/wp-update-watcher \
   "pvtl/pvtl-sso:~1.0"
 
