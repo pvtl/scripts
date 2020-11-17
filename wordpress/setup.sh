@@ -35,7 +35,6 @@ RAND=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 # DB Details
 DB_HOST="mysql"
 DB_USER="root"
-DB_PW="dbroot"
 
 # WP Secrets
 WP_AUTH_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
@@ -59,6 +58,14 @@ done
 
 # Site Config
 # ---------------------------------------------
+# LDE database password
+echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the password for MySQL: [dbroot] ${RESET_FORMATTING}"
+read -p "== " DB_PW
+
+if [[ -z "$DB_PW" ]]; then
+  DB_PW="dbroot"
+fi
+
 # Asks for the Git repo URL of the project
   # Quit if nothing input
 echo -e "${FORMAT_QUESTION}\n  ➤  What's the URL to access the Git repo?"
