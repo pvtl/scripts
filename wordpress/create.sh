@@ -162,16 +162,28 @@ $conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
 mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 ' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
+# Add Debugging helpers
+# ---------------------------------------------
+# Add extra .env variables
+sed -i "s,WP_DEBUG_LOG=/path/to/debug.log,\nDISABLE_WP_CRON=false\n\nWP_DEBUG=false\nWP_DEBUG_LOG=false\nWP_DEBUG_DISPLAY=false,g" .env.example
+
+# Ensure the .env debug vars work for staging and production
+echo "\nConfig::define('WP_DEBUG', env('WP_DEBUG') ?? false);\nConfig::define('WP_DEBUG_DISPLAY', env('WP_DEBUG_DISPLAY') ?? false);\n" >> ./config/environments/staging.php
+cp ./config/environments/staging.php ./config/environments/production.php
+sed -i "s/WP_ENV === 'staging'/WP_ENV === 'production'/g" ./config/environments/production.php
 
 # Create the .env file and setup DB connection
 # ---------------------------------------------
 cp .env.example .env
+
+# Add URL/Database credentials
 sed -i 's/database_name/'"$DIR_NAME"'/g' .env
 sed -i 's/database_user/'"$DB_USER"'/g' .env
 sed -i 's/database_password/'"$DB_PW"'/g' .env
 sed -i "s/# DB_HOST='localhost'/DB_HOST='$DB_HOST'/g" .env
 sed -i 's,http://example.com,'"$URL"',g' .env
 
+# Generate secrets
 sed -i "s/SECURE_AUTH_KEY='generateme'/SECURE_AUTH_KEY='"$WP_SECURE_AUTH_KEY"'/g" .env
 sed -i "s/AUTH_KEY='generateme'/AUTH_KEY='"$WP_AUTH_KEY"'/g" .env
 sed -i "s/LOGGED_IN_KEY='generateme'/LOGGED_IN_KEY='"$WP_LOGGED_IN_KEY"'/g" .env
@@ -180,6 +192,9 @@ sed -i "s/SECURE_AUTH_SALT='generateme'/SECURE_AUTH_SALT='"$WP_SECURE_AUTH_SALT"
 sed -i "s/AUTH_SALT='generateme'/AUTH_SALT='"$WP_AUTH_SALT"'/g" .env
 sed -i "s/LOGGED_IN_SALT='generateme'/LOGGED_IN_SALT='"$WP_LOGGED_IN_SALT"'/g" .env
 sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
+
+# Debug vars don't work in development (this case) - so remove to save confusion
+sed -i '/WP_DEBUG/d' .env
 
 # Install Wordpress
 # ---------------------------------------------
