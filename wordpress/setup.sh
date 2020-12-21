@@ -194,7 +194,7 @@ cp .env.example .env
 sed -i 's/database_name/'"$DIR_NAME"'/g' .env
 sed -i 's/database_user/'"$DB_USER"'/g' .env
 sed -i 's/database_password/'"$DB_PW"'/g' .env
-sed -i "s/# DB_HOST='localhost'/DB_HOST='$DB_HOST'/g" .env
+sed -i "s/# DB_HOST=/DB_HOST='$DB_HOST' # DB_HOST=/g" .env
 sed -i 's,http://example.com,'"$URL"',g' .env
 
 sed -i "s/SECURE_AUTH_KEY='generateme'/SECURE_AUTH_KEY='"$WP_SECURE_AUTH_KEY"'/g" .env
@@ -211,7 +211,7 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 # ---------------------------------------------
 echo '
 <IfModule mod_rewrite.c>
-  #### Access 404d Wordpress uploads from another site site (so that you do not need to download all assets)
+  #### Access 404d Wordpress uploads from another site (so that you do not need to download all assets)
   #### - If URL is not found AND the URL contains /app/uploads/ - check on live site
   # RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
   # RewriteCond %{REQUEST_URI} ^/app/uploads/.*$
