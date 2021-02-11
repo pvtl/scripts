@@ -220,7 +220,6 @@ wp option update admin_email $WP_EMAIL --allow-root
 
 # Activate plugins
 # ---------------------------------------------
-wp plugin activate pvtl-sso --allow-root
 wp plugin activate advanced-custom-fields-pro --allow-root
 wp plugin activate admin-menu-editor --allow-root
 wp plugin activate duplicate-post --allow-root
