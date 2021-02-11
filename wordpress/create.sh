@@ -228,6 +228,46 @@ wp plugin activate simple-custom-post-order --allow-root
 wp plugin activate wordpress-seo --allow-root
 
 
+# Create MU plugin/s
+# ---------------------------------------------
+# ACF hider
+cat << 'EOF' >> ./web/app/mu-plugins/hide-acf-panel.php
+<?php
+/**
+ * Plugin Name:  Hide ACF Panel
+ * Description:  Hide the ACF Admin Panel, unless it's the development environment.
+ * Version:      1.0.0
+ * Author:       Pivotal Agency
+ * Author URI:   https://pvtl.io/
+ * License:      MIT License
+ */
+
+if ( defined( 'WP_ENV' ) && WP_ENV !== 'development' ) {
+    add_filter( 'acf/settings/show_admin', '__return_false' );
+}
+EOF
+
+# CSS Customizer remover
+cat << 'EOF' >> ./web/app/mu-plugins/remove-customizer-css.php
+<?php
+/**
+ * Plugin Name:  Remove Customizer CSS
+ * Description:  Remove the CSS editor from the WordPress Customizer.
+ * Version:      1.0.0
+ * Author:       Pivotal Agency
+ * Author URI:   https://pvtl.io/
+ * License:      MIT License
+ */
+
+function prefix_remove_css_section( $wp_customize ) {
+  $wp_customize->remove_section( 'custom_css' );
+}
+
+add_action( 'customize_register', 'prefix_remove_css_section', 15 );
+EOF
+
+
+# Set Wordpress config
 # ---------------------------------------------
 # URL structure
 wp rewrite structure /%category%/%postname%/ --allow-root
