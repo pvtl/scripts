@@ -165,14 +165,14 @@ mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLL
 # Add Debugging helpers
 # ---------------------------------------------
 # Add extra .env variables
-sed -i "s,WP_DEBUG_LOG=/path/to/debug.log,\nDISABLE_WP_CRON=false\n\nWP_DEBUG_LOG=false,g" .env.example
+sed -i "s,WP_DEBUG_LOG=/path/to/debug.log,\nDISABLE_WP_CRON=false\nWP_DEBUG_LOG=false,g" .env.example
 
 # Ensure the .env debug vars work for staging and production
-echo "\n\
-Config::define('WP_DEBUG', false);\n\
-Config::define('WP_DEBUG_DISPLAY', false);\n\
-Config::define('WP_POST_REVISIONS', 10);\n\
-Config::define('WP_DISABLE_FATAL_ERROR_HANDLER', true);\n\
+echo "\
+Config::define('WP_DEBUG', false);\
+\nConfig::define('WP_DEBUG_DISPLAY', false);\
+\nConfig::define('WP_POST_REVISIONS', 10);\
+\nConfig::define('WP_DISABLE_FATAL_ERROR_HANDLER', true);\
 " >> ./config/environments/staging.php
 
 cp ./config/environments/staging.php ./config/environments/production.php
