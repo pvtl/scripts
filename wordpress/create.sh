@@ -162,6 +162,7 @@ $conn = mysqli_connect($argv[1], $argv[2], $argv[3]);
 mysqli_query($conn, "CREATE DATABASE " . $argv[4] . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 ' $DB_HOST $DB_USER $DB_PW $DIR_NAME
 
+
 # Add Debugging helpers
 # ---------------------------------------------
 # Add extra .env variables
@@ -175,6 +176,7 @@ echo "Config::define('WP_DISABLE_FATAL_ERROR_HANDLER', true);" >> ./config/envir
 
 cp ./config/environments/staging.php ./config/environments/production.php
 sed -i "s/WP_ENV === 'staging'/WP_ENV === 'production'/g" ./config/environments/production.php
+
 
 # Create the .env file and setup DB connection
 # ---------------------------------------------
@@ -200,6 +202,7 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 # Debug vars don't work in development (this case) - so remove to save confusion
 sed -i '/WP_DEBUG/d' .env
 
+
 # Install Wordpress
 # ---------------------------------------------
 wp core install \
@@ -215,24 +218,21 @@ wp core install \
 wp option update admin_email $WP_EMAIL --allow-root
 
 
-# Activate a plugins
+# Activate plugins
 # ---------------------------------------------
 wp plugin activate pvtl-sso --allow-root
-wp plugin activate wordpress-seo --allow-root
+wp plugin activate advanced-custom-fields-pro --allow-root
+wp plugin activate admin-menu-editor --allow-root
+wp plugin activate duplicate-post --allow-root
 wp plugin activate gravityforms --allow-root
 wp plugin activate simple-custom-post-order --allow-root
-wp plugin activate duplicate-post --allow-root
-wp plugin activate admin-menu-editor --allow-root
+wp plugin activate wordpress-seo --allow-root
 
 
-# Set Wordpress config & activate plugins
 # ---------------------------------------------
 # URL structure
 wp rewrite structure /%category%/%postname%/ --allow-root
 wp rewrite flush --allow-root
-
-# Active plugins - only the plugins manually cloned - the others are installing in the bg
-wp plugin activate advanced-custom-fields-pro --allow-root
 
 # Timezone
 wp option update timezone_string Australia/Brisbane --allow-root
@@ -338,6 +338,7 @@ echo '
 </IfModule>
 # END WordPress
 ' >> web/.htaccess
+
 
 # Add the following to the .gitignore
 # ---------------------------------------------
