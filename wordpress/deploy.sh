@@ -366,13 +366,16 @@ chown -R ${CORRECT_USER} .
 
 # Output the next steps
 # ---------------------------------------------
+DEPLOY_SCRIPT_URL_W_KEY="${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
+
 echo -e "${FORMAT_SUCCESS}\n  ✓  Deployed Successfully!"
-echo -e "     ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
+echo -e "     ${DEPLOY_SCRIPT_URL_W_KEY}"
 echo -e " "
 echo -e "     Next Steps:"
 echo -e "       1. Upload any assets (images, files etc)"
-echo -e "       2. Setup the CRON - `0,30 * * * * /usr/local/bin/php ${DIR_NAME}wp-cron.php >/dev/null 2>&1`"
-echo -e "       3. Add the following webhook URL to your git repo, to trigger auto-deploys (Github: Settings > Webhooks)"
-echo -e "          - ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
-echo -e "            (OR http://pvtl:pvtl@... if password protected)"
+echo -e "       2. Import the database"
+echo -e "       3. Setup the CRON: '0,30 * * * * /usr/local/bin/php ${DIR_NAME}/wp-cron.php >/dev/null 2>&1'"
+echo -e "       4. Add the following webhook URL to your git repo, to trigger auto-deploys (Github: Settings > Webhooks)"
+echo -e "          - ${DEPLOY_SCRIPT_URL_W_KEY}"
+echo -e "            (OR https://pvtl:pvtl@... if password protected)"
 echo -e "${RESET_FORMATTING}"
