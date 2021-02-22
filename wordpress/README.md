@@ -1,5 +1,7 @@
 # Wordpress Scripts
 
+A compilation of scripts that can be used for automating common Wordpress tasks.
+
 ## 🖼 Create a New Site
 
 <details><summary>Prerequisites</summary>
@@ -59,7 +61,7 @@ Installs a fresh version of Wordpress with the following:
 Whilst SSH'd into the Docker `php74` container (`docker exec -it php74 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/create.sh -L)
+bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/create.sh -L)
 ```
 
 ---
@@ -95,7 +97,7 @@ In the past, deploying a Wordpress site typically requires:
 1. Next, through FTP, create, upload, configure a `.env` (and go to another site to generate WP Secrets custom to this site)
 1. Next, through FTP, create, upload, configure a `.htaccess`
 
-This script does all of the above with a single command:
+This script does all of the below with a single command:
 
 - In a single place, provides step-by-step prompts for the required information
 - Grabs the `deploy.php` script from Git (placing it on the server)
@@ -114,7 +116,7 @@ This script does all of the above with a single command:
 SSH into the destination server and change to the correct user (`sudo su - -s /bin/bash <cPanel username>`)
 
 ```bash
-curl https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/deploy.sh --output wordpress-deploy.sh && bash wordpress-deploy.sh && rm wordpress-deploy.sh
+curl https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/deploy.sh --output wordpress-deploy.sh && bash wordpress-deploy.sh && rm wordpress-deploy.sh
 ```
 
 ---
@@ -140,7 +142,7 @@ curl https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/dep
 
 Setting up a site on your local machine takes time. What if it could be done through a (almost) single command?
 
-This script does all of the above with a single command:
+This script does all of the below with a single command:
 
 - In a single place, provides step-by-step prompts for the required information
 - Creates a directory and Clones the repo into it
@@ -158,7 +160,7 @@ This script does all of the above with a single command:
 Whilst SSH'd into the Docker `php74` container (`docker exec -it php74 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/setup.sh -L)
+bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/setup.sh -L)
 ```
 
 ---
@@ -183,7 +185,7 @@ bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wor
 
 Setting up a site for staging does take time. What if it could be done through a (almost) single command?
 
-This script does all of the above with a single command:
+This script does all of the below with a single command:
 
 - In a single place, provides step-by-step prompts for the required information
 - Creates a directory and Clones the repo into it
@@ -202,5 +204,32 @@ This script does all of the above with a single command:
 Whilst SSH'd into the Dev Server, `php71` container (`sudo docker exec -it services_php71-fpm_1 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/pvtl/install-scripts/master/wordpress/setup.sh -L) -s
+bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/setup.sh -L) -s
+```
+
+---
+
+## 🔭 Converting a Standard WP site to Bedrock (for Git Tracking)
+
+<details><summary>Prerequisites</summary>
+<p>
+
+- Unix
+
+</p></details>
+
+<details><summary>What does this do?</summary>
+
+<p>
+
+Converting a traditional (out of the box) Wordpress site to Bedrock for Git tracking can be tedious. This script simply analyses a Wordpress directory and outputs a list of all of the plugins, themes & uploads, and gives guidance on how to handle each
+
+</p></details>
+
+### Usage
+
+Whilst SSH'd into the Docker `php80` container (`docker exec -it php80 bash`), browsed to `/var/www/html`, simply run:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/git-conversion.sh -L) -s
 ```
