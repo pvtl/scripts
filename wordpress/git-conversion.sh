@@ -38,6 +38,9 @@ THEMES=()
 GITIGNORE=()
 COMPOSERJSON=()
 
+echo -e "${FORMAT_QUESTION}\n  ➤  Step 1. Use the Pivotal Wordpress Create Script to create a new Wordpress website."
+echo -e "     https://github.com/pvtl/scripts/tree/master/wordpress ${RESET_FORMATTING}"
+
 # Directory
 echo -e "${FORMAT_QUESTION}\n  ➤  Which Wordpress directory would you like to run this on? ${RESET_FORMATTING}"
 echo -e "     Default: ${INIT_DIR} ${RESET_FORMATTING}"
@@ -126,7 +129,7 @@ fi
 
 cd $INIT_DIR
 
-echo -e "${FORMAT_SUCCESS}\n  ✓  Finished!"
+echo -e "${FORMAT_SUCCESS}\n  Step 2. Follow the following instructions"
 echo -e "${RESET_FORMATTING}"
 
 if [ ${#THEMES[@]} -gt 0 ]; then
