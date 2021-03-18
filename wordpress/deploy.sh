@@ -311,11 +311,18 @@ sed -i "s/# DB_HOST='localhost'/DB_HOST='localhost'/g" .env
 # Create a generic .htaccess file for permalinks (for convenience...user can FTP up a real one if needed)
 # ---------------------------------------------
 echo "
-#### Password protect this directory
+#### Password protect this directory (excl. PVTL office, Neon, Carbon)
 # AuthType Basic
 # AuthName 'restricted area'
 # AuthUserFile ${DIR_NAME}/.htpasswd
 # require valid-user
+# Order allow,deny
+# Allow from 122.199.1.6
+# Allow from 2406:da1c:8ac:e100:fb67:658e:18a6:2cf4
+# Allow from 52.63.123.241
+# Allow from 2406:da1c:8ac:e102:86f9:3a30:d09:8ef9
+# Allow from 13.238.205.33
+# satisfy any
 
 #### Block access to xml-rpc.php
 #### It's usually how malicious actors brute force logins
