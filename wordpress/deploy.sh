@@ -356,12 +356,26 @@ echo "
   RewriteRule . /index.php [L]
 </IfModule>
 # END WordPress
+
+# Redirect everything while deploying
+# NEEDS TO GO RIGHT AT THE BOTTOM to work
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteCond %{REQUEST_URI} !^/deploy.php
+#     RewriteCond %{REQUEST_URI} !^/coming-soon.html
+#     RewriteCond %{REQUEST_URI} !\.(gif|jpe?g|png|css|js)$
+#     RewriteRule .* /coming-soon.html [L,R=302]
+# </IfModule>
 " >> web/.htaccess
 
 echo '
 pvtl:pvrgJ0QAegQSM
 nbm:nbVh6lSiQJnlI
 ' >> web/.htpasswd
+
+echo '
+Coming soon...
+' >> web/coming-soon.html
 
 
 # Fix any file permissions
