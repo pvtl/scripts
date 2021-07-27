@@ -311,6 +311,8 @@ sed -i "s/# DB_HOST='localhost'/DB_HOST='localhost'/g" .env
 # Create a generic .htaccess file for permalinks (for convenience...user can FTP up a real one if needed)
 # ---------------------------------------------
 echo "
+ErrorDocument 403 default
+
 #### Password protect this directory (excl. PVTL office, Neon, Carbon)
 # AuthType Basic
 # AuthName 'restricted area'
@@ -326,9 +328,7 @@ echo "
 
 #### Block access to xml-rpc.php
 #### It's usually how malicious actors brute force logins
-<Files xmlrpc.php>
- deny from all
-</Files>
+RewriteRule ^(.+\/)?xmlrpc.php$ - [F,L]
 
 #### Custom rules
 <IfModule mod_rewrite.c>
