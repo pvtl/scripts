@@ -5,4 +5,3 @@ This is a compilation of scripts that can be used for automating common dev task
 It's ok if you use different config or want different plugins - feel free to fork this repo and make them your own. We hope you'll benefit from our templates.
 
 - [Wordpress](/wordpress)
-- [Voyager](/voyager)
