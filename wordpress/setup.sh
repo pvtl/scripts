@@ -25,11 +25,6 @@
 
 # Variables
 # ---------------------------------------------
-RESET_FORMATTING="\e[49m\e[39m"
-FORMAT_QUESTION="\e[44m\e[30m"
-FORMAT_MESSAGE="\e[43m\e[30m"
-FORMAT_SUCCESS="\e[102m\e[30m"
-FORMAT_ERROR="\e[41m\e[30m"
 RAND=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 
 # DB Details
@@ -59,7 +54,7 @@ done
 # Site Config
 # ---------------------------------------------
 # LDE database password
-echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the password for MySQL: [dbroot] ${RESET_FORMATTING}"
+echo -e "\n  ➤  Please enter the password for MySQL: [dbroot] "
 read -p "== " DB_PW
 
 if [[ -z "$DB_PW" ]]; then
@@ -68,8 +63,8 @@ fi
 
 # Asks for the Git repo URL of the project
   # Quit if nothing input
-echo -e "${FORMAT_QUESTION}\n  ➤  What's the URL to access the Git repo?"
-echo -e "     Note: use the HTTPS version of the URL${RESET_FORMATTING}"
+echo -e "\n  ➤  What's the URL to access the Git repo?"
+echo -e "     Note: use the HTTPS version of the URL"
 read -p "== " GIT_REPO_URL_HTTPS
 
 GIT_URL_FORMAT="^(https)(:\/\/|@)([^@:]+)([^\/:]+)[\/:]([^\/:]+)\/(.+).git$"
@@ -99,14 +94,14 @@ if [[ ${GIT_REPO_URL_HTTPS} =~ ${GIT_URL_FORMAT} ]] ; then
   echo ${GIT_REPO_URL_GIT}
 
 else
-  echo -e "${FORMAT_ERROR}  ⚠  Please enter the HTTPS version of the URL...${RESET_FORMATTING}"
+  echo -e "  ⚠  Please enter the HTTPS version of the URL..."
   exit 1
 fi
 
 # Asks for the branch to deploy
   # Defaults to master
-echo -e "${FORMAT_QUESTION}\n  ➤  What Git branch would you like to use?"
-echo -e "     Default: develop${RESET_FORMATTING}"
+echo -e "\n  ➤  What Git branch would you like to use?"
+echo -e "     Default: develop"
 read -p "== " GIT_BRANCH
 if [[ -z "$GIT_BRANCH" ]]; then
   GIT_BRANCH="develop"
@@ -117,8 +112,8 @@ DIR_NAME_TMP=$(echo $GIT_REPO_NAME | tr -cd '[[:alnum:]].' | tr '[:upper:]' '[:l
 
 # Directory/DB Name
   # Defaults to a random folder name
-echo -e "${FORMAT_QUESTION}\n  ➤   We'll create a new directory & DB for the project. What shall we call them?"
-echo -e "     Default: ${DIR_NAME_TMP}${RESET_FORMATTING}"
+echo -e "\n  ➤   We'll create a new directory & DB for the project. What shall we call them?"
+echo -e "     Default: ${DIR_NAME_TMP}"
 read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="${DIR_NAME_TMP}"
@@ -134,7 +129,7 @@ fi
 
   # Error if directory already exists
 if [ -d ${DIR_NAME} ]; then
-  echo -e "${FORMAT_ERROR}  ⚠  That directory already exists...${RESET_FORMATTING}"
+  echo -e "  ⚠  That directory already exists..."
   exit 1
 fi
 
@@ -160,7 +155,7 @@ git remote set-url origin ${GIT_REPO_URL_GIT}
 
   # Exit if it didn't clone
 if [ ! -f ".env.example" ]; then
-  echo -e "${FORMAT_ERROR}  ⚠  Git clone failed${RESET_FORMATTING}"
+  echo -e "  ⚠  Git clone failed"
   exit 1
 fi
 
@@ -255,7 +250,7 @@ fi
 
 # Output the next steps
 # ---------------------------------------------
-echo -e "${FORMAT_SUCCESS}\n  ✓  Setup Successfully!"
+echo -e "\n  ✓  Setup Successfully!"
 echo -e " "
 echo -e "     Wordpress has been installed at: ${URL}"
 echo -e "     and you can login at: ${URL}/wp/wp-admin"
@@ -273,4 +268,4 @@ if [[ ${IS_STAGE} == 1 ]] ; then
   echo -e "          - ${URL_STAGE_SCRIPT}"
 fi
 
-echo -e "${RESET_FORMATTING}"
+echo -e ""

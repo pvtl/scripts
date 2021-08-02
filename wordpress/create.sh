@@ -25,12 +25,6 @@
 
 # Variables
 # ---------------------------------------------
-RESET_FORMATTING="\e[49m\e[39m"
-FORMAT_QUESTION="\e[44m\e[30m"
-FORMAT_MESSAGE="\e[43m\e[30m"
-FORMAT_SUCCESS="\e[102m\e[30m"
-FORMAT_ERROR="\e[41m\e[30m"
-
 # DB Details
 DB_HOST="mysql"
 DB_USER="root"
@@ -52,7 +46,7 @@ WP_NONCE_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 # Site Config
 # ---------------------------------------------
 # Directory/DB Name
-echo -e "${FORMAT_QUESTION}\n  ➤  We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] ${RESET_FORMATTING}"
+echo -e "\n  ➤  We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] "
 read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="wordpress${RAND}"
@@ -64,12 +58,12 @@ DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
 URL="http://${DIR_NAME}.pub.localhost"
 
 # Install Pivotal Theme?
-echo -e "${FORMAT_QUESTION}\n  ➤  Would you like the Pivotal theme installed? [y/n] ${RESET_FORMATTING}"
+echo -e "\n  ➤  Would you like the Pivotal theme installed? [y/n] "
 read -p "== " INSTALL_THEME
 [ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] && INSTALL_THEME=1 || INSTALL_THEME=0
 
 # LDE database password
-echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the password for your LDE's MySQL: [dbroot] ${RESET_FORMATTING}"
+echo -e "\n  ➤  Please enter the password for your LDE's MySQL: [dbroot] "
 read -p "== " DB_PW
 
 if [[ -z "$DB_PW" ]]; then
@@ -77,7 +71,7 @@ if [[ -z "$DB_PW" ]]; then
 fi
 
 # Wordpress Username - NOT NEEDED SINCE SSO
-# echo -e "${FORMAT_QUESTION}\n  ➤  Please enter the Wordpress Admin username: [user${RAND}] ${RESET_FORMATTING}"
+# echo -e "\n  ➤  Please enter the Wordpress Admin username: [user${RAND}] "
 # read -p "== " WP_USER
 
 # WP_USER=$(echo $WP_USER | tr -cd '[[:alnum:]].')
@@ -87,7 +81,7 @@ fi
 # fi
 
 # Wordpress Email - NOT NEEDED SINCE SSO
-echo -e "${FORMAT_QUESTION}\n  ➤  Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] ${RESET_FORMATTING}"
+echo -e "\n  ➤  Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] "
 read -p "== " WP_EMAIL
 if [[ -z "$WP_EMAIL" ]]; then
   WP_EMAIL="${RAND_EMAIL}"
@@ -98,7 +92,7 @@ EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@
 if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
   echo -e " "
 else
-  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real email...${RESET_FORMATTING}"
+  echo -e "  ⚠  Please enter a real email..."
   exit 1
 fi
 
@@ -510,7 +504,7 @@ git checkout develop
 
 # Output the next steps
 # ---------------------------------------------
-echo -e "${FORMAT_SUCCESS}\n  ✓  Installed Successfully!"
+echo -e "\n  ✓  Installed Successfully!"
 echo -e " "
 echo -e "     Wordpress has been installed at: ${URL}"
 echo -e "     and you can login at: ${URL}/wp/wp-admin"
@@ -519,6 +513,6 @@ echo -e " "
 # echo -e "       - Email: ${WP_EMAIL}"
 # echo -e "       - Username: ${WP_USER}"
 # echo -e "       - Password: ${WP_PW}"
-echo -e "${RESET_FORMATTING}"
+echo -e ""
 
 disown

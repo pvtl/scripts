@@ -25,13 +25,7 @@
 
 # Variables
 # ---------------------------------------------
-RESET_FORMATTING="\e[49m\e[39m"
-FORMAT_QUESTION="\e[44m\e[30m"
-FORMAT_MESSAGE="\e[43m\e[30m"
-FORMAT_SUCCESS="\e[102m\e[30m"
-FORMAT_ERROR="\e[41m\e[30m"
 PWD=$(pwd)
-# DEPLOY_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1)
 
 # WP Secrets
 WP_AUTH_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
@@ -45,8 +39,8 @@ WP_NONCE_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 
 # Directory to deploy to
   # Defaults to PWD/public_html
-echo -e "${FORMAT_QUESTION}\n  ➤  Which directory should we deploy to?"
-echo -e "     Default: ${PWD}/public_html${RESET_FORMATTING}"
+echo -e "\n  ➤  Which directory should we deploy to?"
+echo -e "     Default: ${PWD}/public_html"
 read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="${PWD}/public_html"
@@ -60,8 +54,8 @@ fi
 
 # Asks for the publicly accessible URL (used to CURL the deploy script)
   # Quit if nothing input
-echo -e "${FORMAT_QUESTION}\n  ➤  What's the publicly accessible URL of the site?"
-echo -e "     Note: include http:// and NO trailing slash${RESET_FORMATTING}"
+echo -e "\n  ➤  What's the publicly accessible URL of the site?"
+echo -e "     Note: include http:// and NO trailing slash"
 read -p "== " PUBLIC_SITE_URL
 
 URL_FORMAT='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
@@ -69,7 +63,7 @@ URL_FORMAT='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%
 if [[ ${PUBLIC_SITE_URL} =~ ${URL_FORMAT} ]] ; then
   DEPLOY_SCRIPT_URL="${PUBLIC_SITE_URL}/deploy.php"
 else
-  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real URL...${RESET_FORMATTING}"
+  echo -e "  ⚠  Please enter a real URL..."
   exit 1
 fi
 
@@ -79,10 +73,10 @@ HOST_IP=$(ping -c 1 ${HOSTNAME} | awk -F '[()]' '{print $2}' | head -n 1)
 
 if [[ ${SERVER_IP} != ${HOST_IP} ]]; then
   if [[ '127.0.0.1' != ${HOST_IP} ]]; then
-    echo -e "${FORMAT_ERROR}  ⚠  The hostname is not currently pointed to this server.${RESET_FORMATTING}"
-    echo -e "${FORMAT_ERROR}  ⚠  This will cause the deploy to fail.${RESET_FORMATTING}"
-    echo -e "${FORMAT_ERROR}  ⚠  Please read the 'Prerequisites' of this script before continuing.${RESET_FORMATTING}"
-    echo -e "${FORMAT_QUESTION}\n  ➤  Continue? [y/n] ${RESET_FORMATTING}"
+    echo -e "  ⚠  The hostname is not currently pointed to this server."
+    echo -e "  ⚠  This will cause the deploy to fail."
+    echo -e "  ⚠  Please read the 'Prerequisites' of this script before continuing."
+    echo -e "\n  ➤  Continue? [y/n] "
     read -p "== " CONTINUE_WHEN_IPS_DIFF
 
     if [[ "$CONTINUE_WHEN_IPS_DIFF" != "${CONTINUE_WHEN_IPS_DIFF#[Nn]}" ]]; then
@@ -93,8 +87,8 @@ fi
 
 # Asks for the Git repo URL of the project
   # Quit if nothing input
-echo -e "${FORMAT_QUESTION}\n  ➤  What's the URL to access the Git repo?"
-echo -e "     Note: use the GIT version of the URL${RESET_FORMATTING}"
+echo -e "\n  ➤  What's the URL to access the Git repo?"
+echo -e "     Note: use the GIT version of the URL"
 read -p "== " GIT_REPO_URL
 
 GIT_URL_FORMAT='git@[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
@@ -102,14 +96,14 @@ GIT_URL_FORMAT='git@[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 if [[ ${GIT_REPO_URL} =~ ${GIT_URL_FORMAT} ]] ; then
   echo -e ""
 else
-  echo -e "${FORMAT_ERROR}  ⚠  Please enter a real URL...${RESET_FORMATTING}"
+  echo -e "  ⚠  Please enter a real URL..."
   exit 1
 fi
 
 # Asks for the branch to deploy
   # Defaults to master
-echo -e "${FORMAT_QUESTION}\n  ➤  What Git branch would you like to use?"
-echo -e "     Default: master${RESET_FORMATTING}"
+echo -e "\n  ➤  What Git branch would you like to use?"
+echo -e "     Default: master"
 read -p "== " GIT_BRANCH
 if [[ -z "$GIT_BRANCH" ]]; then
   GIT_BRANCH="master"
@@ -127,7 +121,7 @@ git clone https://github.com/pvtl/deploy-script.git deploy_tmp
 
   # Exit if it didn't clone
 if [ ! -d "deploy_tmp" ]; then
-  echo -e "${FORMAT_ERROR}  ⚠  Git clone failed${RESET_FORMATTING}"
+  echo -e "  ⚠  Git clone failed"
   exit 1
 fi
 
@@ -138,7 +132,7 @@ rm -rf deploy_tmp
 
   # Exit if the files don't exist
 if [ ! -f "deploy.json" ]; then
-  echo -e "${FORMAT_ERROR}  ⚠  Deploy script files didn't move${RESET_FORMATTING}"
+  echo -e "  ⚠  Deploy script files didn't move"
   exit 1
 fi
 
@@ -178,18 +172,18 @@ ACC_PUBLIC_KEY=$(cat $ACC_PUBLIC_KEY_PATH)
 
   # Can't find public key
 if [[ -z "$ACC_PUBLIC_KEY" ]]; then
-  echo -e "${FORMAT_ERROR}  ⚠  Something went wrong - the public/access key wasn't found${RESET_FORMATTING}"
+  echo -e "  ⚠  Something went wrong - the public/access key wasn't found"
   exit 1
 fi
 
 # Show the key and pause
-echo -e "${FORMAT_QUESTION}\n  ➤  Please add this Access Key to the Git Repo"
-echo -e "     Github: Settings > Access keys${RESET_FORMATTING}"
+echo -e "\n  ➤  Please add this Access Key to the Git Repo"
+echo -e "     Github: Settings > Access keys"
 echo -e "$ACC_PUBLIC_KEY"
 
 PUB_KEY_ADDED=0
 while [  $PUB_KEY_ADDED != 1 ]; do
-  echo -e "${FORMAT_QUESTION}\n  ➤  Have you added it? [y/n] ${RESET_FORMATTING}"
+  echo -e "\n  ➤  Have you added it? [y/n] "
   read -p "== " PUB_KEY_ADDED
   [ "$PUB_KEY_ADDED" != "${PUB_KEY_ADDED#[Yy]}" ] && PUB_KEY_ADDED=1 || PUB_KEY_ADDED=0
 done
@@ -198,11 +192,11 @@ done
 # Stage and Deploy
 # ---------------------------------------------
 # A bit of bants
-echo -e "${FORMAT_MESSAGE}\n  ➤  Deploying...please be patient, it may take 5-10mins..."
+echo -e "\n  ➤  Deploying...please be patient, it may take 5-10mins..."
 sleep 1
 echo -e "     While you're waiting...Go and setup the Database and import the SQL"
 sleep 1
-echo -e "     - I'll ask you for DB credentials in a few minutes (you better be ready for it).${RESET_FORMATTING}"
+echo -e "     - I'll ask you for DB credentials in a few minutes (you better be ready for it)."
 
 # Give the server a bit more time to execute
 # echo '
@@ -256,12 +250,12 @@ cd -P ${DIR_NAME} && cd ../
 # ---------------------------------------------
   # Exit if the deploy script (CURL) didn't execute
 if [ ! -f ".env.example" ]; then
-  echo -e "${FORMAT_ERROR}  ⚠  Deploy didn't successfully execute"
+  echo -e "  ⚠  Deploy didn't successfully execute"
   echo "Please deploy manually:"
-  echo -e " -  ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}${RESET_FORMATTING}"
+  echo -e " -  ${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
   exit 1
 else
-  echo -e "${FORMAT_SUCCESS}\n  ✓  Code deployed.${RESET_FORMATTING}"
+  echo -e "\n  ✓  Code deployed."
 fi
 
 cp .env.example .env
@@ -282,24 +276,24 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 # DB Credentials
 # ---------------------------------------------
 # DB Name
-echo -e "${FORMAT_QUESTION}\n  ➤  What's the Database Name${RESET_FORMATTING}"
+echo -e "\n  ➤  What's the Database Name"
 read -p "== " DB_NAME
 if [[ -z "$DB_NAME" ]]; then
-  echo -e "${FORMAT_ERROR}  ⚠  You didn't provide a DB Name. You'll need to resolve this yourself.${RESET_FORMATTING}"
+  echo -e "  ⚠  You didn't provide a DB Name. You'll need to resolve this yourself."
 fi
 
 # DB Username
-echo -e "${FORMAT_QUESTION}\n  ➤  What's the Database Username${RESET_FORMATTING}"
+echo -e "\n  ➤  What's the Database Username"
 read -p "== " DB_USER
 if [[ -z "$DB_USER" ]]; then
-  echo -e "${FORMAT_ERROR}  ⚠  You didn't provide a DB Username. You'll need to resolve this yourself.${RESET_FORMATTING}"
+  echo -e "  ⚠  You didn't provide a DB Username. You'll need to resolve this yourself."
 fi
 
 # DB Password
-echo -e "${FORMAT_QUESTION}\n  ➤  What's the Database Password${RESET_FORMATTING}"
+echo -e "\n  ➤  What's the Database Password"
 read -p "== " DB_PW
 if [[ -z "$DB_PW" ]]; then
-  echo -e "${FORMAT_ERROR}  ⚠  You didn't provide a DB Password. You'll need to resolve this yourself.${RESET_FORMATTING}"
+  echo -e "  ⚠  You didn't provide a DB Password. You'll need to resolve this yourself."
 fi
 
 sed -i 's/database_name/'"$DB_NAME"'/g' .env
@@ -389,7 +383,7 @@ chown -R ${CORRECT_USER} .
 # ---------------------------------------------
 DEPLOY_SCRIPT_URL_W_KEY="${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
 
-echo -e "${FORMAT_SUCCESS}\n  ✓  Deployed Successfully!"
+echo -e "\n  ✓  Deployed Successfully!"
 echo -e "     ${DEPLOY_SCRIPT_URL_W_KEY}"
 echo -e " "
 echo -e "     Next Steps:"
@@ -399,4 +393,4 @@ echo -e "       3. Setup the CRON: '0,30 * * * * /usr/local/bin/php ${DIR_NAME}/
 echo -e "       4. Add the following webhook URL to your git repo, to trigger auto-deploys (Github: Settings > Webhooks)"
 echo -e "          - ${DEPLOY_SCRIPT_URL_W_KEY}"
 echo -e "            (OR https://pvtl:pvtl@... if password protected)"
-echo -e "${RESET_FORMATTING}"
+echo -e ""

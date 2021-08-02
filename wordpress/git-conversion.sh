@@ -26,31 +26,25 @@
 # Variables
 # ########################################################################
 
-RESET_FORMATTING="\e[49m\e[39m"
-FORMAT_QUESTION="\e[44m\e[30m"
-FORMAT_MESSAGE="\e[43m\e[30m"
-FORMAT_SUCCESS="\e[102m\e[30m"
-FORMAT_ERROR="\e[41m\e[30m"
-
 INIT_DIR=$( pwd )
 UPLOADS=()
 THEMES=()
 GITIGNORE=()
 COMPOSERJSON=()
 
-echo -e "${FORMAT_QUESTION}\n  ➤  Step 1. Use the Pivotal Wordpress Create Script to create a new Wordpress website."
-echo -e "     https://github.com/pvtl/scripts/tree/master/wordpress ${RESET_FORMATTING}"
+echo -e "\n  ➤  Step 1. Use the Pivotal Wordpress Create Script to create a new Wordpress website."
+echo -e "     https://github.com/pvtl/scripts/tree/master/wordpress "
 
 # Directory
-echo -e "${FORMAT_QUESTION}\n  ➤  Which Wordpress directory would you like to run this on? ${RESET_FORMATTING}"
-echo -e "     Default: ${INIT_DIR} ${RESET_FORMATTING}"
+echo -e "\n  ➤  Which Wordpress directory would you like to run this on? "
+echo -e "     Default: ${INIT_DIR} "
 read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="${INIT_DIR}"
 fi
 
 if [ ! -f "${DIR_NAME}/wp-login.php" ]; then
-  echo -e "${FORMAT_ERROR}  ⚠  Please enter valid a Wordpress directory...${RESET_FORMATTING}"
+  echo -e "  ⚠  Please enter valid a Wordpress directory..."
   exit 1
 fi
 
@@ -129,45 +123,45 @@ fi
 
 cd $INIT_DIR
 
-echo -e "${FORMAT_SUCCESS}\n  Step 2. Follow the following instructions"
-echo -e "${RESET_FORMATTING}"
+echo -e "\n  Step 2. Follow the following instructions"
+echo -e ""
 
 if [ ${#THEMES[@]} -gt 0 ]; then
-  echo -e "${FORMAT_SUCCESS}\n THEMES // Manually copy across these themes:"
+  echo -e "\n THEMES // Manually copy across these themes:"
 
   for THEME in "${THEMES[@]}"; do
     echo -e "    - ${THEME}"
   done
 
-  echo -e "\n ${RESET_FORMATTING}"
+  echo -e "\n "
 fi
 
 if [ ${#COMPOSERJSON[@]} -gt 0 ]; then
-  echo -e "${FORMAT_SUCCESS}\n PLUGINS // Composer require these plugins:"
+  echo -e "\n PLUGINS // Composer require these plugins:"
 
   for PLUGIN in "${COMPOSERJSON[@]}"; do
     echo -e "    - ${PLUGIN}"
   done
 
-  echo -e "\n ${RESET_FORMATTING}"
+  echo -e "\n "
 fi
 
 if [ ${#GITIGNORE[@]} -gt 0 ]; then
-  echo -e "${FORMAT_SUCCESS}\n PLUGINS // Manually copy across these plugins + add them to .gitignore:"
+  echo -e "\n PLUGINS // Manually copy across these plugins + add them to .gitignore:"
 
   for PLUGIN in "${GITIGNORE[@]}"; do
     echo -e "    - ${PLUGIN}"
   done
 
-  echo -e "\n ${RESET_FORMATTING}"
+  echo -e "\n "
 fi
 
 if [ ${#UPLOADS[@]} -gt 0 ]; then
-  echo -e "${FORMAT_SUCCESS}\n UPLOADS // Copy across these upload dirs:"
+  echo -e "\n UPLOADS // Copy across these upload dirs:"
 
   for UPLOAD in "${UPLOADS[@]}"; do
     echo -e "    - ${UPLOAD}"
   done
 
-  echo -e "\n ${RESET_FORMATTING}"
+  echo -e "\n "
 fi
