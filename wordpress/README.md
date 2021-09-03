@@ -233,3 +233,28 @@ Whilst SSH'd into the Docker `php80` container (`docker exec -it php80 bash`), b
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/git-conversion.sh -L) -s
 ```
+
+## ⛵ Automatically migrating vanilla plugins to Composer for Bedrock Conversions
+
+<details><summary>Prerequisites</summary>
+<p>
+
+- Unix
+
+</p></details>
+
+<details><summary>What does this do?</summary>
+
+<p>
+
+Scans the Bedrock plugins directory and automatically migrates applicable plugins to Composer via WPackagist, or git-ignores them if their not available on Composer.
+
+</p></details>
+
+### Usage
+
+Whilst SSH'd into the Docker `php80` container (`docker exec -it php80 bash`), browsed to `/var/www/html`, simply run:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/bedrock-migrate-plugins-to-composer.sh -L) -s
+```
