@@ -275,6 +275,17 @@ if [[ ${IS_SALIENT} == 1 ]] ; then
   git clone --depth 1 https://github.com/pvtl/wp-salient.git web/app/themes/salient
   ( cd web/app/themes/salient && rm -rf .git )
 
+  # Copy all of the Salient plugins to 'plugins'
+  for i in `ls web/app/themes/salient/plugins/*.zip`; do unzip $i -d web/app/plugins/TEST; done
+
+  # Activate each of the plugins
+  cd web/app/themes/salient/plugins/
+  for i in `ls *.zip`; do wp plugin activate $(echo $i | sed 's/.zip//g') --allow-root --path="../../../../wp/"; done
+  cd $SITE_ROOT
+
+  # Delete the Zips - we don't need them in out Git repos
+  rm web/app/themes/salient/plugins/*.zip
+
   # Child theme
   git clone --depth 1 https://github.com/pvtl/wp-salient-child.git web/app/themes/salient-child
   ( cd web/app/themes/salient-child && rm -rf .git )
