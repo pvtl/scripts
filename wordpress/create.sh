@@ -167,6 +167,7 @@ sed -i "s/WP_ENV === 'staging'/WP_ENV === 'production'/g" ./config/environments/
 cp .env.example .env
 
 # Add URL/Database credentials
+sed -i "s/WP_ENV='development'/WP_ENV='production'/g" .env
 sed -i 's/database_name/'"$DIR_NAME"'/g' .env
 sed -i 's/database_user/'"$DB_USER"'/g' .env
 sed -i 's/database_password/'"$DB_PW"'/g' .env
@@ -486,13 +487,18 @@ git branch develop
 git checkout develop
 
 
+# Turn full debug mode back on (we turned it off to disable CLI errors)
+# ---------------------------------------------
+sed -i "s/WP_ENV='production'/WP_ENV='development'/g" .env
+
+
 # Output the next steps
 # ---------------------------------------------
-echo -e "\n  ✓  Installed Successfully!"
-echo -e " "
-echo -e "     Wordpress has been installed at: ${URL}"
-echo -e "     and you can login at: ${URL}/wp/wp-admin"
-echo -e " "
-echo -e ""
+echo -e "${QUESTION_PREFIX} ✓  Installed Successfully!"
+echo -e " | "
+echo -e " |     Wordpress has been installed at: ${URL}"
+echo -e " |     and you can login at: ${URL}/wp/wp-admin"
+echo -e " | "
+echo -e "${ANSWER_SUFFIX}"
 
 disown
