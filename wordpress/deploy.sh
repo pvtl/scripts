@@ -27,6 +27,11 @@
 # ---------------------------------------------
 PWD=$(pwd)
 
+# Misc
+QUESTION_PREFIX=" ┌────── ───── ─── ── ─ \n │ 👋👋👋 \n │ Q. "
+ANSWER_PREFIX=" │ 👉  "
+ANSWER_SUFFIX=" └──────── ─────── ───── ──── ─── ── ─ "
+
 # WP Secrets
 WP_AUTH_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 WP_SECURE_AUTH_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
@@ -37,26 +42,27 @@ WP_SECURE_AUTH_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head 
 WP_LOGGED_IN_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 WP_NONCE_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 
-# Directory to deploy to
-  # Defaults to PWD/public_html
-echo -e "\n  ➤  Which directory should we deploy to?"
+# Directory to deploy to (Defaults to PWD/public_html)
+echo -e "${QUESTION_PREFIX} Which directory should we deploy to?"
 echo -e "     Default: ${PWD}/public_html"
-read -p "== " DIR_NAME
+read -p "${ANSWER_PREFIX}" DIR_NAME
+echo -e "${ANSWER_SUFFIX}"
+
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="${PWD}/public_html"
 fi
 
-  # Create if it doesn't exist
+# Create if it doesn't exist
 if [ ! -d ${DIR_NAME} ]; then
   mkdir -p ${DIR_NAME};
   chmod 755 ${DIR_NAME}
 fi
 
 # Asks for the publicly accessible URL (used to CURL the deploy script)
-  # Quit if nothing input
-echo -e "\n  ➤  What's the publicly accessible URL of the site?"
+echo -e "${QUESTION_PREFIX} What's the publicly accessible URL of the site?"
 echo -e "     Note: include http:// and NO trailing slash"
-read -p "== " PUBLIC_SITE_URL
+read -p "${ANSWER_PREFIX}" PUBLIC_SITE_URL
+echo -e "${ANSWER_SUFFIX}"
 
 URL_FORMAT='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 
@@ -73,11 +79,13 @@ HOST_IP=$(ping -c 1 ${HOSTNAME} | awk -F '[()]' '{print $2}' | head -n 1)
 
 if [[ ${SERVER_IP} != ${HOST_IP} ]]; then
   if [[ '127.0.0.1' != ${HOST_IP} ]]; then
+    echo -e "${QUESTION_PREFIX} ⚠  Warning..."
     echo -e "  ⚠  The hostname is not currently pointed to this server."
     echo -e "  ⚠  This will cause the deploy to fail."
     echo -e "  ⚠  Please read the 'Prerequisites' of this script before continuing."
     echo -e "\n  ➤  Continue? [y/n] "
-    read -p "== " CONTINUE_WHEN_IPS_DIFF
+    read -p "${ANSWER_PREFIX}" CONTINUE_WHEN_IPS_DIFF
+    echo -e "${ANSWER_SUFFIX}"
 
     if [[ "$CONTINUE_WHEN_IPS_DIFF" != "${CONTINUE_WHEN_IPS_DIFF#[Nn]}" ]]; then
       exit 1
@@ -86,10 +94,10 @@ if [[ ${SERVER_IP} != ${HOST_IP} ]]; then
 fi
 
 # Asks for the Git repo URL of the project
-  # Quit if nothing input
-echo -e "\n  ➤  What's the URL to access the Git repo?"
+echo -e "${QUESTION_PREFIX} What's the URL to access the Git repo?"
 echo -e "     Note: use the GIT version of the URL"
-read -p "== " GIT_REPO_URL
+read -p "${ANSWER_PREFIX}" GIT_REPO_URL
+echo -e "${ANSWER_SUFFIX}"
 
 GIT_URL_FORMAT='git@[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
 
@@ -100,11 +108,12 @@ else
   exit 1
 fi
 
-# Asks for the branch to deploy
-  # Defaults to master
-echo -e "\n  ➤  What Git branch would you like to use?"
+# Asks for the branch to deploy (Defaults to master)
+echo -e "${QUESTION_PREFIX} What Git branch would you like to use?"
 echo -e "     Default: master"
-read -p "== " GIT_BRANCH
+read -p "${ANSWER_PREFIX}" GIT_BRANCH
+echo -e "${ANSWER_SUFFIX}"
+
 if [[ -z "$GIT_BRANCH" ]]; then
   GIT_BRANCH="master"
 fi
@@ -177,14 +186,17 @@ if [[ -z "$ACC_PUBLIC_KEY" ]]; then
 fi
 
 # Show the key and pause
-echo -e "\n  ➤  Please add this Access Key to the Git Repo"
+echo -e "${QUESTION_PREFIX} Please add this Access Key to the Git Repo"
 echo -e "     Github: Settings > Access keys"
 echo -e "$ACC_PUBLIC_KEY"
+echo -e "${ANSWER_SUFFIX}"
 
 PUB_KEY_ADDED=0
 while [  $PUB_KEY_ADDED != 1 ]; do
-  echo -e "\n  ➤  Have you added it? [y/n] "
-  read -p "== " PUB_KEY_ADDED
+  echo -e "${QUESTION_PREFIX} Have you added it? [y/n] "
+  read -p "${ANSWER_PREFIX}" PUB_KEY_ADDED
+  echo -e "${ANSWER_SUFFIX}"
+
   [ "$PUB_KEY_ADDED" != "${PUB_KEY_ADDED#[Yy]}" ] && PUB_KEY_ADDED=1 || PUB_KEY_ADDED=0
 done
 
@@ -192,11 +204,12 @@ done
 # Stage and Deploy
 # ---------------------------------------------
 # A bit of bants
-echo -e "\n  ➤  Deploying...please be patient, it may take 5-10mins..."
+echo -e "${QUESTION_PREFIX} Deploying...please be patient, it may take 5-10mins..."
 sleep 1
 echo -e "     While you're waiting...Go and setup the Database and import the SQL"
 sleep 1
 echo -e "     - I'll ask you for DB credentials in a few minutes (you better be ready for it)."
+echo -e "${ANSWER_SUFFIX}"
 
 # Give the server a bit more time to execute
 # echo '
@@ -276,22 +289,28 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 # DB Credentials
 # ---------------------------------------------
 # DB Name
-echo -e "\n  ➤  What's the Database Name"
-read -p "== " DB_NAME
+echo -e "${QUESTION_PREFIX} What's the Database Name"
+read -p "${ANSWER_PREFIX}" DB_NAME
+echo -e "${ANSWER_SUFFIX}"
+
 if [[ -z "$DB_NAME" ]]; then
   echo -e "  ⚠  You didn't provide a DB Name. You'll need to resolve this yourself."
 fi
 
 # DB Username
-echo -e "\n  ➤  What's the Database Username"
-read -p "== " DB_USER
+echo -e "${QUESTION_PREFIX} What's the Database Username"
+read -p "${ANSWER_PREFIX}" DB_USER
+echo -e "${ANSWER_SUFFIX}"
+
 if [[ -z "$DB_USER" ]]; then
   echo -e "  ⚠  You didn't provide a DB Username. You'll need to resolve this yourself."
 fi
 
 # DB Password
-echo -e "\n  ➤  What's the Database Password"
-read -p "== " DB_PW
+echo -e "${QUESTION_PREFIX} What's the Database Password"
+read -p "${ANSWER_PREFIX}" DB_PW
+echo -e "${ANSWER_SUFFIX}"
+
 if [[ -z "$DB_PW" ]]; then
   echo -e "  ⚠  You didn't provide a DB Password. You'll need to resolve this yourself."
 fi
@@ -383,7 +402,7 @@ chown -R ${CORRECT_USER} .
 # ---------------------------------------------
 DEPLOY_SCRIPT_URL_W_KEY="${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
 
-echo -e "\n  ✓  Deployed Successfully!"
+echo -e "${QUESTION_PREFIX} ✓  Deployed Successfully!"
 echo -e "     ${DEPLOY_SCRIPT_URL_W_KEY}"
 echo -e " "
 echo -e "     Next Steps:"
@@ -394,3 +413,4 @@ echo -e "       4. Add the following webhook URL to your git repo, to trigger au
 echo -e "          - ${DEPLOY_SCRIPT_URL_W_KEY}"
 echo -e "            (OR https://pvtl:pvtl@... if password protected)"
 echo -e ""
+echo -e "${ANSWER_SUFFIX}"
