@@ -44,7 +44,7 @@ WP_NONCE_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 
 # Directory to deploy to (Defaults to PWD/public_html)
 echo -e "${QUESTION_PREFIX} Which directory should we deploy to?"
-echo -e "     Default: ${PWD}/public_html"
+echo -e " │     Default: ${PWD}/public_html"
 read -p "${ANSWER_PREFIX}" DIR_NAME
 echo -e "${ANSWER_SUFFIX}"
 
@@ -60,7 +60,7 @@ fi
 
 # Asks for the publicly accessible URL (used to CURL the deploy script)
 echo -e "${QUESTION_PREFIX} What's the publicly accessible URL of the site?"
-echo -e "     Note: include http:// and NO trailing slash"
+echo -e " │     Note: include http:// and NO trailing slash"
 read -p "${ANSWER_PREFIX}" PUBLIC_SITE_URL
 echo -e "${ANSWER_SUFFIX}"
 
@@ -80,10 +80,10 @@ HOST_IP=$(ping -c 1 ${HOSTNAME} | awk -F '[()]' '{print $2}' | head -n 1)
 if [[ ${SERVER_IP} != ${HOST_IP} ]]; then
   if [[ '127.0.0.1' != ${HOST_IP} ]]; then
     echo -e "${QUESTION_PREFIX} ⚠  Warning..."
-    echo -e "  ⚠  The hostname is not currently pointed to this server."
-    echo -e "  ⚠  This will cause the deploy to fail."
-    echo -e "  ⚠  Please read the 'Prerequisites' of this script before continuing."
-    echo -e "\n  ➤  Continue? [y/n] "
+    echo -e " │  ⚠  The hostname is not currently pointed to this server."
+    echo -e " │  ⚠  This will cause the deploy to fail."
+    echo -e " │  ⚠  Please read the 'Prerequisites' of this script before continuing."
+    echo -e " │  ➤  Continue? [y/n] "
     read -p "${ANSWER_PREFIX}" CONTINUE_WHEN_IPS_DIFF
     echo -e "${ANSWER_SUFFIX}"
 
@@ -95,7 +95,7 @@ fi
 
 # Asks for the Git repo URL of the project
 echo -e "${QUESTION_PREFIX} What's the URL to access the Git repo?"
-echo -e "     Note: use the GIT version of the URL"
+echo -e " │     Note: use the GIT version of the URL"
 read -p "${ANSWER_PREFIX}" GIT_REPO_URL
 echo -e "${ANSWER_SUFFIX}"
 
@@ -110,7 +110,7 @@ fi
 
 # Asks for the branch to deploy (Defaults to master)
 echo -e "${QUESTION_PREFIX} What Git branch would you like to use?"
-echo -e "     Default: master"
+echo -e " │     Default: master"
 read -p "${ANSWER_PREFIX}" GIT_BRANCH
 echo -e "${ANSWER_SUFFIX}"
 
@@ -187,7 +187,7 @@ fi
 
 # Show the key and pause
 echo -e "${QUESTION_PREFIX} Please add this Access Key to the Git Repo"
-echo -e "     Github: Settings > Access keys"
+echo -e " │     Github: Settings > Access keys"
 echo -e "$ACC_PUBLIC_KEY"
 echo -e "${ANSWER_SUFFIX}"
 
@@ -206,9 +206,9 @@ done
 # A bit of bants
 echo -e "${QUESTION_PREFIX} Deploying...please be patient, it may take 5-10mins..."
 sleep 1
-echo -e "     While you're waiting...Go and setup the Database and import the SQL"
+echo -e " │     While you're waiting...Go and setup the Database and import the SQL"
 sleep 1
-echo -e "     - I'll ask you for DB credentials in a few minutes (you better be ready for it)."
+echo -e " │     - I'll ask you for DB credentials in a few minutes (you better be ready for it)."
 echo -e "${ANSWER_SUFFIX}"
 
 # Give the server a bit more time to execute
@@ -403,14 +403,14 @@ chown -R ${CORRECT_USER} .
 DEPLOY_SCRIPT_URL_W_KEY="${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}"
 
 echo -e "${QUESTION_PREFIX} ✓  Deployed Successfully!"
-echo -e "     ${DEPLOY_SCRIPT_URL_W_KEY}"
-echo -e " "
-echo -e "     Next Steps:"
-echo -e "       1. Upload any assets (images, files etc)"
-echo -e "       2. Import the database"
-echo -e "       3. Setup the CRON: '0,30 * * * * /usr/local/bin/php ${DIR_NAME}/wp/wp-cron.php >/dev/null 2>&1'"
-echo -e "       4. Add the following webhook URL to your git repo, to trigger auto-deploys (Github: Settings > Webhooks)"
-echo -e "          - ${DEPLOY_SCRIPT_URL_W_KEY}"
-echo -e "            (OR https://pvtl:pvtl@... if password protected)"
-echo -e ""
+echo -e " │     ${DEPLOY_SCRIPT_URL_W_KEY}"
+echo -e " │ "
+echo -e " │     Next Steps:"
+echo -e " │       1. Upload any assets (images, files etc)"
+echo -e " │       2. Import the database"
+echo -e " │       3. Setup the CRON: '0,30 * * * * /usr/local/bin/php ${DIR_NAME}/wp/wp-cron.php >/dev/null 2>&1'"
+echo -e " │       4. Add the following webhook URL to your git repo, to trigger auto-deploys (Github: Settings > Webhooks)"
+echo -e " │          - ${DEPLOY_SCRIPT_URL_W_KEY}"
+echo -e " │            (OR https://pvtl:pvtl@... if password protected)"
+echo -e " │"
 echo -e "${ANSWER_SUFFIX}"
