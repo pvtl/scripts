@@ -25,6 +25,12 @@
 
 # Variables
 # ---------------------------------------------
+
+# Misc
+QUESTION_PREFIX=" ┌────── ───── ─── ── ─ \n │ 👋👋👋 \n │ Q. "
+ANSWER_PREFIX=" │ 👉  "
+ANSWER_SUFFIX=" └──────── ─────── ───── ──── ─── ── ─ "
+
 # DB Details
 DB_HOST="mysql"
 DB_USER="root"
@@ -46,8 +52,10 @@ WP_NONCE_SALT=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 64 | head -n 1)
 # Site Config
 # ---------------------------------------------
 # Directory/DB Name
-echo -e "\n  ➤  We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] "
-read -p "== " DIR_NAME
+echo -e "${QUESTION_PREFIX} We'll create a new directory & DB for the project. What shall we call them? [wordpress${RAND}] "
+read -p "${ANSWER_PREFIX}" DIR_NAME
+echo -e "${ANSWER_SUFFIX}"
+
 if [[ -z "$DIR_NAME" ]]; then
   DIR_NAME="wordpress${RAND}"
 fi
@@ -57,43 +65,22 @@ DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
 
 URL="http://${DIR_NAME}.pub.localhost"
 
+
 # Install Pivotal Theme?
-echo -e "\n  ➤  Would you like the Pivotal theme installed? [y/n] "
-read -p "== " INSTALL_THEME
+echo -e "${QUESTION_PREFIX} Would you like the Pivotal theme installed? [y/n] "
+read -p "${ANSWER_PREFIX}" INSTALL_THEME
+echo -e "${ANSWER_SUFFIX}"
+
 [ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] && INSTALL_THEME=1 || INSTALL_THEME=0
 
+
 # LDE database password
-echo -e "\n  ➤  Please enter the password for your LDE's MySQL: [dbroot] "
-read -p "== " DB_PW
+echo -e "${QUESTION_PREFIX} Please enter the password for your LDE's MySQL: [dbroot] "
+read -p "${ANSWER_PREFIX}" DB_PW
+echo -e "${ANSWER_SUFFIX}"
 
 if [[ -z "$DB_PW" ]]; then
   DB_PW="dbroot"
-fi
-
-# Wordpress Username - NOT NEEDED SINCE SSO
-# echo -e "\n  ➤  Please enter the Wordpress Admin username: [user${RAND}] "
-# read -p "== " WP_USER
-
-# WP_USER=$(echo $WP_USER | tr -cd '[[:alnum:]].')
-# WP_USER=`echo "$WP_USER" | tr '[:upper:]' '[:lower:]'`
-# if [[ -z "$WP_USER" ]]; then
-#   WP_USER="user${RAND}"
-# fi
-
-# Wordpress Email - NOT NEEDED SINCE SSO
-echo -e "\n  ➤  Please enter an Email for the Wordpress admin: [${RAND_EMAIL}] "
-read -p "== " WP_EMAIL
-if [[ -z "$WP_EMAIL" ]]; then
-  WP_EMAIL="${RAND_EMAIL}"
-fi
-
-EMAIL_FORMAT="^[a-z0-9!#\$%&'*+/=?^_\`{|}~-]+(\.[a-z0-9!#$%&'*+/=?^_\`{|}~-]+)*@([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]([a-z0-9-]*[a-z0-9])?\$"
-
-if [[ ${WP_EMAIL} =~ ${EMAIL_FORMAT} ]] ; then
-  echo -e " "
-else
-  echo -e "  ⚠  Please enter a real email..."
-  exit 1
 fi
 
 
@@ -210,9 +197,6 @@ wp core install \
   --admin_email="${RAND_EMAIL}" \
   --skip-email \
   --allow-root
-
-# Change main WP email (not the user email) to the installer
-wp option update admin_email $WP_EMAIL --allow-root
 
 
 # Activate plugins
@@ -509,10 +493,6 @@ echo -e " "
 echo -e "     Wordpress has been installed at: ${URL}"
 echo -e "     and you can login at: ${URL}/wp/wp-admin"
 echo -e " "
-# echo -e "     Login credentials:"
-# echo -e "       - Email: ${WP_EMAIL}"
-# echo -e "       - Username: ${WP_USER}"
-# echo -e "       - Password: ${WP_PW}"
 echo -e ""
 
 disown
