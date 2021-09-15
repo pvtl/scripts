@@ -66,13 +66,22 @@ DIR_NAME=`echo "$DIR_NAME" | tr '[:upper:]' '[:lower:]'`
 URL="http://${DIR_NAME}.pub.localhost"
 
 
-# Install Pivotal Theme?
-echo -e "${QUESTION_PREFIX} Would you like the Pivotal theme installed? [y/n] "
-read -p "${ANSWER_PREFIX}" INSTALL_THEME
+# Turns on Salient specific features
+echo -e "${QUESTION_PREFIX} Is this a Salient (i.e. template) build? [y/n] "
+read -p "${ANSWER_PREFIX}" IS_SALIENT
 echo -e "${ANSWER_SUFFIX}"
 
-[ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] && INSTALL_THEME=1 || INSTALL_THEME=0
+[ "$IS_SALIENT" != "${IS_SALIENT#[Yy]}" ] && IS_SALIENT=1 || IS_SALIENT=0
 
+
+# Install Pivotal Theme? (only when it's not a Salient site)
+if [[ ${IS_SALIENT} == 0 ]] ; then
+  echo -e "${QUESTION_PREFIX} Would you like the Pivotal theme installed? [y/n] "
+  read -p "${ANSWER_PREFIX}" INSTALL_THEME
+  echo -e "${ANSWER_SUFFIX}"
+fi
+
+[ "$INSTALL_THEME" != "${INSTALL_THEME#[Yy]}" ] && INSTALL_THEME=1 || INSTALL_THEME=0
 
 # LDE database password
 echo -e "${QUESTION_PREFIX} Please enter the password for your LDE's MySQL: [dbroot] "
@@ -259,6 +268,30 @@ wp rewrite flush --allow-root
 wp option update timezone_string Australia/Brisbane --allow-root
 
 
+# Install all the Salient things
+# ---------------------------------------------
+if [[ ${IS_SALIENT} == 1 ]] ; then
+  # Parent theme
+  git clone --depth 1 https://github.com/pvtl/wp-salient.git web/app/themes/salient
+  ( cd web/app/themes/salient && rm -rf .git )
+
+  # Child theme
+  git clone --depth 1 https://github.com/pvtl/wp-salient-child.git web/app/themes/salient-child
+  ( cd web/app/themes/salient-child && rm -rf .git )
+
+  # Move the PHPCS-root config from the theme, into the root (mainly for SublimeLinter...)
+  mv ./phpcs.xml ./config/phpcs.xml
+  # mv web/app/themes/salient-child/phpcs-root.xml ./phpcs.xml
+  
+  # Move the Github Actions file into the root
+  # mv web/app/themes/pvtl-child/github-workflows-test.yml ./.github/workflows/test.yml
+  # rm -rf web/app/themes/pvtl-child/.github
+
+  # Activate Theme
+  wp theme activate salient-child --allow-root
+fi
+
+
 # Install the Pivotal theme
 # ---------------------------------------------
 if [[ ${INSTALL_THEME} == 1 ]] ; then
@@ -277,7 +310,8 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   cd $SITE_ROOT
   
   # Move the PHPCS-root config from the theme, into the root (mainly for SublimeLinter...)
-  mv ./phpcs.xml ./config/phpcs.xml && mv web/app/themes/pvtl-child/phpcs-root.xml ./phpcs.xml
+  mv ./phpcs.xml ./config/phpcs.xml
+  mv web/app/themes/pvtl-child/phpcs-root.xml ./phpcs.xml
   
   # Move the Bitbucket Pipelines file into the root
   mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
