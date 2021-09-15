@@ -281,11 +281,12 @@ if [[ ${IS_SALIENT} == 1 ]] ; then
 
   # Move the PHPCS-root config from the theme, into the root (mainly for SublimeLinter...)
   mv ./phpcs.xml ./config/phpcs.xml
-  # mv web/app/themes/salient-child/phpcs-root.xml ./phpcs.xml
+  mv web/app/themes/salient-child/phpcs-root.xml ./phpcs.xml
   
   # Move the Github Actions file into the root
-  # mv web/app/themes/pvtl-child/github-workflows-test.yml ./.github/workflows/test.yml
-  # rm -rf web/app/themes/pvtl-child/.github
+  mkdir ./.github && mkdir ./.github/workflows
+  mv ./web/app/themes/salient-child/github-workflows-test.yml ./.github/workflows/test.yml
+  rm -rf ./web/app/themes/salient-child/.github
 
   # Activate Theme
   wp theme activate salient-child --allow-root
@@ -318,6 +319,7 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   sed -i 's,# - cd web/app/themes/pvtl-child,- cd web/app/themes/pvtl-child,g' ./bitbucket-pipelines.yml
   
   # Move the Github Actions file into the root
+  mkdir ./.github && mkdir ./.github/workflows
   mv web/app/themes/pvtl-child/github-workflows-test.yml ./.github/workflows/test.yml
   rm -rf web/app/themes/pvtl-child/.github
 
