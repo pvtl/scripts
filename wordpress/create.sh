@@ -276,7 +276,7 @@ if [[ ${IS_SALIENT} == 1 ]] ; then
   ( cd web/app/themes/salient && rm -rf .git )
 
   # Copy all of the Salient plugins to 'plugins'
-  for i in `ls web/app/themes/salient/plugins/*.zip`; do unzip $i -d web/app/plugins/TEST; done
+  for i in `ls web/app/themes/salient/plugins/*.zip`; do unzip $i -d web/app/plugins/; done
 
   # Activate each of the plugins
   cd web/app/themes/salient/plugins/
