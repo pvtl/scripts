@@ -167,10 +167,6 @@ echo "Config::define('WP_DEBUG_DISPLAY', false);" >> ./config/environments/stagi
 echo "Config::define('WP_POST_REVISIONS', 20);" >> ./config/environments/staging.php
 echo "Config::define('WP_DISABLE_FATAL_ERROR_HANDLER', true);" >> ./config/environments/staging.php
 
-cp ./config/environments/staging.php ./config/environments/production.php
-sed -i "s/WP_ENV === 'staging'/WP_ENV === 'production'/g" ./config/environments/production.php
-
-
 # Create the .env file and setup DB connection
 # ---------------------------------------------
 cp .env.example .env
