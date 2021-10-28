@@ -159,7 +159,7 @@ disable_functions="show_source, system, passthru, popen"
 # - Posting the input details for the script to do its thing
 # ---------------------------------------------
 # Curl request to URL/deploy.php
-curl -X POST \
+curl --insecure -X POST \
   ${DEPLOY_SCRIPT_URL} \
   -H 'cache-control: no-cache' \
   -H 'content-type: multipart/form-data;' \
@@ -218,7 +218,7 @@ echo -e "${ANSWER_SUFFIX}"
 
 # The deploy may take some time due to pre/post-hook tasks like composer install
 function do_deploy() {
-  curl -X GET "${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}&deploy" \
+  curl --insecure -X GET "${DEPLOY_SCRIPT_URL}?key=${DEPLOY_SECRET_KEY}&deploy" \
     --max-time 150 \
     --connect-timeout 150 \
     --silent > /dev/null
