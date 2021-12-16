@@ -121,7 +121,7 @@ ln -s web public
 composer config repositories.wp-update-watcher git https://github.com/pvtl/wp-update-watcher
 composer config repositories.pvtl-sso git https://github.com/pvtl/wordpress-pvtl-sso-plugin
 composer config repositories.pvtl-itsec-login-logs git https://github.com/pvtl/wordpress-itsec-login-logs-plugin
-composer config repositories.pvtl-video-training git https://github.com/pvtl/video-training-wp-plugin
+composer config repositories.pvtl-wordpress-training git https://github.com/pvtl/video-training-wp-plugin
 
 
 # Install default Wordpress plugins
@@ -141,7 +141,7 @@ composer require wpackagist-plugin/wordpress-seo \
   pvtl/wp-update-watcher \
   "pvtl/pvtl-sso:~1.0" \
   "pvtl/pvtl-itsec-login-logs:~1.0" \
-  "pvtl/pvtl-video-training:~1.0"
+  "pvtl/pvtl-wordpress-training:~1.0"
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone --depth 1 https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
