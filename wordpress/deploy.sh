@@ -2,7 +2,7 @@
 
 #
 #
-# Deploys Wordpress "the Pivotal Way"
+# Deploys WordPress "the Pivotal Way"
 #
 #
 # This program is free software: you can redistribute it and/or modify
@@ -123,7 +123,7 @@ fi
 # ---------------------------------------------
 cd ${DIR_NAME}
 
-# Gets (from Githib) deploy.php and the Wordpress specific config
+# Gets (from Githib) deploy.php and the WordPress specific config
   # Will ask for git username/password
 git config --global http.sslVerify false
 git clone https://github.com/pvtl/deploy-script.git deploy_tmp
@@ -345,7 +345,7 @@ RewriteRule ^(.+\/)?xmlrpc.php$ - [F,L]
 
 #### Custom rules
 <IfModule mod_rewrite.c>
-  #### Access 404d Wordpress uploads from another site site (so that you do not need to download all assets)
+  #### Access 404d WordPress uploads from another site site (so that you do not need to download all assets)
   #### - If URL is not found AND the URL contains /app/uploads/ - check on live site
   # RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
   # RewriteCond %{REQUEST_URI} ^/app/uploads/.*$

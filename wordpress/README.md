@@ -1,6 +1,6 @@
-# Wordpress Scripts
+# WordPress Scripts
 
-A compilation of scripts that can be used for automating common Wordpress tasks.
+A compilation of scripts that can be used for automating common WordPress tasks.
 
 ## 🖼 Create a New Site
 
@@ -23,10 +23,10 @@ A compilation of scripts that can be used for automating common Wordpress tasks.
 
 <p>
 
-Installs a fresh version of Wordpress with the following:
+Installs a fresh version of WordPress with the following:
 
 - Creates a new database for the install
-- [Bedrock](https://roots.io/bedrock/) setup with the latest Wordpress core
+- [Bedrock](https://roots.io/bedrock/) setup with the latest WordPress core
 - A randomly generated admin username and password
 - (Optional) The [Pivotal Boilerplate Theme](https://bitbucket.org/pvtl/wordpress-theme-boilerplate/overview) installed and activated
 - A set of default plugins (* comes pre-activated):
@@ -47,7 +47,7 @@ Installs a fresh version of Wordpress with the following:
     - [WP Migrate DB](https://wordpress.org/plugins/wp-migrate-db/)
 - A `README.md` with nice usage instructions
 - A pre-configured `.gitignore`
-- Some basic Wordpress config:
+- Some basic WordPress config:
     - Default home and blog pages created
     - Permalinks set as `/%category%/%postname%/`
     - Header and Footer menus setup with menu items
@@ -89,7 +89,7 @@ bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/c
 
 <p>
 
-In the past, deploying a Wordpress site typically requires:
+In the past, deploying a WordPress site typically requires:
 
 1. Finding, downloading, connecting to FTP, uploading, configuring `deploy.php` and the `deploy.json` config
 1. Next, through the browser, filling out/submitting deploy.php
@@ -103,7 +103,7 @@ This script does all of the below with a single command:
 - Grabs the `deploy.php` script from Git (placing it on the server)
 - Grabs the `deploy.wordpress.json` (placing it on the server)
 - Automatically (using user input) sets up the deploy script & deploys
-- Configures Wordpress:
+- Configures WordPress:
     - Database credentials and URL
     - Generates WP secrets/keys/salts
     - A default `.htaccess` for permalinks
@@ -148,7 +148,7 @@ This script does all of the below with a single command:
 - Creates a directory and Clones the repo into it
 - Automatically installs PHP (composer) and build (npm) dependencies
 - Symlinks the correct directories
-- Configures Wordpress:
+- Configures WordPress:
     - Database credentials and URL
     - Generates WP secrets/keys/salts
     - A default `.htaccess` for permalinks
@@ -191,11 +191,11 @@ This script does all of the below with a single command:
 - Creates a directory and Clones the repo into it
 - Automatically installs PHP (composer) and build (npm) dependencies
 - Symlinks the correct directories
-- Configures Wordpress:
+- Configures WordPress:
     - Database credentials and URL
     - Generates WP secrets/keys/salts
     - A default `.htaccess` for permalinks
-- Downloads and sets up the `stage.php` script 
+- Downloads and sets up the `stage.php` script
 
 </p></details>
 
@@ -222,7 +222,7 @@ bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/s
 
 <p>
 
-Converting a traditional (out of the box) Wordpress site to Bedrock for Git tracking can be tedious. This script simply analyses a Wordpress directory and outputs a list of all of the plugins, themes & uploads, and gives guidance on how to handle each
+Converting a traditional (out of the box) WordPress site to Bedrock for Git tracking can be tedious. This script simply analyses a WordPress directory and outputs a list of all of the plugins, themes & uploads, and gives guidance on how to handle each
 
 </p></details>
 

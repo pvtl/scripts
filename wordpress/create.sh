@@ -2,7 +2,7 @@
 
 #
 #
-# Installs Wordpress "the Pivotal Way"
+# Installs WordPress "the Pivotal Way"
 #
 #
 # This program is free software: you can redistribute it and/or modify
@@ -124,7 +124,7 @@ composer config repositories.pvtl-itsec-login-logs git https://github.com/pvtl/w
 composer config repositories.wordpress-training git https://github.com/pvtl/video-training-wp-plugin.git
 
 
-# Install default Wordpress plugins
+# Install default WordPress plugins
 # ---------------------------------------------
 composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/w3-total-cache \
@@ -195,7 +195,7 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 sed -i '/WP_DEBUG/d' .env
 
 
-# Install Wordpress
+# Install WordPress
 # ---------------------------------------------
 wp core install \
   --url="${URL}" \
@@ -256,7 +256,7 @@ add_action( 'customize_register', 'prefix_remove_css_section', 15 );
 EOF
 
 
-# Set Wordpress config
+# Set WordPress config
 # ---------------------------------------------
 # URL structure
 wp rewrite structure /%category%/%postname%/ --allow-root
@@ -291,7 +291,7 @@ if [[ ${IS_SALIENT} == 1 ]] ; then
   # Move the PHPCS-root config from the theme, into the root (mainly for SublimeLinter...)
   mv ./phpcs.xml ./config/phpcs.xml
   mv web/app/themes/salient-child/phpcs-root.xml ./phpcs.xml
-  
+
   # Move the Github Actions file into the root
   mkdir ./.github && mkdir ./.github/workflows
   mv ./web/app/themes/salient-child/github-workflows-test.yml ./.github/workflows/test.yml
@@ -318,15 +318,15 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   yarn &>/dev/null &
 
   cd $SITE_ROOT
-  
+
   # Move the PHPCS-root config from the theme, into the root (mainly for SublimeLinter...)
   mv ./phpcs.xml ./config/phpcs.xml
   mv web/app/themes/pvtl-child/phpcs-root.xml ./phpcs.xml
-  
+
   # Move the Bitbucket Pipelines file into the root
   mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
   sed -i 's,# - cd web/app/themes/pvtl-child,- cd web/app/themes/pvtl-child,g' ./bitbucket-pipelines.yml
-  
+
   # Move the Github Actions file into the root
   mkdir ./.github && mkdir ./.github/workflows
   mv web/app/themes/pvtl-child/github-workflows-test.yml ./.github/workflows/test.yml
@@ -444,7 +444,7 @@ web/app/themes/salient/css/salient-dynamic-styles.css
 # ---------------------------------------------
 rm README.md
 cat << 'EOF' >> README.md
-# A Wordpress site by Pivotal Agency
+# A WordPress site by Pivotal Agency
 
 ## Installation
 
@@ -499,10 +499,10 @@ For more information on working with this site's theme, please see the README.md
 
 ---
 
-## Wordpress Plugins
+## WordPress Plugins
 
 
-Wordpress Plugins are managed through composer.
+WordPress Plugins are managed through composer.
 
 ### Installing
 
@@ -541,7 +541,7 @@ sed -i "s/WP_ENV='production'/WP_ENV='development'/g" .env
 # ---------------------------------------------
 echo -e "${QUESTION_PREFIX} ✓  Installed Successfully!"
 echo -e " | "
-echo -e " |     Wordpress has been installed at: ${URL}"
+echo -e " |     WordPress has been installed at: ${URL}"
 echo -e " |     and you can login at: ${URL}/wp/wp-admin"
 echo -e " | "
 echo -e "${ANSWER_SUFFIX}"

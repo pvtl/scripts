@@ -2,7 +2,7 @@
 
 #
 #
-# Sets up (locally) Wordpress "the Pivotal Way"
+# Sets up (locally) WordPress "the Pivotal Way"
 #
 #
 # This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,7 @@ if [[ ${GIT_REPO_URL_HTTPS} =~ ${GIT_URL_FORMAT} ]] ; then
   BASH_REMATCH_4=${BASH_REMATCH[4]}
   BASH_REMATCH_5=${BASH_REMATCH[5]}
   BASH_REMATCH_6=${BASH_REMATCH[6]}
-  
+
   # If Bitbucket
   if [[ ${GIT_REPO_URL_HTTPS} =~ .*bitbucket* ]] ; then
     GIT_REPO_HOSTNAME=${BASH_REMATCH_4}
@@ -206,7 +206,7 @@ sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 # ---------------------------------------------
 echo '
 <IfModule mod_rewrite.c>
-  #### Access 404d Wordpress uploads from another site (so that you do not need to download all assets)
+  #### Access 404d WordPress uploads from another site (so that you do not need to download all assets)
   #### - If URL is not found AND the URL contains /app/uploads/ - check on live site
   # RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
   # RewriteCond %{REQUEST_URI} ^/app/uploads/.*$
@@ -252,7 +252,7 @@ fi
 # ---------------------------------------------
 echo -e "\n  ✓  Setup Successfully!"
 echo -e " "
-echo -e "     Wordpress has been installed at: ${URL}"
+echo -e "     WordPress has been installed at: ${URL}"
 echo -e "     and you can login at: ${URL}/wp/wp-admin"
 echo -e " "
 echo -e "     We're running the install of dependencies in the background"

@@ -2,7 +2,7 @@
 
 #
 #
-# Helps converts a standard Wordpress site, into Bedrock for git tracking
+# Helps converts a standard WordPress site, into Bedrock for git tracking
 #
 #
 # This program is free software: you can redistribute it and/or modify
@@ -32,11 +32,11 @@ THEMES=()
 GITIGNORE=()
 COMPOSERJSON=()
 
-echo -e "\n  ➤  Step 1. Use the Pivotal Wordpress Create Script to create a new Wordpress website."
+echo -e "\n  ➤  Step 1. Use the Pivotal WordPress Create Script to create a new WordPress website."
 echo -e "     https://github.com/pvtl/scripts/tree/master/wordpress "
 
 # Directory
-echo -e "\n  ➤  Which Wordpress directory would you like to run this on? "
+echo -e "\n  ➤  Which WordPress directory would you like to run this on? "
 echo -e "     Default: ${INIT_DIR} "
 read -p "== " DIR_NAME
 if [[ -z "$DIR_NAME" ]]; then
@@ -44,7 +44,7 @@ if [[ -z "$DIR_NAME" ]]; then
 fi
 
 if [ ! -f "${DIR_NAME}/wp-login.php" ]; then
-  echo -e "  ⚠  Please enter valid a Wordpress directory..."
+  echo -e "  ⚠  Please enter valid a WordPress directory..."
   exit 1
 fi
 
