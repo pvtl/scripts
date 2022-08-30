@@ -114,10 +114,13 @@ This script does all of the below with a single command:
 ### Usage
 
 SSH into the destination server and change to the correct user (`sudo su - -s /bin/bash <cPanel username>`)
+Run this command from the directory immediately above the publicly accessible web root (i.e. the directory containing `public_html`)
 
 ```bash
 curl https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/deploy.sh --output wordpress-deploy.sh && bash wordpress-deploy.sh && rm wordpress-deploy.sh
 ```
+
+**Note** Run this command for any subdomains before running for the home directory to avoid issues with deployments
 
 ---
 
