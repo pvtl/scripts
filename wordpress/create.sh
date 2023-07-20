@@ -146,7 +146,7 @@ composer require wpackagist-plugin/wordpress-seo \
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone --depth 1 https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
 rm -rf web/app/plugins/advanced-custom-fields-pro/.git
-git clone --depth 1 https://github.com/wp-premium/gravityforms.git web/app/plugins/gravityforms
+git clone --depth 1 https://github.com/pronamic/gravityforms.git web/app/plugins/gravityforms
 rm -rf web/app/plugins/gravityforms/.git
 
 
@@ -291,7 +291,7 @@ if [[ ${IS_SALIENT} == 1 ]] ; then
   # Move the PHPCS-root config from the theme, into the root (mainly for SublimeLinter...)
   mv ./phpcs.xml ./config/phpcs.xml
   mv web/app/themes/salient-child/phpcs-root.xml ./phpcs.xml
-  
+
   # Move the Github Actions file into the root
   mkdir ./.github && mkdir ./.github/workflows
   mv ./web/app/themes/salient-child/github-workflows-test.yml ./.github/workflows/test.yml
@@ -318,15 +318,15 @@ if [[ ${INSTALL_THEME} == 1 ]] ; then
   yarn &>/dev/null &
 
   cd $SITE_ROOT
-  
+
   # Move the PHPCS-root config from the theme, into the root (mainly for SublimeLinter...)
   mv ./phpcs.xml ./config/phpcs.xml
   mv web/app/themes/pvtl-child/phpcs-root.xml ./phpcs.xml
-  
+
   # Move the Bitbucket Pipelines file into the root
   mv web/app/themes/pvtl-child/bitbucket-pipelines.yml ./bitbucket-pipelines.yml
   sed -i 's,# - cd web/app/themes/pvtl-child,- cd web/app/themes/pvtl-child,g' ./bitbucket-pipelines.yml
-  
+
   # Move the Github Actions file into the root
   mkdir ./.github && mkdir ./.github/workflows
   mv web/app/themes/pvtl-child/github-workflows-test.yml ./.github/workflows/test.yml
