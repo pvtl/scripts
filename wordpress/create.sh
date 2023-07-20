@@ -93,6 +93,12 @@ if [[ -z "$DB_PW" ]]; then
 fi
 
 
+# Fetch latest or older version of ACF Pro
+echo -e "${QUESTION_PREFIX} To pre-install the latest version of ACF Pro, enter the licence key (starting with \"b3JkZ...\"). Otherwise an older version will be used."
+read -p "${ANSWER_PREFIX}" ACF_LICENCE
+echo -e "${ANSWER_SUFFIX}"
+
+
 # Create the directory
 # ---------------------------------------------
 mkdir $DIR_NAME && cd $DIR_NAME
@@ -144,10 +150,19 @@ composer require wpackagist-plugin/wordpress-seo \
   "pvtl/wordpress-training:~1.0"
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
-git clone --depth 1 https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
-rm -rf web/app/plugins/advanced-custom-fields-pro/.git
 git clone --depth 1 https://github.com/pronamic/gravityforms.git web/app/plugins/gravityforms
 rm -rf web/app/plugins/gravityforms/.git
+
+# Install Advanced Custom Fields Pro
+if [[ -z "$ACF_LICENCE" ]]; then
+  # No licence, use an older version
+  git clone --depth 1 https://github.com/wp-premium/advanced-custom-fields-pro.git web/app/plugins/advanced-custom-fields-pro
+  rm -rf web/app/plugins/advanced-custom-fields-pro/.git
+else
+  # Licence provided, use the ACF official composer package
+  composer config repositories.advanced-custom-fields-pro composer https://$ACF_LICENCE:https%3A%2F%2Fconcepts.pivotalagency.com.au@connect.advancedcustomfields.com
+  composer require wpengine/advanced-custom-fields-pro
+fi
 
 
 # Create a Database
