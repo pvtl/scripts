@@ -58,7 +58,7 @@ Installs a fresh version of Wordpress with the following:
 
 ### Usage
 
-Whilst SSH'd into the Docker `php74` container (`docker exec -it php74 bash`), browsed to `/var/www/html`, simply run:
+Whilst SSH'd into the Docker `php81` container (`docker exec -it php81 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/create.sh -L)
@@ -160,7 +160,7 @@ This script does all of the below with a single command:
 
 ### Usage
 
-Whilst SSH'd into the Docker `php74` container (`docker exec -it php74 bash`), browsed to `/var/www/html`, simply run:
+Whilst SSH'd into the Docker `php81` container (`docker exec -it php81 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/setup.sh -L)
@@ -198,7 +198,7 @@ This script does all of the below with a single command:
     - Database credentials and URL
     - Generates WP secrets/keys/salts
     - A default `.htaccess` for permalinks
-- Downloads and sets up the `stage.php` script 
+- Downloads and sets up the `stage.php` script
 
 </p></details>
 

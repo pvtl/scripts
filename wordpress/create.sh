@@ -546,6 +546,15 @@ git init && git add . && git commit -m 'init'
 git branch develop
 git checkout develop
 
+# ACF Pro cleanup
+# ---------------------------------------------
+if [[ ! -z "$ACF_LICENCE" ]]; then
+  # Licence provided, remove ACF from composer.json, but keep the files.
+  # This is to prevent issues with later installs.
+  composer config --unset repositories.advanced-custom-fields-pro
+  composer remove --no-update wpengine/advanced-custom-fields-pro
+fi
+
 
 # Turn full debug mode back on (we turned it off to disable CLI errors)
 # ---------------------------------------------
