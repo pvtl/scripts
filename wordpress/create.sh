@@ -35,7 +35,7 @@ ANSWER_SUFFIX=" └──────── ─────── ────�
 DB_HOST="mysql"
 DB_USER="root"
 RAND=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
-RAND_EMAIL="${RAND}@${RAND}.com"
+RAND_EMAIL="${RAND}@pvtl.io"
 WP_PW=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 # WP Secrets
