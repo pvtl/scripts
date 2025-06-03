@@ -134,7 +134,7 @@ if [ ! -d "deploy_tmp" ]; then
   exit 1
 fi
 
-# Puts both deploy.php and config (as deploy.json) into ‘folder to deploy to’
+# Puts both deploy.php and config (as deploy.json) into 'folder to deploy to'
 mv deploy_tmp/deploy.php deploy.php
 mv deploy_tmp/config-templates/deploy.wordpress.json deploy.json
 rm -rf deploy_tmp
@@ -273,7 +273,7 @@ fi
 
 cp .env.example .env
 sed -i 's,http://example.com,'"$PUBLIC_SITE_URL"',g' .env
-sed -i "s,WP_ENV='development',WP_ENV='staging',g" .env
+sed -i 's,^WP_ENV=.*,WP_ENV=production,' .env
 
 # WP Secrets
 sed -i "s/SECURE_AUTH_KEY='generateme'/SECURE_AUTH_KEY='"$WP_SECURE_AUTH_KEY"'/g" .env
