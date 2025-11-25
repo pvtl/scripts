@@ -128,6 +128,7 @@ composer config repositories.wp-update-watcher git https://github.com/pvtl/wp-up
 composer config repositories.pvtl-sso git https://github.com/pvtl/wordpress-pvtl-sso-plugin
 composer config repositories.pvtl-itsec-login-logs git https://github.com/pvtl/wordpress-itsec-login-logs-plugin
 composer config repositories.wp-gf-spam-filter git https://github.com/pvtl/wp-gf-spam-filter
+composer config repositories.wordpress-training git https://github.com/pvtl/video-training-wp-plugin
 
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-update-watcher
 git config --global --add safe.directory $SITE_ROOT/web/app/mu-plugins/pvtl-sso
