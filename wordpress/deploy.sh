@@ -345,11 +345,11 @@ RewriteRule ^(.+\/)?xmlrpc.php$ - [F,L]
 
 #### Custom rules
 <IfModule mod_rewrite.c>
-  #### Access 404d Wordpress uploads from another site site (so that you do not need to download all assets)
-  #### - If URL is not found AND the URL contains /app/uploads/ - check on live site
-  # RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
-  # RewriteCond %{REQUEST_URI} ^/app/uploads/.*$
-  # RewriteRule ^(.*)$ https://livesite.com.au/$1 [QSA,L]
+  #### Access any non-existent Wordpress uploads from Live site (so that you do not need to download all assets)
+  RewriteCond %{REQUEST_URI} ^/app/uploads/(.*)$
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ https://www.example.com.au/$1 [QSA,L]
 
   #### If URL is not XYZ, then redirect to XYZ
   # RewriteCond %{HTTP_HOST} !^example\.com
