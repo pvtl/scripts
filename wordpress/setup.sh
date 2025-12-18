@@ -192,9 +192,6 @@ sed -i 's/database_password/'"$DB_PW"'/g' .env
 sed -i "s/# DB_HOST=/DB_HOST='$DB_HOST' # DB_HOST=/g" .env
 sed -i 's,http://example.com,'"$URL"',g' .env   
 
-# Add or Update WP_POST_REVISIONS
-grep -q "^WP_POST_REVISIONS=" .env && sed -i "s/^WP_POST_REVISIONS=.*/WP_POST_REVISIONS=25/g" .env || echo "\nWP_POST_REVISIONS=25" >> .env
-
 sed -i "s/SECURE_AUTH_KEY='generateme'/SECURE_AUTH_KEY='"$WP_SECURE_AUTH_KEY"'/g" .env
 sed -i "s/AUTH_KEY='generateme'/AUTH_KEY='"$WP_AUTH_KEY"'/g" .env
 sed -i "s/LOGGED_IN_KEY='generateme'/LOGGED_IN_KEY='"$WP_LOGGED_IN_KEY"'/g" .env
@@ -203,6 +200,11 @@ sed -i "s/SECURE_AUTH_SALT='generateme'/SECURE_AUTH_SALT='"$WP_SECURE_AUTH_SALT"
 sed -i "s/AUTH_SALT='generateme'/AUTH_SALT='"$WP_AUTH_SALT"'/g" .env
 sed -i "s/LOGGED_IN_SALT='generateme'/LOGGED_IN_SALT='"$WP_LOGGED_IN_SALT"'/g" .env
 sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
+
+
+# Add or Update WP_POST_REVISIONS
+grep -q "^WP_POST_REVISIONS=" .env && sed -i "s/^WP_POST_REVISIONS=.*/WP_POST_REVISIONS=25/g" .env || echo -e "\nWP_POST_REVISIONS=25" >> .env
+grep -q "^WP_POST_REVISIONS=" .env.example && sed -i "s/^WP_POST_REVISIONS=.*/WP_POST_REVISIONS=25/g" .env.example || echo -e "\nWP_POST_REVISIONS=25" >> .env.example
 
 
 # Create a .htaccess file for permalinks
