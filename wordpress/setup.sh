@@ -201,6 +201,9 @@ sed -i "s/AUTH_SALT='generateme'/AUTH_SALT='"$WP_AUTH_SALT"'/g" .env
 sed -i "s/LOGGED_IN_SALT='generateme'/LOGGED_IN_SALT='"$WP_LOGGED_IN_SALT"'/g" .env
 sed -i "s/NONCE_SALT='generateme'/NONCE_SALT='"$WP_NONCE_SALT"'/g" .env
 
+# Add WP_POST_REVISIONS=25
+sed -i "s/WP_POST_REVISIONS=25/WP_POST_REVISIONS=25/g" .env
+
 
 # Create a .htaccess file for permalinks
 # ---------------------------------------------
