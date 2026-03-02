@@ -129,12 +129,14 @@ composer config repositories.pvtl-sso git https://github.com/pvtl/wordpress-pvtl
 composer config repositories.pvtl-itsec-login-logs git https://github.com/pvtl/wordpress-itsec-login-logs-plugin
 composer config repositories.wp-gf-spam-filter git https://github.com/pvtl/wp-gf-spam-filter
 composer config repositories.wordpress-training git https://github.com/pvtl/video-training-wp-plugin
+composer config repositories.wp-safe-user-deletion git https://github.com/pvtl/wp-safe-user-deletion
 
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-update-watcher
 git config --global --add safe.directory $SITE_ROOT/web/app/mu-plugins/pvtl-sso
 git config --global --add safe.directory $SITE_ROOT/web/app/mu-plugins/pvtl-itsec-login-logs
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wordpress-training
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-gf-spam-filter
+git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-safe-user-deletion
 
 
 # Install default Wordpress plugins
@@ -155,11 +157,15 @@ composer require wpackagist-plugin/wordpress-seo \
   "pvtl/wp-gf-spam-filter:~1.2" \
   "pvtl/pvtl-sso:~1.0" \
   "pvtl/pvtl-itsec-login-logs:~1.0" \
-  "pvtl/wordpress-training:~1.0"
+  "pvtl/wordpress-training:~1.0",
+  "pvtl/wp-safe-user-deletion:~1.0"
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone --depth 1 https://github.com/pronamic/gravityforms.git web/app/plugins/gravityforms
 rm -rf web/app/plugins/gravityforms/.git
+
+git clone --depth 1 https://github.com/pronamic/gravitysmtp.git web/app/plugins/gravitysmtp
+rm -rf web/app/plugins/gravitysmtp/.git
 
 # Install Advanced Custom Fields Pro
 if [[ -z "$ACF_LICENCE" ]]; then
@@ -236,8 +242,10 @@ wp plugin activate advanced-custom-fields-pro --allow-root
 wp plugin activate admin-menu-editor --allow-root
 wp plugin activate duplicate-post --allow-root
 wp plugin activate gravityforms --allow-root
+wp plugin activate gravitysmtp --allow-root
 wp plugin activate simple-custom-post-order --allow-root
 wp plugin activate wordpress-seo --allow-root
+wp plugin activate wp-safe-user-deletion --allow-root
 
 
 # Create MU plugin/s
@@ -453,6 +461,7 @@ web/app/object-cache.php
 !web/app/plugins/advanced-custom-fields-pro
 !web/app/plugins/gravityforms
 !web/app/plugins/gravityformscampaignmonitor
+!web/app/plugins/gravitysmtp
 
 # Include Salient plugins
 !web/app/plugins/js_composer_salient
