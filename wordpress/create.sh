@@ -157,7 +157,7 @@ composer require wpackagist-plugin/wordpress-seo \
   "pvtl/wp-gf-spam-filter:~1.2" \
   "pvtl/pvtl-sso:~1.0" \
   "pvtl/pvtl-itsec-login-logs:~1.0" \
-  "pvtl/wordpress-training:~1.0",
+  "pvtl/wordpress-training:~1.0" \
   "pvtl/wp-safe-user-deletion:~1.0"
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
