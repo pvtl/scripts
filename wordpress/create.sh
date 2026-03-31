@@ -129,30 +129,29 @@ composer config repositories.pvtl-sso git https://github.com/pvtl/wordpress-pvtl
 composer config repositories.pvtl-itsec-login-logs git https://github.com/pvtl/wordpress-itsec-login-logs-plugin
 composer config repositories.wp-gf-spam-filter git https://github.com/pvtl/wp-gf-spam-filter
 composer config repositories.wordpress-training git https://github.com/pvtl/video-training-wp-plugin
-composer config repositories.wp-safe-user-deletion git https://github.com/pvtl/wp-safe-user-deletion
+composer require pvtl/wp-safe-user-deletion
 
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-update-watcher
 git config --global --add safe.directory $SITE_ROOT/web/app/mu-plugins/pvtl-sso
 git config --global --add safe.directory $SITE_ROOT/web/app/mu-plugins/pvtl-itsec-login-logs
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wordpress-training
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-gf-spam-filter
-git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-safe-user-deletion
 
 
 # Install default Wordpress plugins
 # ---------------------------------------------
-composer require wpackagist-plugin/wordpress-seo \
-  wpackagist-plugin/w3-total-cache \
-  wpackagist-plugin/better-wp-security \
-  wpackagist-plugin/wp-migrate-db \
-  wpackagist-plugin/admin-menu-editor \
-  wpackagist-plugin/custom-post-type-ui \
-  wpackagist-plugin/simple-custom-post-order \
-  wpackagist-plugin/duplicate-post \
-  wpackagist-plugin/ewww-image-optimizer \
-  wpackagist-plugin/redirection \
-  wpackagist-plugin/email-templates \
-  wpackagist-plugin/user-switching \
+composer require wp-plugin/wordpress-seo \
+  wp-plugin/w3-total-cache \
+  wp-plugin/better-wp-security \
+  wp-plugin/wp-migrate-db \
+  wp-plugin/admin-menu-editor \
+  wp-plugin/custom-post-type-ui \
+  wp-plugin/simple-custom-post-order \
+  wp-plugin/duplicate-post \
+  wp-plugin/ewww-image-optimizer \
+  wp-plugin/redirection \
+  wp-plugin/email-templates \
+  wp-plugin/user-switching \
   pvtl/wp-update-watcher \
   "pvtl/wp-gf-spam-filter:~1.2" \
   "pvtl/pvtl-sso:~1.0" \
@@ -246,6 +245,7 @@ wp plugin activate gravitysmtp --allow-root
 wp plugin activate simple-custom-post-order --allow-root
 wp plugin activate wordpress-seo --allow-root
 wp plugin activate wp-safe-user-deletion --allow-root
+wp plugin activate wp-gf-spam-filter --allow-root
 
 
 # Create MU plugin/s
@@ -416,6 +416,12 @@ fi
 # ---------------------------------------------
 echo '
 <IfModule mod_rewrite.c>
+  #### Access any non-existent Wordpress uploads from Live site (so that you do not need to download all assets)
+  RewriteCond %{REQUEST_URI} ^/app/uploads/(.*)$
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ https://www.example.com.au/$1 [QSA,L]
+
   #### If URL is not XYZ, then redirect to XYZ
   # RewriteCond %{HTTP_HOST} !^example\.com
   # RewriteRule ^(.*)$ https://example.com/$1 [R=301,L]
@@ -424,15 +430,21 @@ echo '
   # RewriteRule ^old-url?$ /new-url [R=301]
 </IfModule>
 
+
 # BEGIN WordPress
+# The directives (lines) between "BEGIN WordPress" and "END WordPress" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
 <IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-  RewriteRule ^index\.php$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.php [L]
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
 </IfModule>
+
 # END WordPress
 ' >> web/.htaccess
 
@@ -508,7 +520,7 @@ Once imported: scrub any sensitive data (eg. customer info, credit card tokens e
 
 ```bash
 composer install --ignore-platform-reqs
-( cd web/app/themes/pvtl-child ; yarn )
+( cd web/app/themes/pvtl-child ; npm install )
 ```
 
 ---
@@ -539,7 +551,7 @@ Wordpress Plugins are managed through composer.
 ### Installing
 
 
-- Visit [WP Packagist](https://wpackagist.org/)
+- Visit [WP Composer](https://wp-composer.com/)
 - Find the plugin (eg. akismet)
 - Copy the packagist name (eg. `wpackagist-plugin/plugin-name`) and run `composer require wpackagist-plugin/plugin-name`
 
