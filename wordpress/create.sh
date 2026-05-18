@@ -129,7 +129,10 @@ composer config repositories.pvtl-sso git https://github.com/pvtl/wordpress-pvtl
 composer config repositories.pvtl-itsec-login-logs git https://github.com/pvtl/wordpress-itsec-login-logs-plugin
 composer config repositories.wp-gf-spam-filter git https://github.com/pvtl/wp-gf-spam-filter
 composer config repositories.wordpress-training git https://github.com/pvtl/video-training-wp-plugin
-composer require pvtl/wp-safe-user-deletion
+
+# Add WPackagist composer repos
+composer config --json repositories.wpackagist '{"type":"composer","url":"https://wpackagist.org","only":["wpackagist-plugin/*","wpackagist-theme/*"]}'
+
 
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-update-watcher
 git config --global --add safe.directory $SITE_ROOT/web/app/mu-plugins/pvtl-sso
@@ -141,23 +144,23 @@ git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-gf-spam-f
 # Install default Wordpress plugins
 # ---------------------------------------------
 composer require wp-plugin/wordpress-seo \
-  wp-plugin/w3-total-cache \
-  wp-plugin/better-wp-security \
-  wp-plugin/wp-migrate-db \
-  wp-plugin/admin-menu-editor \
-  wp-plugin/custom-post-type-ui \
-  wp-plugin/simple-custom-post-order \
-  wp-plugin/duplicate-post \
-  wp-plugin/ewww-image-optimizer \
-  wp-plugin/redirection \
-  wp-plugin/email-templates \
-  wp-plugin/user-switching \
+  wpackagist-plugin/w3-total-cache \
+  wpackagist-plugin/better-wp-security \
+  wpackagist-plugin/wp-migrate-db \
+  wpackagist-plugin/admin-menu-editor \
+  wpackagist-plugin/custom-post-type-ui \
+  wpackagist-plugin/simple-custom-post-order \
+  wpackagist-plugin/duplicate-post \
+  wpackagist-plugin/ewww-image-optimizer \
+  wpackagist-plugin/redirection \
+  wpackagist-plugin/email-templates \
+  wpackagist-plugin/user-switching \
   pvtl/wp-update-watcher \
+  pvtl/wp-safe-user-deletion \
   "pvtl/wp-gf-spam-filter:~1.2" \
   "pvtl/pvtl-sso:~1.0" \
   "pvtl/pvtl-itsec-login-logs:~1.0" \
-  "pvtl/wordpress-training:~1.0" \
-  "pvtl/wp-safe-user-deletion:~1.0"
+  "pvtl/wordpress-training:~1.0"
 
 # We're not sure if these will forever be around, so we'll manually add them to the directory
 git clone --depth 1 https://github.com/pronamic/gravityforms.git web/app/plugins/gravityforms
