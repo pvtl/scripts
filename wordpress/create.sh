@@ -132,9 +132,21 @@ if [[ ${CREATE_GITHUB} == 1 ]] ; then
 
   GITHUB_REPO_FULL="${GITHUB_OWNER}/${GITHUB_REPO}"
 
+  if command -v gh >/dev/null 2>&1; then
+    if ! gh auth status >/dev/null 2>&1; then
+      echo -e "${QUESTION_PREFIX} GitHub CLI is installed but not logged in. Log in now (browser, SSH for git)? [Y/n] "
+      read -p "${ANSWER_PREFIX}" GH_LOGIN_NOW
+      echo -e "${ANSWER_SUFFIX}"
+
+      if [[ -z "$GH_LOGIN_NOW" || "$GH_LOGIN_NOW" != "${GH_LOGIN_NOW#[Yy]}" ]]; then
+        gh auth login --hostname github.com --git-protocol ssh --web
+      fi
+    fi
+  fi
+
   if ! command -v gh >/dev/null 2>&1 || ! gh auth status >/dev/null 2>&1; then
     if [[ -z "$GITHUB_TOKEN" ]]; then
-      echo -e "${QUESTION_PREFIX} GitHub CLI (gh) is missing or not logged in. Paste a PAT with repo scope, or leave blank to skip creating the remote. "
+      echo -e "${QUESTION_PREFIX} No GitHub CLI login. Paste a PAT with repo scope to create the remote, or leave blank to skip. "
       read -s -p "${ANSWER_PREFIX}" GITHUB_TOKEN
       echo
       echo -e "${ANSWER_SUFFIX}"
@@ -669,6 +681,7 @@ git branch -M develop
 # ---------------------------------------------
 if [[ ${CREATE_GITHUB} == 1 ]] ; then
   if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    gh config set git_protocol ssh >/dev/null
     if gh repo create "${GITHUB_REPO_FULL}" --private --source=. --remote=origin --push; then
       GITHUB_CREATED=1
     fi
@@ -691,10 +704,15 @@ if [[ ${CREATE_GITHUB} == 1 ]] ; then
 
     if [[ "$HTTP_CODE" == "201" || "$HTTP_CODE" == "422" ]]; then
       git remote remove origin 2>/dev/null
-      git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO_FULL}.git"
+      git remote add origin "git@github.com:${GITHUB_REPO_FULL}.git"
 
       if git push -u origin develop; then
         GITHUB_CREATED=1
+      else
+        git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO_FULL}.git"
+        if git push -u origin develop; then
+          GITHUB_CREATED=1
+        fi
       fi
     else
       echo -e " | ⚠  Could not create GitHub repo (HTTP ${HTTP_CODE})."
