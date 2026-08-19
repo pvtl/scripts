@@ -99,6 +99,55 @@ read -p "${ANSWER_PREFIX}" ACF_LICENCE
 echo -e "${ANSWER_SUFFIX}"
 
 
+# Create a private GitHub repo and push?
+echo -e "${QUESTION_PREFIX} Create a private GitHub repo and push this site? [Y/n] "
+read -p "${ANSWER_PREFIX}" CREATE_GITHUB
+echo -e "${ANSWER_SUFFIX}"
+
+if [[ -z "$CREATE_GITHUB" ]]; then
+  CREATE_GITHUB=1
+else
+  [ "$CREATE_GITHUB" != "${CREATE_GITHUB#[Yy]}" ] && CREATE_GITHUB=1 || CREATE_GITHUB=0
+fi
+
+GITHUB_TOKEN="${GITHUB_TOKEN:-${GH_TOKEN:-}}"
+GITHUB_CREATED=0
+
+if [[ ${CREATE_GITHUB} == 1 ]] ; then
+  echo -e "${QUESTION_PREFIX} GitHub org or owner? [pvtl] "
+  read -p "${ANSWER_PREFIX}" GITHUB_OWNER
+  echo -e "${ANSWER_SUFFIX}"
+
+  if [[ -z "$GITHUB_OWNER" ]]; then
+    GITHUB_OWNER="pvtl"
+  fi
+
+  echo -e "${QUESTION_PREFIX} GitHub repo name? [${DIR_NAME}] "
+  read -p "${ANSWER_PREFIX}" GITHUB_REPO
+  echo -e "${ANSWER_SUFFIX}"
+
+  if [[ -z "$GITHUB_REPO" ]]; then
+    GITHUB_REPO="$DIR_NAME"
+  fi
+
+  GITHUB_REPO_FULL="${GITHUB_OWNER}/${GITHUB_REPO}"
+
+  if ! command -v gh >/dev/null 2>&1 || ! gh auth status >/dev/null 2>&1; then
+    if [[ -z "$GITHUB_TOKEN" ]]; then
+      echo -e "${QUESTION_PREFIX} GitHub CLI (gh) is missing or not logged in. Paste a PAT with repo scope, or leave blank to skip creating the remote. "
+      read -s -p "${ANSWER_PREFIX}" GITHUB_TOKEN
+      echo
+      echo -e "${ANSWER_SUFFIX}"
+    fi
+
+    if [[ -z "$GITHUB_TOKEN" ]]; then
+      CREATE_GITHUB=0
+      echo -e " | ⚠  Skipping GitHub repo creation (no gh CLI login or PAT)."
+    fi
+  fi
+fi
+
+
 # Create the directory
 # ---------------------------------------------
 mkdir $DIR_NAME && cd $DIR_NAME
@@ -110,6 +159,27 @@ SITE_ROOT="$(pwd)"
 git clone --depth 1 https://github.com/roots/bedrock.git .
 rm -rf .git
 rm -rf .github
+
+# Replace Bedrock's WP Packages composer repo with WPackagist
+php -r '
+$json = json_decode(file_get_contents("composer.json"), true);
+$json["repositories"] = array_values(array_map(function ($repo) {
+    if (($repo["name"] ?? "") === "wp-packages" || ($repo["url"] ?? "") === "https://repo.wp-packages.org") {
+        return [
+            "name" => "wpackagist",
+            "type" => "composer",
+            "url" => "https://wpackagist.org",
+            "only" => ["wpackagist-plugin/*", "wpackagist-theme/*"],
+        ];
+    }
+    return $repo;
+}, $json["repositories"] ?? []));
+if (isset($json["require"]["wp-theme/twentytwentyfive"])) {
+    $json["require"]["wpackagist-theme/twentytwentyfive"] = $json["require"]["wp-theme/twentytwentyfive"];
+    unset($json["require"]["wp-theme/twentytwentyfive"]);
+}
+file_put_contents("composer.json", json_encode($json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
+'
 
 
 # Install Dependencies
@@ -130,10 +200,6 @@ composer config repositories.pvtl-itsec-login-logs git https://github.com/pvtl/w
 composer config repositories.wp-gf-spam-filter git https://github.com/pvtl/wp-gf-spam-filter
 composer config repositories.wordpress-training git https://github.com/pvtl/video-training-wp-plugin
 
-# Add WPackagist composer repos
-composer config --json repositories.wpackagist '{"type":"composer","url":"https://wpackagist.org","only":["wpackagist-plugin/*","wpackagist-theme/*"]}'
-
-
 git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-update-watcher
 git config --global --add safe.directory $SITE_ROOT/web/app/mu-plugins/pvtl-sso
 git config --global --add safe.directory $SITE_ROOT/web/app/mu-plugins/pvtl-itsec-login-logs
@@ -143,7 +209,7 @@ git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-gf-spam-f
 
 # Install default Wordpress plugins
 # ---------------------------------------------
-composer require wp-plugin/wordpress-seo \
+composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/w3-total-cache \
   wpackagist-plugin/better-wp-security \
   wpackagist-plugin/wp-migrate-db \
@@ -155,6 +221,7 @@ composer require wp-plugin/wordpress-seo \
   wpackagist-plugin/redirection \
   wpackagist-plugin/email-templates \
   wpackagist-plugin/user-switching \
+  wpackagist-plugin/bulk-page-creator \
   pvtl/wp-update-watcher \
   pvtl/wp-safe-user-deletion \
   "pvtl/wp-gf-spam-filter:~1.2" \
@@ -248,7 +315,7 @@ wp plugin activate gravitysmtp --allow-root
 wp plugin activate simple-custom-post-order --allow-root
 wp plugin activate wordpress-seo --allow-root
 wp plugin activate wp-safe-user-deletion --allow-root
-wp plugin activate wp-gf-spam-filter --allow-root
+wp plugin activate bulk-page-creator --allow-root
 
 
 # Create MU plugin/s
@@ -423,7 +490,7 @@ echo '
   RewriteCond %{REQUEST_URI} ^/app/uploads/(.*)$
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ https://www.example.com.au/$1 [QSA,L]
+  RewriteRule ^(.*)$ https://example.com.au/$1 [QSA,L]
 
   #### If URL is not XYZ, then redirect to XYZ
   # RewriteCond %{HTTP_HOST} !^example\.com
@@ -516,14 +583,22 @@ cp .env.example .env
 
 #### 3. Import the DB
 
-
 Once imported: scrub any sensitive data (eg. customer info, credit card tokens etc).
 
 #### 4. Install dependencies (composer, npm)
 
 ```bash
 composer install --ignore-platform-reqs
-( cd web/app/themes/pvtl-child ; npm install )
+```
+
+### If using the PVTL Child Theme
+```
+cd web/app/themes/pvtl-child ; npm install
+```
+
+### If using the Salient Child Theme
+```
+cd web/app/themes/salient-child ; npm install
 ```
 
 ---
@@ -554,7 +629,7 @@ Wordpress Plugins are managed through composer.
 ### Installing
 
 
-- Visit [WP Composer](https://wp-composer.com/)
+- Visit [WPackagist](https://wpackagist.org/)
 - Find the plugin (eg. akismet)
 - Copy the packagist name (eg. `wpackagist-plugin/plugin-name`) and run `composer require wpackagist-plugin/plugin-name`
 
@@ -570,21 +645,67 @@ Simply run `composer remove wpackagist-plugin/plugin-name`
 EOF
 
 
-# Add to Git
-# ---------------------------------------------
-git config --global user.email "tech+github@pvtl.io"
-git config --global user.name "PVTL Install Bot"
-git init && git add . && git commit -m 'init'
-git branch develop
-git checkout develop
-
 # ACF Pro cleanup
 # ---------------------------------------------
+# Do this before the initial commit so the licence is never committed or pushed.
 if [[ ! -z "$ACF_LICENCE" ]]; then
   # Licence provided, remove ACF from composer.json, but keep the files.
   # This is to prevent issues with later installs.
   composer config --unset repositories.advanced-custom-fields-pro
   composer remove --no-update wpengine/advanced-custom-fields-pro
+fi
+
+
+# Add to Git
+# ---------------------------------------------
+git init
+git config user.email "tech+github@pvtl.io"
+git config user.name "PVTL Install Bot"
+git add . && git commit -m 'init'
+git branch -M develop
+
+
+# Create GitHub repo and push
+# ---------------------------------------------
+if [[ ${CREATE_GITHUB} == 1 ]] ; then
+  if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    if gh repo create "${GITHUB_REPO_FULL}" --private --source=. --remote=origin --push; then
+      GITHUB_CREATED=1
+    fi
+  elif [[ -n "$GITHUB_TOKEN" ]] && command -v curl >/dev/null 2>&1; then
+    HTTP_CODE=$(curl -sS -o /dev/null -w "%{http_code}" -X POST \
+      -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+      -H "Accept: application/vnd.github+json" \
+      -H "X-GitHub-Api-Version: 2022-11-28" \
+      "https://api.github.com/orgs/${GITHUB_OWNER}/repos" \
+      -d "{\"name\":\"${GITHUB_REPO}\",\"private\":true}")
+
+    if [[ "$HTTP_CODE" != "201" && "$HTTP_CODE" != "422" ]]; then
+      HTTP_CODE=$(curl -sS -o /dev/null -w "%{http_code}" -X POST \
+        -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+        -H "Accept: application/vnd.github+json" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        "https://api.github.com/user/repos" \
+        -d "{\"name\":\"${GITHUB_REPO}\",\"private\":true}")
+    fi
+
+    if [[ "$HTTP_CODE" == "201" || "$HTTP_CODE" == "422" ]]; then
+      git remote remove origin 2>/dev/null
+      git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO_FULL}.git"
+
+      if git push -u origin develop; then
+        GITHUB_CREATED=1
+      fi
+    else
+      echo -e " | ⚠  Could not create GitHub repo (HTTP ${HTTP_CODE})."
+    fi
+  else
+    echo -e " | ⚠  Skipping GitHub repo creation (no gh CLI login or PAT)."
+  fi
+
+  if git remote get-url origin >/dev/null 2>&1; then
+    git remote set-url origin "git@github.com:${GITHUB_REPO_FULL}.git"
+  fi
 fi
 
 
@@ -599,6 +720,10 @@ echo -e "${QUESTION_PREFIX} ✓  Installed Successfully!"
 echo -e " | "
 echo -e " |     Wordpress has been installed at: ${URL}"
 echo -e " |     and you can login at: ${URL}/wp/wp-admin"
+if [[ ${GITHUB_CREATED} == 1 ]] ; then
+  echo -e " | "
+  echo -e " |     GitHub: https://github.com/${GITHUB_REPO_FULL}"
+fi
 echo -e " | "
 echo -e "${ANSWER_SUFFIX}"
 
