@@ -58,7 +58,7 @@ Installs a fresh version of Wordpress with the following:
 
 ### Usage
 
-Whilst SSH'd into the Docker `php81` container (`docker exec -it php81 bash`), browsed to `/var/www/html`, simply run:
+Whilst SSH'd into the Docker `php85` container (`docker exec -it php85 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/create.sh -L)
@@ -160,7 +160,7 @@ This script does all of the below with a single command:
 
 ### Usage
 
-Whilst SSH'd into the Docker `php81` container (`docker exec -it php81 bash`), browsed to `/var/www/html`, simply run:
+Whilst SSH'd into the Docker `php85` container (`docker exec -it php85 bash`), browsed to `/var/www/html`, simply run:
 
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/pvtl/scripts/master/wordpress/setup.sh -L)
