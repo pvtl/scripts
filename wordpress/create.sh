@@ -234,6 +234,7 @@ composer require wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/email-templates \
   wpackagist-plugin/user-switching \
   wpackagist-plugin/bulk-page-creator \
+  wpackagist-plugin/google-site-kit \
   pvtl/wp-update-watcher \
   pvtl/wp-safe-user-deletion \
   "pvtl/wp-gf-spam-filter:~1.2" \
@@ -323,11 +324,11 @@ wp plugin activate advanced-custom-fields-pro --allow-root
 wp plugin activate admin-menu-editor --allow-root
 wp plugin activate duplicate-post --allow-root
 wp plugin activate gravityforms --allow-root
-wp plugin activate gravitysmtp --allow-root
 wp plugin activate simple-custom-post-order --allow-root
 wp plugin activate wordpress-seo --allow-root
 wp plugin activate wp-safe-user-deletion --allow-root
 wp plugin activate bulk-page-creator --allow-root
+wp plugin activate google-site-kit --allow-root
 
 
 # Create MU plugin/s
