@@ -230,7 +230,8 @@ git config --global --add safe.directory $SITE_ROOT/web/app/plugins/wp-gf-spam-f
 
 # Install default Wordpress plugins
 # ---------------------------------------------
-composer require wpackagist-plugin/wordpress-seo \
+composer require --ignore-platform-reqs \
+  wpackagist-plugin/wordpress-seo \
   wpackagist-plugin/w3-total-cache \
   wpackagist-plugin/better-wp-security \
   wpackagist-plugin/wp-migrate-db \
@@ -266,7 +267,7 @@ if [[ -z "$ACF_LICENCE" ]]; then
 else
   # Licence provided, use the ACF official composer package
   composer config repositories.advanced-custom-fields-pro composer https://$ACF_LICENCE:https%3A%2F%2Fconcepts.pivotalagency.com.au@connect.advancedcustomfields.com
-  composer require wpengine/advanced-custom-fields-pro
+  composer require --ignore-platform-reqs wpengine/advanced-custom-fields-pro
 fi
 
 
