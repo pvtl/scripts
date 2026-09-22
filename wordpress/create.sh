@@ -175,17 +175,26 @@ rm -rf .github
 # Replace Bedrock's WP Packages composer repo with WPackagist
 php -r '
 $json = json_decode(file_get_contents("composer.json"), true);
-$json["repositories"] = array_values(array_map(function ($repo) {
-    if (($repo["name"] ?? "") === "wp-packages" || ($repo["url"] ?? "") === "https://repo.wp-packages.org") {
-        return [
-            "name" => "wpackagist",
+$repos = [];
+foreach ($json["repositories"] ?? [] as $key => $repo) {
+    if (($repo["name"] ?? "") === "wp-packages" || ($repo["url"] ?? "") === "https://repo.wp-packages.org" || $key === "wp-packages") {
+        $repos["wpackagist"] = [
             "type" => "composer",
             "url" => "https://wpackagist.org",
-            "only" => ["wpackagist-plugin/*", "wpackagist-theme/*"],
+            "only" => [
+                "wpackagist-plugin/*",
+                "wpackagist-theme/*",
+            ],
         ];
+        continue;
     }
-    return $repo;
-}, $json["repositories"] ?? []));
+    if (is_string($key) && !is_numeric($key)) {
+        $repos[$key] = $repo;
+    } else {
+        $repos[] = $repo;
+    }
+}
+$json["repositories"] = $repos;
 if (isset($json["require"]["wp-theme/twentytwentyfive"])) {
     $json["require"]["wpackagist-theme/twentytwentyfive"] = $json["require"]["wp-theme/twentytwentyfive"];
     unset($json["require"]["wp-theme/twentytwentyfive"]);
